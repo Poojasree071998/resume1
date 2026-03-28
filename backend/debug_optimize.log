@@ -1,0 +1,52 @@
+[2026-03-26T04:26:24.825Z] Payload: {
+  "analysis": {
+    "score": 53,
+    "matchPercentage": 0,
+    "verdict": "Rejected",
+    "status": "Rejected",
+    "reasons": [
+      "Keyword gap for Fullstack requirements"
+    ],
+    "weaknesses": [
+      "Keyword gap for Fullstack requirements"
+    ],
+    "suggestions": [
+      "Consider adding skills like: React, Node.js, Express"
+    ],
+    "matchedSkills": [],
+    "missingSkills": [
+      "React",
+      "Node.js",
+      "Express",
+      "SQL",
+      "JavaScript",
+      "TypeScript",
+      "API Integration",
+      "Redux",
+      "Architecture"
+    ],
+    "skills": [],
+    "strengths": [
+      "Strong use of action verbs to describe professional impact",
+      "Uses quantifiable metrics to demonstrate impact",
+      "Strong professional formatting and document structure"
+    ],
+    "suggestedRoles": [],
+    "improvementSkills": [
+      "React",
+      "Node.js",
+      "Express"
+    ],
+    "communicationScore": 95,
+    "communicationAnalysis": [
+      "Clear and professional tone",
+      "Good descriptive clarity",
+      "Grammar is acceptable"
+    ],
+    "role": "Fullstack",
+    "extractedText": "\n\n      RESUME \nV. VAIDEESWARI \nContact  :  8428491232 \nEmail ID  :  vaideeswari8@gmail.com \n  \nAddress:  \nD/O S. VAITHEESWARAN, \n2/886, Nelli Nagar, Pidamaneri ,  \nDharmapuri – 636 701 \n=============================================================================== \nObjective: \nTo  secure  an  Entry-Level  Position  in  a  Reputable  Organization  Where  I  can  apply  my \nMechanical Engineering Skills and Knowledge to Contribute to the Company's Growth and Success. \n \nEducation: \n “Diploma in Computer Science Engineering” -  MARUTAM NELLI Polytechnic College \n-Dharmapuri, [Dote], [2022 -2025] at 77%. \n \" S.S.L.C ” -  Government Hr Secondary School  -Dharmapuri, [ State Board ] , [2021 - \n2022 ]at 58%. \n \nRelevant Course Work: \n System Work.  \n \nProjects: \n Project  : “IOT BASED HEART ATTACK AND HEART MONITORING SYSTEM ” in  This \nAchieve Less Time & Secure our Health . \n \nTraining: \n Training Will Attend – “SKMT Project Center” at Salem main Road – Dharmapuri. \n \nSoft Skills & Strength  \n Quick learner with strong problem-solving skills \n Ability to work in a team as well as independently \n Good communication and adaptability \n Time management and adaptability \n \nPersonal Data: \n D.O.B     :   22-06-2007 \n Gender  :    Female  \n Nationality  : Indian  \n \nDeclaration : \n I  here  by  that  Information  provided  in  this  Resume is  True  and  Accurate  to  the  Best  of  My \nKnowledge. \n \n \nDATE   :                                                                                                                                    Your’s Faithfully \nPLACE  :                                       V. VAIDEESWARI \n "
+  },
+  "role": "Fullstack",
+  "jd": "full stack"
+}
+

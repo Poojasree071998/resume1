@@ -1,0 +1,230 @@
+[2026-03-24T07:31:38.966Z] Invalid regular expression: /\bC++\b/i: Nothing to repeat
+SyntaxError: Invalid regular expression: /\bC++\b/i: Nothing to repeat
+    at new RegExp (<anonymous>)
+    at D:\Antigraviity\Resume\backend\utils\resumeParser.js:23:5
+    at Array.filter (<anonymous>)
+    at parseResumeContent (D:\Antigraviity\Resume\backend\utils\resumeParser.js:22:34)
+    at D:\Antigraviity\Resume\backend\index.js:52:24
+
+[2026-03-24T07:34:28.218Z] Invalid regular expression: /\bC++\b/i: Nothing to repeat
+SyntaxError: Invalid regular expression: /\bC++\b/i: Nothing to repeat
+    at new RegExp (<anonymous>)
+    at D:\Antigraviity\Resume\backend\utils\resumeParser.js:23:5
+    at Array.filter (<anonymous>)
+    at parseResumeContent (D:\Antigraviity\Resume\backend\utils\resumeParser.js:22:34)
+    at D:\Antigraviity\Resume\backend\index.js:52:24
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-24T07:36:51.256Z] Invalid regular expression: /\bC++\b/i: Nothing to repeat
+SyntaxError: Invalid regular expression: /\bC++\b/i: Nothing to repeat
+    at new RegExp (<anonymous>)
+    at D:\Antigraviity\Resume\backend\utils\resumeParser.js:23:5
+    at Array.filter (<anonymous>)
+    at parseResumeContent (D:\Antigraviity\Resume\backend\utils\resumeParser.js:22:34)
+    at D:\Antigraviity\Resume\backend\index.js:52:24
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-24T11:32:46.880Z] finalScore is not defined
+ReferenceError: finalScore is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\resumeParser.js:132:3)
+    at D:\Antigraviity\Resume\backend\index.js:53:29
+
+[2026-03-24T11:49:42.393Z] finalScore is not defined
+ReferenceError: finalScore is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\resumeParser.js:132:3)
+    at D:\Antigraviity\Resume\backend\index.js:53:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-24T11:51:43.362Z] finalScore is not defined
+ReferenceError: finalScore is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\resumeParser.js:132:3)
+    at D:\Antigraviity\Resume\backend\index.js:53:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-24T11:51:53.592Z] finalScore is not defined
+ReferenceError: finalScore is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\resumeParser.js:132:3)
+    at D:\Antigraviity\Resume\backend\index.js:53:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-24T11:52:34.518Z] finalScore is not defined
+ReferenceError: finalScore is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\resumeParser.js:132:3)
+    at D:\Antigraviity\Resume\backend\index.js:53:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T08:43:50.288Z] bad XRef entry
+Error
+    at UnknownErrorExceptionClosure (D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:443:37)
+    at Object.<anonymous> (D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:446:2)
+    at __w_pdfjs_require__ (D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:45:30)
+    at Object.<anonymous> (D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:7939:23)
+    at __w_pdfjs_require__ (D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:45:30)
+    at D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:88:18
+    at D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:91:10
+    at webpackUniversalModuleDefinition (D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:18:20)
+    at Object.<anonymous> (D:\Antigraviity\Resume\backend\node_modules\pdf-parse\lib\pdf.js\v1.10.100\build\pdf.js:25:3)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object..js (node:internal/modules/cjs/loader:1893:10)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.require (node:internal/modules/cjs/loader:1504:12)
+
+[2026-03-25T08:47:00.395Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-25T09:51:04.405Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+
+[2026-03-25T09:51:09.852Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T09:51:28.918Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T09:53:26.589Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T09:53:32.527Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T09:54:58.348Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T09:55:40.044Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T10:03:22.595Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T10:03:39.807Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[2026-03-25T10:06:06.198Z] text is not defined
+ReferenceError: text is not defined
+    at analyzeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:63:60)
+    at D:\Antigraviity\Resume\backend\index.js:51:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+[GLOBAL 2026-03-26T04:24:37.378Z] Expected property name or '}' in JSON at position 1 (line 1 column 2)
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (D:\Antigraviity\Resume\backend\node_modules\body-parser\lib\types\json.js:72:19)
+    at D:\Antigraviity\Resume\backend\node_modules\body-parser\lib\read.js:162:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:238:16)
+    at done (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:508:28)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+
+[OPTIMIZE 2026-03-27T10:12:56.801Z] TypeError: Cannot read properties of undefined (reading 'trim')
+    at extractPersonalDetails (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:29:59)
+    at optimizeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:295:21)
+    at D:\Antigraviity\Resume\backend\index.js:79:26
+    at Layer.handleRequest (D:\Antigraviity\Resume\backend\node_modules\router\lib\layer.js:152:17)
+    at next (D:\Antigraviity\Resume\backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (D:\Antigraviity\Resume\backend\node_modules\router\lib\route.js:117:3)
+    at handle (D:\Antigraviity\Resume\backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (D:\Antigraviity\Resume\backend\node_modules\router\lib\layer.js:152:17)
+    at D:\Antigraviity\Resume\backend\node_modules\router\index.js:295:15
+    at processParams (D:\Antigraviity\Resume\backend\node_modules\router\index.js:582:12)
+    at next (D:\Antigraviity\Resume\backend\node_modules\router\index.js:291:5)
+    at D:\Antigraviity\Resume\backend\node_modules\body-parser\lib\read.js:171:5
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:238:16)
+    at done (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:287:7)
+[OPTIMIZE 2026-03-27T10:13:00.594Z] TypeError: Cannot read properties of undefined (reading 'trim')
+    at extractPersonalDetails (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:29:59)
+    at optimizeResume (D:\Antigraviity\Resume\backend\utils\aiPrompt.js:295:21)
+    at D:\Antigraviity\Resume\backend\index.js:79:26
+    at Layer.handleRequest (D:\Antigraviity\Resume\backend\node_modules\router\lib\layer.js:152:17)
+    at next (D:\Antigraviity\Resume\backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (D:\Antigraviity\Resume\backend\node_modules\router\lib\route.js:117:3)
+    at handle (D:\Antigraviity\Resume\backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (D:\Antigraviity\Resume\backend\node_modules\router\lib\layer.js:152:17)
+    at D:\Antigraviity\Resume\backend\node_modules\router\index.js:295:15
+    at processParams (D:\Antigraviity\Resume\backend\node_modules\router\index.js:582:12)
+    at next (D:\Antigraviity\Resume\backend\node_modules\router\index.js:291:5)
+    at D:\Antigraviity\Resume\backend\node_modules\body-parser\lib\read.js:171:5
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:238:16)
+    at done (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (D:\Antigraviity\Resume\backend\node_modules\raw-body\index.js:287:7)
+[2026-03-27T10:36:39.080Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-27T10:38:47.766Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-27T11:13:50.533Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-27T11:19:59.544Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-27T11:22:43.689Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-27T11:42:32.682Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-27T12:03:19.674Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-27T12:10:14.921Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
+[2026-03-27T12:15:10.489Z] Failed to parse PDF
+Error: Failed to parse PDF
+    at extractTextFromPDF (D:\Antigraviity\Resume\backend\utils\pdfParser.js:10:15)
+    at async D:\Antigraviity\Resume\backend\index.js:43:14
+
