@@ -10,7 +10,7 @@ const InboxView = ({ setActiveView }) => {
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/candidates');
+      const response = await fetch('/api/candidates');
       if (response.ok) {
         const candidates = await response.json();
         // Flatten notifications into "Email" objects

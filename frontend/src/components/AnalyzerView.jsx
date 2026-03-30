@@ -535,7 +535,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
   // Fetch candidates from DB on mount if in recruiter mode
   React.useEffect(() => {
     if (recruiterMode) {
-      fetch('http://localhost:5000/api/candidates')
+      fetch('/api/candidates')
         .then(res => res.json())
         .then(data => setCandidates(data))
         .catch(err => console.error('Error fetching candidates:', err));
@@ -652,7 +652,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
       formData.append('role', role || 'General');
       formData.append('email', fileEmails[file.name] || 'candidate@example.com');
 
-      const response = await fetch('http://localhost:5000/api/analyze', {
+      const response = await fetch('/api/analyze', {
         method: 'POST',
         body: formData,
       });
@@ -675,7 +675,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
     setOptimizing(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/analyze/optimize', {
+      const response = await fetch('/api/analyze/optimize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ analysis: results, role: role, jd: jdText })
@@ -714,7 +714,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
             formData.append('role', role || 'General');
             formData.append('email', fileEmails[f.name] || 'candidate@example.com');
     
-            const response = await fetch('http://localhost:5000/api/analyze', {
+            const response = await fetch('/api/analyze', {
               method: 'POST',
               body: formData,
             });
@@ -769,7 +769,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
       const persistedCandidates = [];
       for (const [index, cand] of resultsArray.entries()) {
         try {
-          const response = await fetch('http://localhost:5000/api/candidates', {
+          const response = await fetch('/api/candidates', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(cand)
@@ -816,7 +816,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
     if (!candidate) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/candidates/${candidate.id}`, {
+      const response = await fetch(`/api/candidates/${candidate.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
@@ -868,7 +868,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
 
   const onScheduleConfirm = async (schedulingData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/candidates/${selectedCandidateForSchedule.id}`, {
+      const response = await fetch(`/api/candidates/${selectedCandidateForSchedule.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -880,7 +880,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
         const updated = await response.json();
         
         // Refresh candidates list
-        const updatedRes = await fetch('http://localhost:5000/api/candidates');
+        const updatedRes = await fetch('/api/candidates');
         const updatedData = await updatedRes.json();
         setCandidates(updatedData);
 

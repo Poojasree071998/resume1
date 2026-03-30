@@ -246,7 +246,7 @@ function App() {
   
   const fetchRecentAnalyses = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/candidates');
+      const response = await fetch('/api/candidates');
       if (response.ok) {
         const data = await response.json();
         const formatted = data.map(cand => ({
@@ -297,7 +297,7 @@ function App() {
         email: user?.email || 'N/A'
       };
 
-      await fetch('http://localhost:5000/api/candidates', {
+      await fetch('/api/candidates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cand)

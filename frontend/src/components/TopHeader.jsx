@@ -11,7 +11,7 @@ const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark, onLogout }) =>
   // Fetch real notifications from the backend
   const fetchNotifications = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/candidates');
+      const response = await fetch('/api/candidates');
       if (response.ok) {
         const candidates = await response.json();
         const allNotifications = sortNotifications(candidates);

@@ -20,7 +20,7 @@ const SchedulingModal = ({ candidate, isOpen, onClose, onSchedule, user }) => {
       if (isOpen && candidate?.id && user?.userRole === 'HR') {
         setLoadingLink(true);
         try {
-          const response = await fetch('http://localhost:5000/api/interviews/generate', {
+          const response = await fetch('/api/interviews/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 

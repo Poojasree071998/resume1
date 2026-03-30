@@ -12,7 +12,7 @@ const InterviewPage = ({ token }) => {
   useEffect(() => {
     const validateToken = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/interviews/validate/${token}`);
+        const response = await fetch(`/api/interviews/validate/${token}`);
         if (!response.ok) {
           const data = await response.json();
           throw new Error(data.error || 'Invalid Link');
