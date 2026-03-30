@@ -9,7 +9,8 @@ import {
   Settings,
   ShieldCheck,
   BarChart3,
-  Mail
+  Mail,
+  LogOut
 } from 'lucide-react';
 
 import ForgeLogo from './ForgeLogo';
@@ -28,7 +29,7 @@ const NavItem = ({ icon: Icon, label, active, onClick }) => (
   </div>
 );
 
-const Sidebar = ({ activeView, setActiveView, recruiterMode, setRecruiterMode, user }) => {
+const Sidebar = ({ activeView, setActiveView, recruiterMode, setRecruiterMode, user, onLogout }) => {
   return (
     <aside className="sidebar-nav" style={{ width: '280px' }}>
       <div style={{ paddingBottom: '1.25rem', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
@@ -76,7 +77,7 @@ const Sidebar = ({ activeView, setActiveView, recruiterMode, setRecruiterMode, u
         </nav>
       </div>
 
-      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', flexShrink: 0 }}>
+      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem', flexShrink: 0 }}>
         <div 
           onClick={() => setRecruiterMode(!recruiterMode)}
           style={{ 
@@ -86,7 +87,7 @@ const Sidebar = ({ activeView, setActiveView, recruiterMode, setRecruiterMode, u
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            background: recruiterMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.2)',
+            background: recruiterMode ? 'rgba(255,196,0,0.1)' : 'rgba(0,0,0,0.2)',
             border: `1px solid ${recruiterMode ? 'var(--secondary)' : 'rgba(255,255,255,0.1)'}`,
             transition: 'all 0.2s ease'
           }}
@@ -114,6 +115,30 @@ const Sidebar = ({ activeView, setActiveView, recruiterMode, setRecruiterMode, u
             }} />
           </div>
         </div>
+
+        <button 
+          onClick={onLogout}
+          style={{ 
+            padding: '1rem', 
+            borderRadius: '16px', 
+            background: 'rgba(239, 68, 68, 0.1)', 
+            border: '1px solid rgba(239, 68, 68, 0.2)', 
+            color: '#ef4444', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '0.75rem', 
+            fontWeight: 800, 
+            fontSize: '0.85rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
+        >
+          <LogOut size={18} />
+          SIGN OUT
+        </button>
       </div>
     </aside>
   );

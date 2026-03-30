@@ -190,10 +190,12 @@ const StatCard = ({ icon: Icon, label, value, color, delay, onClick }) => (
     onClick={onClick}
     className="glass-card" 
     style={{ 
-      padding: '1.5rem', 
-      flex: 1, 
-      cursor: onClick ? 'pointer' : 'default',
-      minWidth: '200px'
+      padding: '1.75rem', 
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      minHeight: '140px',
+      cursor: onClick ? 'pointer' : 'default'
     }}
   >
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -289,7 +291,7 @@ const DnaBar = ({ label, value, color, delay }) => (
   </div>
 );
 
-const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, recruiterMode, onRefresh }) => {
+const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, recruiterMode, onRefresh, onUploadNew }) => {
   const [analyticsPeriod, setAnalyticsPeriod] = React.useState('Weekly');
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   
@@ -343,6 +345,24 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
         </div>
         <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
           <motion.button
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onUploadNew}
+            className="glass-btn btn-primary"
+            style={{ 
+              padding: '0.9rem 2rem',
+              borderRadius: '16px',
+              fontSize: '0.95rem',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              boxShadow: '0 10px 25px var(--primary-glow)'
+            }}
+          >
+            <Zap size={20} /> Upload New Resume
+          </motion.button>
+          <motion.button
             whileHover={{ scale: 1.05, rotate: 15 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleRefresh}
@@ -368,7 +388,11 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
       </div>
 
       {/* Stats Grid */}
-      <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(4, 1fr)', 
+        gap: '1.5rem' 
+      }}>
         <StatCard icon={FileText} label="Total Resumes" value={stats.total} color="#0066cc" delay={0.1} />
         <StatCard icon={Target} label="Avg. Score" value={stats.avgScore} color="#F59E0B" delay={0.2} />
         <StatCard icon={TrendingUp} label="Selected" value={stats.selected} color="#10b981" delay={0.3} />

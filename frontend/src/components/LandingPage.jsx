@@ -6,8 +6,9 @@ import {
   ChevronRight, Globe, BrainCircuit, Shield, TrendingUp,
   Search, CheckCircle, ArrowRight, Sparkles, Mail, Award,
   Twitter, Linkedin, Github, Star, Users, Clock, Code2,
-  Database, Layers, Cpu, LayoutDashboard
+  Database, Layers, Cpu, LayoutDashboard, HelpCircle, MessageSquare
 } from 'lucide-react';
+import ContactModal from './ContactModal';
 
 /* ─── Animated Counter ───────────────────────────────────────── */
 const AnimatedCounter = ({ target, suffix = '', prefix = '' }) => {
@@ -99,14 +100,15 @@ const StatChip = ({ icon: Icon, value, label, color, delay, style }) => (
     style={{
       position: 'absolute',
       background: 'rgba(255,255,255,0.06)',
-      backdropFilter: 'blur(20px)',
+      backdropFilter: 'blur(24px)',
       border: '1px solid rgba(255,255,255,0.12)',
       borderRadius: 16,
       padding: '0.85rem 1.25rem',
-      display: 'flex', alignItems: 'center', gap: '0.75rem',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+      display: 'flex', alignItems: 'center', gap: '0.9rem',
+      boxShadow: '0 12px 40px rgba(0,0,0,0.3)',
       cursor: 'default',
       zIndex: 10,
+      minHeight: '64px',
       ...style
     }}
   >
@@ -274,6 +276,7 @@ const TestimonialCard = ({ name, role, company, text, rating, delay }) => (
 /* ─── Main Component ──────────────────────────────────────────── */
 function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelectedRole }) {
   const [isDragging, setIsDragging] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.3]);
   const heroY = useTransform(scrollY, [0, 400], [0, -60]);
@@ -325,16 +328,24 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
         }}
       >
         <ForgeLogo size={48} variant="sidebar" />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          {['Features', 'How it Works', 'Pricing'].map(item => (
-            <span key={item} style={{
-              color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem',
-              fontWeight: 600, cursor: 'pointer', transition: 'color 0.2s'
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+          <motion.button
+            whileHover={{ scale: 1.05, color: '#F4C400', borderColor: 'rgba(244,196,0,0.3)' }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowContactModal(true)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.5rem',
+              padding: '0.6rem 1.2rem', borderRadius: 12,
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: 'rgba(255,255,255,0.6)',
+              fontSize: '0.85rem', fontWeight: 700,
+              cursor: 'pointer', transition: 'all 0.3s ease'
             }}
-              onMouseEnter={e => e.target.style.color = '#fff'}
-              onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.5)'}
-            >{item}</span>
-          ))}
+          >
+            <Mail size={16} /> Contact
+          </motion.button>
+
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
@@ -349,7 +360,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
               display: 'flex', alignItems: 'center', gap: '0.4rem'
             }}
           >
-            Launch App <ChevronRight size={14} />
+            Sign In <ChevronRight size={14} />
           </motion.button>
         </div>
       </motion.nav>
@@ -532,24 +543,29 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
             </motion.div>
           </div>
 
-          {/* Right — Stats + Visual */}
-          <div style={{ position: 'relative', height: 520 }}>
+          {/* Right — Stats + Visual Grid */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            position: 'relative',
+            minHeight: 500
+          }}>
             {/* Central card */}
             <motion.div
               initial={{ opacity: 0, scale: 0.85, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                position: 'absolute', top: '50%', left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 320,
-                padding: '2rem',
-                borderRadius: 28,
+                width: 340,
+                padding: '2.25rem',
+                borderRadius: 32,
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 backdropFilter: 'blur(30px)',
                 boxShadow: '0 40px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)',
-                zIndex: 5
+                zIndex: 5,
+                position: 'relative'
               }}
             >
               {/* Mock score UI */}
@@ -607,11 +623,6 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
               ))}
             </motion.div>
 
-            {/* Floating chips */}
-            <StatChip icon={Users} value="12,400+" label="Resumes Analyzed" color="#F4C400" delay={0.7} style={{ top: 20, left: -30 }} />
-            <StatChip icon={CheckCircle} value="94%" label="Selection Rate" color="#10b981" delay={0.85} style={{ top: 80, right: -20 }} />
-            <StatChip icon={Clock} value="<10s" label="Analysis Time" color="#3b82f6" delay={1.0} style={{ bottom: 60, left: -10 }} />
-            <StatChip icon={Star} value="4.9/5" label="User Rating" color="#ec4899" delay={1.1} style={{ bottom: 110, right: 10 }} />
           </div>
         </div>
       </motion.section>
@@ -876,7 +887,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
             { title: 'Company', links: ['About', 'Technology', 'Privacy', 'Terms'] },
             { title: 'Support', links: ['support@forge.ai', '24/7 Global Support', 'Documentation', 'Status'] },
           ].map(({ title, links }) => (
-            <div key={title}>
+            <div key={title} id={title === 'Support' ? 'footer-support' : undefined}>
               <h4 style={{ fontSize: '0.8rem', fontWeight: 800, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>{title}</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {links.map(link => (
@@ -901,6 +912,15 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
           50% { opacity: 0.6; transform: scale(1.3); }
         }
       `}</style>
+
+      <AnimatePresence>
+        {showContactModal && (
+          <ContactModal 
+            isOpen={showContactModal} 
+            onClose={() => setShowContactModal(false)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Search, Bell, User as UserIcon, Shield, Sun, Moon, CheckCircle2, AlertCircle, Zap, X } from 'lucide-react';
+import { Search, Bell, User as UserIcon, Shield, Sun, Moon, CheckCircle2, AlertCircle, Zap, X, HelpCircle, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark }) => {
+const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark, onLogout }) => {
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [notifications, setNotifications] = React.useState([]);
   const [unreadCount, setUnreadCount] = React.useState(0);
+  const [showUserMenu, setShowUserMenu] = React.useState(false);
 
   // Fetch real notifications from the backend
   const fetchNotifications = async () => {
@@ -57,7 +58,6 @@ const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark }) => {
 
   const handleMarkAllRead = () => {
     setUnreadCount(0);
-    // In a real app, we'd also send a request to the backend to mark them in DB
   };
 
   const getIcon = (type) => {
@@ -239,25 +239,25 @@ const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark }) => {
                       </div>
                     )}
                   </div>
-                  
-                  <div style={{ padding: '1rem', textAlign: 'center', borderTop: '1px solid var(--border)' }}>
-                    <button style={{ border: 'none', background: 'none', fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', cursor: 'pointer' }}>View all activity</button>
-                  </div>
                 </motion.div>
               </>
             )}
           </AnimatePresence>
         </div>
         
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '1rem', 
-          paddingLeft: '1.5rem', 
-          borderLeft: '1px solid var(--border)', 
-          cursor: 'pointer',
-          height: '40px' /* Fixed height for centering */
-        }}>
+        <div 
+          onClick={() => setShowUserMenu(!showUserMenu)}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '1rem', 
+            paddingLeft: '1.5rem', 
+            borderLeft: '1px solid var(--border)', 
+            cursor: 'pointer',
+            height: '40px',
+            position: 'relative'
+          }}
+        >
           <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <p style={{ fontSize: '0.9rem', fontWeight: 800, margin: 0, lineHeight: 1.2 }}>{user?.name || 'Alex Rivers'}</p>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, margin: 0, lineHeight: 1.2 }}>{user?.membership || 'Elite Member'}</p>
@@ -281,6 +281,55 @@ const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark }) => {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
+
+          <AnimatePresence>
+            {showUserMenu && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '1rem',
+                  background: 'var(--bg-card)',
+                  borderRadius: '16px',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--shadow-lg)',
+                  width: '180px',
+                  zIndex: 200,
+                  overflow: 'hidden'
+                }}
+              >
+                <div style={{ padding: '0.5rem' }}>
+                  <button 
+                    onClick={onLogout}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      padding: '0.75rem 1rem',
+                      background: 'none',
+                      border: 'none',
+                      color: '#ef4444',
+                      fontSize: '0.85rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      borderRadius: '12px',
+                      textAlign: 'left'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.05)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+                  >
+                    <LogOut size={18} />
+                    SIGN OUT
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </header>

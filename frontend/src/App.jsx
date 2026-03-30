@@ -20,6 +20,9 @@ import InterviewRoomView from './components/InterviewRoomView';
 import SignInRequiredModal from './components/SignInRequiredModal';
 import SplashScreen from './components/SplashScreen';
 import ResumeAlreadyExistsModal from './components/ResumeAlreadyExistsModal';
+import ChatWidget from './components/ChatWidget';
+import ResumeBuilderModal from './components/ResumeBuilderModal';
+import ResumeUploadWorkflow from './components/ResumeUploadWorkflow';
 
 function App() {
   const [showSplash, setShowSplash] = useState(false);
@@ -41,8 +44,28 @@ function App() {
   const [selectedRole, setSelectedRole] = useState('Frontend');
   const [uploadedResumes, setUploadedResumes] = useState([]);
   const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+  const [showResumeBuilder, setShowResumeBuilder] = useState(false);
+  const [showResumeUploadWorkflow, setShowResumeUploadWorkflow] = useState(false);
   const [interviewToken, setInterviewToken] = useState(null);
   const [activeRoomId, setActiveRoomId] = useState(null);
+  const [isInitializing, setIsInitializing] = useState(true);
+
+  // Restore Session on Mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('userdb');
+    if (savedUser) {
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+        setIsLoggedIn(true);
+        setAppEntered(true);
+      } catch (e) {
+        console.error('Failed to restore session:', e);
+        localStorage.removeItem('userdb');
+      }
+    }
+    setIsInitializing(false);
+  }, []);
 
   useEffect(() => {
     const handleUrlRouting = () => {
@@ -135,6 +158,8 @@ function App() {
     if (isUsernameValid && isPasswordValid) {
       console.log('Login successful');
       
+      const roleToAssign = ['admin', 'hr', 'recruiter'].includes(data.username.toLowerCase()) ? 'HR' : 'Employee';
+      
       // Simple gender detection heuristic for demo
       const femaleNames = ['Pooja', 'Agila', 'Jane', 'Sophia', 'Emma', 'Isabella', 'Mia', 'Agila'];
       const isFemale = femaleNames.some(n => data.username.toLowerCase() === n.toLowerCase()) || data.username.toLowerCase().endsWith('a') || data.username.toLowerCase().endsWith('i');
@@ -143,17 +168,21 @@ function App() {
         ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"
         : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80";
 
-      const userRole = ['admin', 'hr', 'recruiter'].includes(data.username.toLowerCase()) ? 'HR' : 'Employee';
-
-      setUser({ 
+      const userData = { 
         name: data.username,
         avatar: avatarUrl,
-        userRole: userRole,
-        role: userRole === 'HR' ? 'Recruiter' : 'Frontend Developer',
+        userRole: roleToAssign,
+        role: roleToAssign === 'HR' ? 'Recruiter' : 'Frontend Developer',
         email: `${data.username.toLowerCase()}@example.com`,
         phone: '+1 123 456 7890',
-        membership: userRole === 'HR' ? 'Elite Member' : 'Standard Member'
-      });
+        membership: roleToAssign === 'HR' ? 'Elite Member' : 'Standard Member'
+      };
+
+      setUser(userData);
+      localStorage.setItem('userdb', JSON.stringify(userData));
+      if (roleToAssign === 'HR') {
+        localStorage.setItem('hrdb', JSON.stringify(userData));
+      }
       
       // Force recruiter mode off for everyone initially, or strictly off for employees
       setRecruiterMode(false);
@@ -172,6 +201,17 @@ function App() {
         setLoginError('Incorrect password');
       }
     }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    setAppEntered(false);
+    setRecruiterMode(false);
+    setActiveView('dashboard');
+    localStorage.removeItem('userdb');
+    localStorage.removeItem('hrdb');
+    console.log('User logged out and session db cleared');
   };
 
   const [recentAnalyses, setRecentAnalyses] = useState([
@@ -320,8 +360,10 @@ function App() {
         )}
       </AnimatePresence>
 
+      <ChatWidget />
+
       <AnimatePresence mode="wait">
-        {showSplash ? (
+        {showSplash || isInitializing ? (
           <SplashScreen key="splash" onComplete={() => setTimeout(() => setShowSplash(false), 2500)} />
         ) : !appEntered ? (
           <motion.div
@@ -353,6 +395,7 @@ function App() {
               setActiveView={setActiveView} 
               recruiterMode={recruiterMode}
               user={user}
+              onLogout={handleLogout}
               setRecruiterMode={(val) => {
                 setRecruiterMode(val);
                 if (val) setActiveView('analyzer');
@@ -360,7 +403,14 @@ function App() {
             />
             
             <div className="content-area">
-              <TopHeader recruiterMode={recruiterMode} user={user} darkMode={darkMode} onToggleDark={() => setDarkMode(d => !d)} style={{ position: 'relative', zIndex: 10 }} />
+              <TopHeader 
+                recruiterMode={recruiterMode} 
+                user={user} 
+                darkMode={darkMode} 
+                onToggleDark={() => setDarkMode(d => !d)} 
+                onLogout={handleLogout}
+                style={{ position: 'relative', zIndex: 10 }} 
+              />
               
               <main className="view-container" style={{ position: 'relative', zIndex: 10 }}>
                 <AnimatePresence mode="wait">
@@ -381,6 +431,7 @@ function App() {
                         setRecruiterMode={setRecruiterMode} 
                         recruiterMode={recruiterMode}
                         onRefresh={fetchRecentAnalyses}
+                        onUploadNew={() => setShowResumeUploadWorkflow(true)}
                       />
                     )}
                     {activeView === 'analyzer' && (
@@ -441,6 +492,25 @@ function App() {
         isOpen={showDuplicateModal} 
         onClose={() => setShowDuplicateModal(false)}
         onConfirm={() => setShowDuplicateModal(false)}
+      />
+
+      <ResumeBuilderModal 
+        isOpen={showResumeBuilder} 
+        onClose={() => setShowResumeBuilder(false)}
+        onComplete={() => {
+          fetchRecentAnalyses();
+          setActiveView('analyzer');
+        }}
+      />
+
+      <ResumeUploadWorkflow 
+        isOpen={showResumeUploadWorkflow} 
+        onClose={() => setShowResumeUploadWorkflow(false)}
+        onComplete={(data) => {
+          console.log('Upload workflow completed:', data);
+          fetchRecentAnalyses();
+          setActiveView('analyzer');
+        }}
       />
     </>
   );

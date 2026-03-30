@@ -900,3 +900,79 @@ body.app-mode {
 .footer-link-premium:hover::after {
   width: 100%;
 }
+
+/* ── Contact Modal Responsive Fixes ──────────────── */
+.contact-modal-glass {
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(25, 33, 48, 0.8) !important;
+  backdrop-filter: blur(40px) !important;
+}
+
+.contact-modal-grid {
+  display: grid;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  grid-template-columns: 1.2fr 0.8fr;
+  min-height: 0; /* Allow the grid to shrink */
+}
+
+.contact-modal-grid.is-submitted {
+  grid-template-columns: 1fr;
+}
+
+.contact-modal-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.contact-modal-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.contact-form-panel, .contact-info-panel {
+  padding: 3rem;
+  transition: padding 0.3s ease;
+}
+
+@media (max-width: 850px) {
+  .contact-modal-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .contact-info-panel {
+    border-left: none !important;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem !important;
+  }
+  
+  .contact-form-panel {
+    padding: 2rem !important;
+  }
+  
+  .contact-modal-glass {
+    width: 98% !important;
+    border-radius: 24px !important;
+  }
+}
+
+@media (max-height: 800px) {
+  .contact-form-panel, .contact-info-panel {
+    padding: 1.5rem !important;
+  }
+  
+  .contact-form-panel h2 {
+    font-size: 1.8rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .contact-form-panel p {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .contact-info-panel section {
+    gap: 1.5rem !important;
+  }
+}
