@@ -1,4 +1,5 @@
 const express = require('express');
+// Optimized for AI Analysis and Premium UI Gallery
 const cors = require('cors');
 const multer = require('multer');
 const { extractTextFromPDF, extractTextFromDOCX } = require('./utils/pdfParser');
