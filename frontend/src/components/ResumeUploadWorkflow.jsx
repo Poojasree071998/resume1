@@ -260,15 +260,29 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
           onClick={onClose}
           style={{ 
             position: 'absolute', top: '24px', right: '24px', 
-            background: step >= 5 ? '#f1f5f9' : 'rgba(255,255,255,0.05)', 
-            border: 'none', 
-            color: step >= 5 ? '#64748b' : 'var(--text-muted)', 
-            width: '36px', height: '36px', 
-            borderRadius: '50%', cursor: 'pointer', zIndex: 10,
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
+            background: step >= 5 ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.08)', 
+            border: '1px solid',
+            borderColor: step >= 5 ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.1)',
+            color: step >= 5 ? '#475569' : '#ffffff', 
+            width: '38px', height: '38px', 
+            borderRadius: '12px', cursor: 'pointer', zIndex: 10,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            backdropFilter: 'blur(4px)'
           }}
+          className="modal-close-btn"
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = step >= 5 ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.15)';
+            e.currentTarget.style.transform = 'scale(1.05)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = step >= 5 ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.08)';
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+          onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.94)'}
+          onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
         >
-          <X size={20} />
+          <X size={22} strokeWidth={2.5} />
         </button>
 
         {/* STEPPER ADDED HERE */}
