@@ -257,32 +257,8 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
         {/* Close Button */}
         <button 
           onClick={onClose}
-          style={{ 
-            position: 'absolute', top: '24px', right: '24px', 
-            background: step >= 4 ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.08)', 
-            border: '1px solid',
-            borderColor: step >= 4 ? 'rgba(15, 23, 42, 0.1)' : 'rgba(255, 255, 255, 0.15)',
-            color: step >= 4 ? '#0f172a' : '#ffffff', 
-            width: '42px', height: '42px', 
-            borderRadius: '14px', cursor: 'pointer', zIndex: 1005,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-            backdropFilter: 'blur(10px)',
-            boxShadow: step >= 4 ? '0 10px 20px rgba(0,0,0,0.04)' : '0 10px 20px rgba(0,0,0,0.2)',
-          }}
-          className="modal-close-btn"
-          onMouseOver={(e) => {
-            e.currentTarget.style.background = step >= 4 ? 'rgba(15, 23, 42, 0.15)' : 'rgba(255,255,255,0.15)';
-            e.currentTarget.style.transform = 'scale(1.1)';
-            e.currentTarget.style.boxShadow = step >= 4 ? '0 12px 24px rgba(0,0,0,0.08)' : '0 12px 24px rgba(0,0,0,0.3)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.background = step >= 4 ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.08)';
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = step >= 4 ? '0 10px 20px rgba(0,0,0,0.04)' : '0 10px 20px rgba(0,0,0,0.2)';
-          }}
-          onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.92)'}
-          onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+          className="close-btn"
+          aria-label="Close modal"
         >
           <X size={24} strokeWidth={2.5} />
         </button>

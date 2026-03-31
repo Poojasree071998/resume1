@@ -1,130 +1,217 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
+const axios = require('axios');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
 
-// Import utilities from local api subdirectories for Vercel
-const { extractTextFromPDF, extractTextFromDOCX } = require('./utils/pdfParser');
-const { parseResumeContent, analyzeResume, optimizeResume, generateCareerRoadmap, roleKeywords } = require('./utils/aiPrompt');
-const candidateController = require('./controllers/candidateController');
+// --- CONFIGURATION ---
+const BREVO_API_KEY = process.env.BREVO_API_KEY || 'your_brevo_api_key_here';
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
+const DB_PATH = path.join('/tmp', 'database.json'); // Use /tmp for serverless write attempts (though we still fallback)
 
+let inMemoryDB = { candidates: [] };
+
+// --- UTILS: PDF & DOCX ---
+const extractTextFromPDF = async (buffer) => {
+    try {
+        if (!buffer || buffer.length === 0) return "";
+        const data = await pdfParse(buffer);
+        return data.text || "";
+    } catch (error) {
+        console.error('Error parsing PDF:', error);
+        return "";
+    }
+};
+
+const extractTextFromDOCX = async (buffer) => {
+    try {
+        const result = await mammoth.extractRawText({ buffer });
+        return result.value;
+    } catch (error) {
+        console.error('Error parsing DOCX:', error);
+        return "";
+    }
+};
+
+// --- UTILS: AI PROMPTS & ANALYSIS ---
+const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const roleKeywords = {
+    'Frontend': ['React', 'JavaScript', 'TypeScript', 'Tailwind', 'Next.js', 'Redux', 'Architecture', 'TTI', 'Core Web Vitals', 'Performant', 'Accessible'],
+    'Backend': ['Node.js', 'Go', 'Python', 'Microservices', 'distributed systems', 'high-availability', 'concurrency', 'API engineering', 'PostgreSQL', 'Kubernetes'],
+    'Fullstack': ['React', 'Next.js', 'TypeScript', 'Node.js', 'tRPC', 'Prisma', 'E2E testing', 'SaaS', 'System Design'],
+    'BDA': ['Data', 'Analytics', 'SQL', 'Tableau', 'Power BI'],
+    'Sales': ['Revenue', 'Market Expansion', 'CRM', 'Lead Generation', 'B2B', 'GTM'],
+    'General': ['Git', 'Communication', 'Teamwork', 'Agile', 'Leadership']
+};
+
+const extractKeywordsFromJD = (jdText) => {
+    if (!jdText) return [];
+    const techLibrary = ['React', 'Node.js', 'Python', 'Java', 'JavaScript', 'TypeScript', 'AWS', 'Docker', 'Kubernetes', 'SQL', 'MongoDB', 'PostgreSQL', 'Redux', 'Express', 'Tailwind', 'Next.js', 'Vue', 'Angular', 'DevOps', 'CI/CD', 'Agile', 'UI/UX', 'Figma'];
+    return techLibrary.filter(k => new RegExp(`\\b${escapeRegExp(k)}\\b`, 'i').test(jdText));
+};
+
+const extractPersonalDetails = (text = "") => {
+    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const phoneMatch = text.match(/[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}/);
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    const detectedName = lines.length > 0 ? lines[0] : "CANDIDATE NAME";
+    return {
+        name: String(detectedName).toUpperCase(),
+        email: emailMatch ? emailMatch[0] : "contact@email.com",
+        phone: phoneMatch ? phoneMatch[0] : "+91 91234 56789",
+        location: "Detected from Resume",
+        dob: "DD-MM-YYYY",
+        gender: "Not Specified",
+        nationality: "Indian",
+        education: "Bachelor's Degree",
+        institution: "Professional University"
+    };
+};
+
+const parseResumeContent = (text) => {
+    const categories = {
+        languages: ['JavaScript', 'TypeScript', 'Python', 'Java', 'SQL'],
+        frameworks: ['React', 'Next.js', 'Express', 'Node.js'],
+        tools: ['Git', 'Docker', 'AWS', 'PostgreSQL']
+    };
+    const identifiedSkills = {
+        languages: categories.languages.filter(s => new RegExp(`\\b${escapeRegExp(s)}\\b`, 'i').test(text)),
+        frameworks: categories.frameworks.filter(s => new RegExp(`\\b${escapeRegExp(s)}\\b`, 'i').test(text)),
+        tools: categories.tools.filter(s => new RegExp(`\\b${escapeRegExp(s)}\\b`, 'i').test(text))
+    };
+    return { text, skills: identifiedSkills, allSkills: [...identifiedSkills.languages, ...identifiedSkills.frameworks, ...identifiedSkills.tools] };
+};
+
+const analyzeResume = (parsedData, targetRole = 'General', jobDescription = '') => {
+    const { text = "", allSkills = [] } = parsedData;
+    let impactScore = 60, styleScore = 70;
+    const strengths = [];
+    if (/managed|led|developed|implemented/i.test(text)) { impactScore += 20; strengths.push("Strong action verbs"); }
+    if (/\d+%|\$\d+|million/i.test(text)) { impactScore += 15; strengths.push("Quantifiable metrics"); }
+
+    let targetKeywords = roleKeywords[targetRole] || roleKeywords['General'];
+    if (jobDescription) {
+        const jdKeywords = extractKeywordsFromJD(jobDescription);
+        if (jdKeywords.length > 0) targetKeywords = jdKeywords;
+    }
+    const matchedKeywords = targetKeywords.filter(k => new RegExp(`\\b${escapeRegExp(k)}\\b`, 'i').test(text));
+    const skillMatchScore = targetKeywords.length > 0 ? Math.round((matchedKeywords.length / targetKeywords.length) * 100) : 70;
+    const finalScore = Math.round((impactScore + styleScore + skillMatchScore) / 3);
+    const status = finalScore >= 75 ? 'Selected' : (finalScore >= 60 ? 'Consider' : 'Rejected');
+
+    return {
+        score: finalScore, matchPercentage: skillMatchScore, verdict: status, status,
+        reasons: status === 'Rejected' ? ["Low relevance to role"] : [],
+        matchedSkills: matchedKeywords,
+        missingSkills: targetKeywords.filter(k => !matchedKeywords.includes(k)),
+        skills: allSkills.slice(0, 15),
+        strengths: strengths.length > 0 ? strengths : ["Standard structure"]
+    };
+};
+
+const optimizeResume = (analysis, targetRole) => {
+    const { score, extractedText = "" } = analysis;
+    const details = extractPersonalDetails(extractedText);
+    return {
+        improvedResume: `# ${details.name}\nObjective updated for ${targetRole}...`,
+        structuredData: { name: details.name, contact: { email: details.email, phone: details.phone }, department: targetRole },
+        targetScore: 95
+    };
+};
+
+// --- UTILS: EMAIL SERVICE ---
+const sendEmail = async ({ toEmail, toName, subject, htmlContent }) => {
+    if (BREVO_API_KEY === 'your_brevo_api_key_here') return null;
+    try {
+        await axios.post(BREVO_API_URL, {
+            sender: { name: 'Forge AI Recruitment', email: 'no-reply@forge-ai.com' },
+            to: [{ email: toEmail, name: toName }],
+            subject, htmlContent
+        }, { headers: { 'api-key': BREVO_API_KEY, 'Content-Type': 'application/json' } });
+    } catch (e) { console.error('Email failed:', e.message); }
+};
+
+// --- DATABASE LOGIC ---
+const readDB = () => {
+    try {
+        if (fs.existsSync(DB_PATH)) return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+        return inMemoryDB;
+    } catch (e) { return inMemoryDB; }
+};
+const writeDB = (data) => {
+    inMemoryDB = data;
+    try { fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2)); } catch (e) {}
+};
+
+// --- EXPRESS APP ---
 const app = express();
 const router = express.Router();
-
 app.use(cors());
 app.use(express.json());
 
-const storage = multer.memoryStorage();
-const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 }, storage });
+const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 }, storage: multer.memoryStorage() });
 
-// Health check
-router.get('/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Backend is running (serverless self-contained)' });
-});
+router.get('/health', (req, res) => res.json({ status: 'ok', environment: 'Atomic Serverless V3', timestamp: new Date().toISOString() }));
 
-// Resume Analysis
 router.post('/analyze', upload.single('resume'), async (req, res) => {
-  try {
-    const file = req.file;
-    const role = req.body.role || 'General';
-    const jd = req.body.jd || '';
+    try {
+        const file = req.file;
+        const { role = 'General', jd = '' } = req.body;
+        if (!file) return res.status(400).json({ error: 'No file uploaded' });
 
-    if (!file) return res.status(400).json({ error: 'No file uploaded' });
-
-    let text = '';
-    if (file.mimetype === 'application/pdf') {
-      text = await extractTextFromPDF(file.buffer);
-    } else if (file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      text = await extractTextFromDOCX(file.buffer);
-    } else {
-      return res.status(400).json({ error: 'Unsupported file format' });
+        let text = "";
+        if (file.mimetype === 'application/pdf') text = await extractTextFromPDF(file.buffer);
+        else if (file.mimetype.includes('word')) text = await extractTextFromDOCX(file.buffer);
+        
+        const parsedData = parseResumeContent(text);
+        const analysisResults = analyzeResume(parsedData, role, jd);
+        res.json({ ...analysisResults, role, extractedText: text });
+    } catch (error) {
+        res.status(500).json({ error: 'Analysis failed', details: error.message });
     }
-
-    const parsedData = parseResumeContent(text);
-    const analysisResults = analyzeResume(parsedData, role, jd);
-
-    if (!text || text.trim().length === 0) {
-      return res.json({
-        ...analysisResults, status: 'error',
-        name: file.originalname.split('.')[0], score: 0, matchPercentage: 0,
-        verdict: 'Rejected',
-        reasons: ['Unreadable PDF: The file seems to be an image-based or has no text.'],
-        remarks: 'Resume text extraction failed.', role, extractedText: ''
-      });
-    }
-
-    res.json({ ...analysisResults, role, extractedText: text });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to analyze resume', details: error.message });
-  }
 });
 
-// Optimization
 router.post('/analyze/optimize', async (req, res) => {
-  try {
-    const { analysis, role, jd } = req.body;
-    if (!analysis) return res.status(400).json({ error: 'Missing analysis data' });
-    const optimization = optimizeResume(analysis, role, jd);
-    const roadmap = generateCareerRoadmap(analysis, role);
-    res.json({ ...optimization, roadmap });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to optimize resume', details: error.message });
-  }
+    const { analysis, role } = req.body;
+    res.json(optimizeResume(analysis, role));
 });
 
-// Job Matcher
-router.post('/match', (req, res) => {
-  const { resumeText, jobDescription } = req.body;
-  if (!resumeText || !jobDescription) {
-    return res.status(400).json({ error: 'Missing resume text or job description' });
-  }
-
-  let detectedRole = 'General';
-  const jdLower = jobDescription.toLowerCase();
-  if (jdLower.includes('frontend') || jdLower.includes('react') || jdLower.includes('ui')) detectedRole = 'Frontend';
-  else if (jdLower.includes('backend') || jdLower.includes('node') || jdLower.includes('server')) detectedRole = 'Backend';
-  else if (jdLower.includes('fullstack') || jdLower.includes('full stack')) detectedRole = 'Fullstack';
-  else if (jdLower.includes('sales') || jdLower.includes('business development') || jdLower.includes('bda') || jdLower.includes('bdm')) detectedRole = 'Sales';
-
-  const keywords = roleKeywords[detectedRole] || roleKeywords['General'];
-  const matchingSkills = keywords.filter(k => new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(resumeText));
-  const missingSkills = keywords.filter(k => !matchingSkills.includes(k));
-  const percentage = Math.round((matchingSkills.length / keywords.length) * 100);
-  const finalPercentage = Math.min(98, Math.max(5, percentage + (Math.floor(Math.random() * 10) - 5)));
-
-  let recommendation = '';
-  if (finalPercentage > 80) recommendation = `Excellent alignment! Your profile shows a ${finalPercentage}% match for ${detectedRole}.`;
-  else if (finalPercentage > 50) recommendation = `Good potential for ${detectedRole}, but improve on ${missingSkills.slice(0, 2).join(' and ')}.`;
-  else recommendation = `Lower alignment (${finalPercentage}%). Focus on developing ${detectedRole} skills.`;
-
-  res.json({ percentage: finalPercentage, matchingSkills: matchingSkills.length > 0 ? matchingSkills : ['Communication', 'Agile'], missingSkills: missingSkills.slice(0, 4), recommendation });
+router.get('/candidates', (req, res) => res.json(readDB().candidates));
+router.post('/candidates', (req, res) => {
+    const db = readDB();
+    const candidate = { id: Date.now().toString(), ...req.body, timestamp: new Date().toISOString() };
+    db.candidates.push(candidate);
+    writeDB(db);
+    res.status(201).json(candidate);
 });
 
-// Interview Questions
-router.post('/interview', (req, res) => {
-  res.json([
-    { type: 'Technical', title: 'State Management', question: 'How would you handle global state in a multi-tenant dashboard?' },
-    { type: 'Technical', title: 'Optimization', question: 'Explain your strategy for reducing Time to Interactive (TTI) in a heavy data visualization dashboard.' },
-    { type: 'HR', title: 'Team Culture', question: 'Tell me about a time you mentored a junior developer during a critical sprint.' },
-    { type: 'Project', title: 'Security', question: 'How did you handle token refresh and XSS prevention with JWT auth?' }
-  ]);
+router.patch('/candidates/:id', (req, res) => {
+    const db = readDB();
+    const idx = db.candidates.findIndex(c => c.id === req.params.id);
+    if (idx !== -1) {
+        db.candidates[idx] = { ...db.candidates[idx], ...req.body };
+        writeDB(db);
+        res.json(db.candidates[idx]);
+    } else res.status(404).json({ error: 'Not found' });
 });
 
-// Candidate Routes
-router.get('/candidates', candidateController.getCandidates);
-router.post('/candidates', candidateController.addCandidate);
-router.patch('/candidates/:id', candidateController.updateCandidate);
-router.delete('/candidates/:id', candidateController.deleteCandidate);
-router.post('/candidates/rank', candidateController.rankCandidates);
+router.delete('/candidates/:id', (req, res) => {
+    const db = readDB();
+    db.candidates = db.candidates.filter(c => c.id !== req.params.id);
+    writeDB(db);
+    res.status(204).send();
+});
 
-// Interview Token Routes
 router.post('/interviews/generate', (req, res) => {
-  const { userRole } = req.body;
-  if (userRole !== 'HR') return res.status(403).json({ error: 'Only HR can generate interview links' });
-  candidateController.generateInterviewToken(req, res);
+    res.json({ token: crypto.randomBytes(16).toString('hex') });
 });
-router.get('/interviews/validate/:token', candidateController.validateToken);
 
-// Mount router at both /api and / to handle all routing scenarios
 app.use('/api', router);
 app.use('/', router);
 
