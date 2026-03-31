@@ -26,8 +26,8 @@ const extractPersonalDetails = (text = "") => {
         nationality: "Indian",
         education: "Bachelor's Degree",
         institution: "Professional University",
-        certifications: (certificationsMatch && certificationsMatch[1]) ? certificationsMatch[1].trim() : "None Detected",
-        projectsSummary: (projectsMatch && projectsMatch[1]) ? projectsMatch[1].trim() : "None Detected"
+        certifications: (certificationsMatch && typeof certificationsMatch[1] === 'string') ? certificationsMatch[1].trim() : "None Detected",
+        projectsSummary: (projectsMatch && typeof projectsMatch[1] === 'string') ? projectsMatch[1].trim() : "None Detected"
     };
 };
 
@@ -166,8 +166,8 @@ const subRoleMapping = {
     }
 };
 
-const analyzeResume = (parsedData, targetRole, jobDescription = '') => {
-    const { skills, sections, text, allSkills } = parsedData;
+const analyzeResume = (parsedData = {}, targetRole = 'General', jobDescription = '') => {
+    const { skills = {}, sections = {}, text = "", allSkills = [] } = parsedData;
     
     let impactScore = 55;
     let skillMatchScore = 35;
@@ -244,7 +244,13 @@ const analyzeResume = (parsedData, targetRole, jobDescription = '') => {
     const suggestedRoles = [];
     if (finalScore < 70) {
         Object.entries(roleMap).forEach(([r, reqs]) => {
-            const matchCount = reqs.filter(req => allSkills.some(s => new RegExp(`\\b${escapeRegExp(req)}\\b`, 'i').test(s))).length;
+            const matchCount = reqs.filter(req => {
+                try {
+                    return allSkills.some(s => new RegExp(`\\b${escapeRegExp(req.trim())}\\b`, 'i').test(s));
+                } catch(e) {
+                    return allSkills.some(s => s.toLowerCase().includes(req.toLowerCase()));
+                }
+            }).length;
             if (matchCount >= 2 && r !== targetRole) suggestedRoles.push(r);
         });
     }

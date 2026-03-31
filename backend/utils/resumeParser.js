@@ -109,7 +109,7 @@ const analyzeResume = (parsedData, targetRole) => {
     const softSkillKeywords = ['Leadership', 'Communication', 'Teamwork', 'Problem Solving', 'Adaptability', 'Management', 'Mentoring'];
     const foundSoftSkills = softSkillKeywords.filter(s => {
         try {
-            return new RegExp(`\\b${escapeRegExp(s)}\\b`, 'i').test(text);
+            return new RegExp(`\\b${escapeRegExp(s.trim())}\\b`, 'i').test(text);
         } catch (e) {
             return text.toLowerCase().includes(s.toLowerCase());
         }

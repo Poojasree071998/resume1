@@ -314,8 +314,8 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', maxWidth: '1600px', margin: '0 auto' }}>
       {/* Welcome Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', gap: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: 1, minWidth: 0 }}>
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -334,11 +334,11 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
               style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '20px', border: '2px solid white' }}
             />
           </motion.div>
-          <div>
-            <h1 style={{ fontSize: '2.8rem', fontWeight: 900, letterSpacing: '-0.04em', color: 'var(--text-main)', marginBottom: '0.25rem' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h1 style={{ fontSize: '2.4rem', fontWeight: 950, letterSpacing: '-0.04em', color: 'var(--text-main)', marginBottom: '0.1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Welcome back, <span className="gradient-text">{user?.name?.split(' ')[0] || 'HR Manager'}</span>
             </h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', fontWeight: 500 }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 600, margin: 0, whiteSpace: 'nowrap', opacity: 0.9 }}>
               {recruiterMode ? `Managing ${stats.total} candidate profiles.` : "Ready for your next AI-powered career match?"}
             </p>
           </div>
@@ -350,40 +350,20 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
             onClick={onUploadNew}
             className="glass-btn btn-primary"
             style={{ 
-              padding: '0.9rem 2rem',
-              borderRadius: '16px',
-              fontSize: '0.95rem',
+              padding: '0.75rem 1.75rem',
+              borderRadius: '14px',
+              fontSize: '0.9rem',
               fontWeight: 900,
               display: 'flex',
               alignItems: 'center',
-              gap: '0.75rem',
-              boxShadow: '0 10px 25px var(--primary-glow)'
+              gap: '0.7rem',
+              boxShadow: '0 10px 25px var(--primary-glow)',
+              whiteSpace: 'nowrap'
             }}
           >
-            <Zap size={20} /> Upload New Resume
+            <Zap size={18} /> Upload New Resume
           </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05, rotate: 15 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleRefresh}
-            className="glass-card"
-            style={{ 
-              width: '48px',
-              height: '48px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--primary)',
-              cursor: 'pointer',
-              border: '1px solid var(--border)'
-            }}
-          >
-            <RefreshCw size={22} className={isRefreshing ? "animate-spin" : ""} />
-          </motion.button>
-          <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Current Plan</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--secondary)' }}>ELITE PARTNER</p>
-          </div>
+          {/* Refresh Action Hidden */}
         </div>
       </div>
 

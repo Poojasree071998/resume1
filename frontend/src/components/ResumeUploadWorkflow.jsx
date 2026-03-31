@@ -24,30 +24,81 @@ import ForgeLogo from './ForgeLogo';
 const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
   const [step, setStep] = useState(1);
   const [selectedTemplate, setSelectedTemplate] = useState('Modern');
-  const [activeTab, setActiveTab] = useState('All Templates');
+  const [activeTab, setActiveTab] = useState('All templates');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   
   const [formData, setFormData] = useState({
     personal: {
-      firstName: 'Vikram',
-      lastName: 'L',
-      jobTitle: 'Mobile Developer',
-      phone: '+91 9876543210',
-      email: 'vikram.l@example.com',
+      firstName: '',
+      lastName: '',
+      jobTitle: '',
+      phone: '',
+      email: '',
       additionalInfo: ''
     }
   });
 
-  // Step 1 Simulation: Processing
+  // Reset state when modal opens
   useEffect(() => {
-    if (isOpen && step === 1) {
+    if (isOpen) {
+      setStep(1);
+      setFormData({
+        personal: {
+          firstName: '',
+          lastName: '',
+          jobTitle: '',
+          phone: '',
+          email: '',
+          additionalInfo: ''
+        }
+      });
+    }
+  }, [isOpen]);
+
+  // Step 2: Uploading Progress Simulation
+  useEffect(() => {
+    if (isOpen && step === 2) {
+      setUploadProgress(0);
+      const interval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            setTimeout(() => setStep(3), 500); // Small pause at 100%
+            return 100;
+          }
+          return prev + 5;
+        });
+      }, 100);
+      return () => clearInterval(interval);
+    }
+  }, [isOpen, step]);
+
+  // Step 3 Simulation: Processing (starts after upload is done)
+  useEffect(() => {
+    if (isOpen && step === 3) {
       const timer = setTimeout(() => {
-        setStep(2);
-      }, 3000);
+        setStep(4);
+      }, 3500);
       return () => clearTimeout(timer);
     }
   }, [isOpen, step]);
 
   if (!isOpen) return null;
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+      setIsUploading(true);
+      // Short delay for visual feedback before processing
+      setTimeout(() => {
+        setStep(2);
+        setIsUploading(false);
+      }, 800);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,14 +109,44 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
   };
 
   const templates = [
-    { name: 'Simple', tag: 'Simple' },
-    { name: 'Modern', tag: 'Modern' },
-    { name: 'Professional', tag: 'Professional' },
-    { name: 'One Column', tag: 'One column' },
-    { name: 'ATS-friendly', tag: 'ATS' }
+    { name: 'Vienna', tag: 'Modern', description: 'Sleek sidebar layout with premium typography', colors: ['#3b82f6', '#10b981', '#f59e0b'], image: '/templates/vienna.png' },
+    { name: 'Sydney', tag: 'ATS', description: 'Maximum readability for tracking systems', colors: ['#64748b', '#0f172a', '#3b82f6'], image: '/templates/sydney.png' },
+    { name: 'Berlin', tag: 'Creative', description: 'Bold artistic design for visual storytellers', colors: ['#ef4444', '#ec4899', '#8b5cf6'], image: '/templates/berlin.png' },
+    { name: 'Tokyo', tag: 'Professional', description: 'Minimalist executive structure with refined spacing', colors: ['#1e293b', '#64748b', '#94a3b8'], image: '/templates/tokyo.png' },
+    { name: 'London', tag: 'Classic', description: 'Traditional academic and corporate excellence', colors: ['#0f172a', '#1e293b', '#3b82f6'], image: '/templates/london.png' },
+    { name: 'Dublin', tag: 'Modern', description: 'Contemporary layout with dynamic accents', colors: ['#10b981', '#059669', '#34d399'], image: '/templates/dublin.png' },
+    { name: 'Amsterdam', tag: 'One column', description: 'Single-column clarity with bold impact', colors: ['#f59e0b', '#d97706', '#fbbf24'], image: '/templates/amsterdam.png' },
+    { name: 'Lisbon', tag: 'Creative', description: 'Fluid design elements for modern thinkers', colors: ['#8b5cf6', '#7c3aed', '#a78bfa'], image: '/templates/lisbon.png' },
+    { name: 'Madrid', tag: 'Professional', description: 'Refined management-focused structure', colors: ['#0f172a', '#1e293b', '#475569'], image: '/templates/madrid.png' },
+    { name: 'Melbourne', tag: 'ATS', description: 'Clean, parse-optimized professional format', colors: ['#334155', '#475569', '#94a3b8'], image: '/templates/melbourne.png' }
   ];
 
-  const tabs = ['All Templates', 'Simple', 'Modern', 'One column', 'With photo', 'Professional', 'ATS'];
+  const tabs = ['All templates', 'ATS', 'Modern', 'Professional', 'Creative', 'One column', 'Classic'];
+
+  const renderTemplateMockup = (t) => {
+    return (
+      <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', borderRadius: '12px' }}>
+        <img 
+          src={t.image} 
+          alt={t.name} 
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            objectFit: 'cover',
+            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+            transform: 'scale(1.02)'
+          }}
+          className="template-preview-image"
+        />
+        <div style={{ 
+          position: 'absolute', 
+          inset: 0, 
+          background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)',
+          pointerEvents: 'none'
+        }} />
+      </div>
+    );
+  };
 
   const modalVariants = {
     hidden: { opacity: 0, scale: 0.9, y: 20 },
@@ -77,6 +158,66 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
     initial: { opacity: 0, x: 20 },
     animate: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } },
     exit: { opacity: 0, x: -20, transition: { duration: 0.3 } }
+  };
+
+  const RenderStepper = () => {
+    const steps = [
+      { id: 1, label: 'Upload & Scan' },
+      { id: 5, label: 'Choose template' },
+      { id: 6, label: 'Finalize & Download' }
+    ];
+
+    const currentIdx = step <= 3 ? 0 : step === 5 ? 1 : 2;
+
+    return (
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        gap: '12px', 
+        marginBottom: '3rem', 
+        width: '100%',
+        paddingTop: '1rem'
+      }}>
+        {steps.map((s, i) => {
+          const isActive = i === currentIdx;
+          const isDone = i < currentIdx;
+          
+          return (
+            <React.Fragment key={s.id}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ 
+                  width: '28px', 
+                  height: '28px', 
+                  borderRadius: '50%', 
+                  background: isActive ? '#00A3FF' : isDone ? '#00A3FF' : 'transparent',
+                  border: isActive || isDone ? 'none' : '2px solid #cbd5e1',
+                  color: isActive || isDone ? 'white' : '#64748b',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.85rem',
+                  fontWeight: 800,
+                  boxShadow: isActive ? '0 0 15px rgba(0, 163, 255, 0.4)' : 'none'
+                }}>
+                  {isDone ? '✓' : i + 1}
+                </div>
+                <span style={{ 
+                  fontSize: '0.9rem', 
+                  fontWeight: isActive ? 800 : 600, 
+                  color: isActive ? '#00A3FF' : '#64748b' 
+                }}>
+                  {s.label}
+                </span>
+              </div>
+              {i < steps.length - 1 && (
+                <div style={{ width: '40px', height: '2px', background: i < currentIdx ? '#00A3FF' : '#cbd5e1', borderRadius: '1px' }} />
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
   };
 
   return (
@@ -96,18 +237,22 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
         animate="visible"
         exit="exit"
         style={{
-          width: step === 4 ? '1100px' : '760px',
-          height: step === 4 ? '780px' : 'auto',
-          minHeight: step === 1 ? '400px' : '500px',
-          background: 'var(--bg-card)',
+          width: [5, 6].includes(step) ? '1100px' : step === 1 ? '600px' : '760px',
+          height: [5, 6].includes(step) ? '780px' : 'auto',
+          minHeight: step === 1 ? '500px' : '500px',
+          maxHeight: '92vh',
+          background: step >= 5 ? '#ffffff' : 'var(--bg-card)',
           borderRadius: '32px',
           border: '1px solid var(--border)',
           boxShadow: '0 50px 100px rgba(0,0,0,0.4)',
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
-          overflow: 'hidden',
-          transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+          alignItems: 'center',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          margin: '2rem'
         }}
       >
         {/* Close Button */}
@@ -115,8 +260,10 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
           onClick={onClose}
           style={{ 
             position: 'absolute', top: '24px', right: '24px', 
-            background: 'rgba(255,255,255,0.05)', border: 'none', 
-            color: 'var(--text-muted)', width: '36px', height: '36px', 
+            background: step >= 5 ? '#f1f5f9' : 'rgba(255,255,255,0.05)', 
+            border: 'none', 
+            color: step >= 5 ? '#64748b' : 'var(--text-muted)', 
+            width: '36px', height: '36px', 
             borderRadius: '50%', cursor: 'pointer', zIndex: 10,
             display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}
@@ -124,11 +271,102 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
           <X size={20} />
         </button>
 
+        {/* STEPPER ADDED HERE */}
+        {step >= 1 && <RenderStepper />}
+
         <AnimatePresence mode="wait">
-          {/* STEP 1: PROCESSING */}
+          {/* STEP 1: UPLOAD FILE (NEW) */}
           {step === 1 && (
             <motion.div 
               key="step1" 
+              variants={stepVariants} 
+              initial="initial" 
+              animate="animate" 
+              exit="exit"
+              style={{ padding: '4.5rem 3rem', textAlign: 'center', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            >
+              <div style={{ marginBottom: '2.5rem' }}>
+                <div style={{ 
+                  width: '80px', height: '80px', background: 'var(--primary-glow)', 
+                  borderRadius: '50%', display: 'flex', alignItems: 'center', 
+                  justifyContent: 'center', margin: '0 auto 1.5rem',
+                  color: 'var(--primary)', boxShadow: '0 0 30px var(--primary-glow)'
+                }}>
+                  <Download size={36} />
+                </div>
+                <h2 style={{ fontSize: '2.8rem', fontWeight: 950, marginBottom: '0.75rem', color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Upload your resume</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', fontWeight: 500 }}>
+                  Select or drag a file to start the AI analysis
+                </p>
+              </div>
+
+              <label style={{ 
+                width: '100%', maxWidth: '480px',
+                border: '2px dashed var(--border)', borderRadius: '24px', 
+                padding: '4rem 2rem', cursor: 'pointer', transition: 'all 0.3s',
+                background: 'rgba(255,255,255,0.02)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center'
+              }} className="upload-box-glass">
+                <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} accept=".pdf,.docx,.doc" />
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                   <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+                      <Zap size={24} />
+                   </div>
+                   <div style={{ color: 'var(--text-main)', fontWeight: 800, fontSize: '1.2rem' }}>
+                      {uploadedFile ? uploadedFile.name : "Click to browse or drag and drop"}
+                   </div>
+                   <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>
+                      Maximum file size: 10MB (PDF, DOCX)
+                   </div>
+              </div>
+              </label>
+            </motion.div>
+          )}
+
+          {/* STEP 2: UPLOADING (NEW) */}
+          {step === 2 && (
+            <motion.div 
+              key="step2" 
+              variants={stepVariants} 
+              initial="initial" 
+              animate="animate" 
+              exit="exit"
+              style={{ padding: '6rem 3rem', textAlign: 'center' }}
+            >
+              <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 2.5rem', color: 'var(--primary)' }}>
+                <Download size={48} />
+                <motion.div 
+                   animate={{ opacity: [0, 1, 0] }}
+                   transition={{ duration: 1, repeat: Infinity }}
+                   style={{ position: 'absolute', top: -10, right: -10 }}
+                >
+                   <Sparkles size={20} />
+                </motion.div>
+              </div>
+              <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '1.5rem', color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
+                Uploading {uploadedFile?.name}...
+              </h2>
+              
+              <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+                <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', marginBottom: '1rem' }}>
+                   <motion.div 
+                     initial={{ width: '0%' }}
+                     animate={{ width: `${uploadProgress}%` }}
+                     style={{ height: '100%', background: 'var(--grad-main)', borderRadius: '10px' }}
+                   />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 700 }}>
+                   <span>TRANSFERRING DATA</span>
+                   <span>{uploadProgress}%</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 3: PROCESSING (FORMERLY STEP 2) */}
+          {step === 3 && (
+            <motion.div 
+              key="step3" 
               variants={stepVariants} 
               initial="initial" 
               animate="animate" 
@@ -149,17 +387,17 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                   />
                 </svg>
               </div>
-              <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '1rem', color: 'var(--text-main)' }}>Processing...</h2>
+              <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '1rem', color: 'var(--text-main)' }}>Analyzing {uploadedFile?.name || 'Resume'}...</h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 500, maxWidth: '500px', margin: '0 auto', lineHeight: 1.6 }}>
                 Please wait while our artificial intelligence processes the information from your resume and selects the right fields
               </p>
             </motion.div>
           )}
 
-          {/* STEP 2: SUCCESS UPLOADED */}
-          {step === 2 && (
+          {/* STEP 4: SUCCESS (FORMERLY STEP 3) */}
+          {step === 4 && (
             <motion.div 
-              key="step2" 
+              key="step4" 
               variants={stepVariants} 
               initial="initial" 
               animate="animate" 
@@ -189,7 +427,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                    Edit and improve your resume with our AI-powered builder.
                  </p>
                  <button 
-                  onClick={() => setStep(3)}
+                  onClick={() => setStep(5)}
                   className="glass-btn btn-primary"
                   style={{ padding: '1rem 4rem', fontSize: '1.1rem', fontWeight: 900, borderRadius: '16px' }}
                  >
@@ -199,83 +437,168 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
             </motion.div>
           )}
 
-          {/* STEP 3: TEMPLATE SELECTION */}
-          {step === 3 && (
+          {/* STEP 5: TEMPLATE SELECTION (FORMERLY STEP 4) */}
+          {step === 5 && (
             <motion.div 
-              key="step3" 
-              variants={stepVariants} 
-              initial="initial" 
-              animate="animate" 
-              exit="exit"
-              style={{ padding: '3.5rem 3rem', textAlign: 'center' }}
-            >
-              <h2 style={{ fontSize: '2.8rem', fontWeight: 900, marginBottom: '0.75rem', color: 'var(--text-main)' }}>Resume templates</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 500, marginBottom: '1.5rem' }}>
-                Simple to use and ready in minutes resume templates — give it a try for free now!
-              </p>
-              <button 
-                onClick={() => setStep(4)}
-                style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 800, fontSize: '1rem', cursor: 'pointer', marginBottom: '3rem' }}
+               key="step5"
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               exit={{ opacity: -20, x: -20 }}
+               style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}
+             >
+               {/* Fixed/Sticky Header Container */}
+               <div style={{ 
+                 position: 'sticky', 
+                 top: '-2.1rem', 
+                 zIndex: 100, 
+                 background: 'rgba(23, 23, 23, 0.7)', 
+                 backdropFilter: 'blur(15px)', 
+                 padding: '2.5rem 0 1.5rem', 
+                 margin: '0 -3rem 2rem', 
+                 borderBottom: '1px solid var(--border)',
+                 maskImage: 'linear-gradient(to bottom, black 85%, transparent)'
+               }}>
+                 <h2 style={{ fontSize: '2.5rem', fontWeight: 950, color: 'var(--text-main)', marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>Choose Your Template</h2>
+                 <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '2.5rem', fontWeight: 600 }}>Select the visual style that best represents your professional brand.</p>
+
+                 <div style={{ 
+                   display: 'flex', 
+                   justifyContent: 'center', 
+                   gap: '0.35rem', 
+                   flexWrap: 'nowrap',
+                   background: 'rgba(255,255,255,0.03)',
+                   padding: '0.5rem',
+                   borderRadius: '24px',
+                   width: 'max-content',
+                   margin: '0 auto',
+                   border: '1px solid var(--border)',
+                   backdropFilter: 'blur(10px)',
+                   boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                   overflowX: 'auto'
+                 }}>
+                   {tabs.map(tab => (
+                     <motion.button 
+                       key={tab}
+                       whileHover={{ scale: 1.05 }}
+                       whileTap={{ scale: 0.95 }}
+                       onClick={() => setActiveTab(tab)}
+                       style={{ 
+                         padding: '0.65rem 1.25rem', borderRadius: '18px', border: 'none',
+                         background: activeTab === tab ? 'var(--primary)' : 'transparent',
+                         color: activeTab === tab ? 'white' : 'var(--text-muted)',
+                         fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer',
+                         display: 'flex', alignItems: 'center', gap: '0.5rem',
+                         whiteSpace: 'nowrap',
+                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                         boxShadow: activeTab === tab ? '0 10px 20px var(--primary-glow)' : 'none',
+                         border: activeTab === tab ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent'
+                       }}
+                     >
+                       {tab === 'All templates' && <LayoutIcon size={16} />}
+                       {tab === 'ATS' && <FileCheck size={16} />}
+                       {tab === 'Modern' && <Sparkles size={16} />}
+                       {tab === 'Professional' && <Zap size={16} />}
+                       {tab === 'Creative' && <Globe size={16} />}
+                       {tab === 'One column' && <LayoutIcon size={16} />}
+                       {tab === 'Classic' && <Info size={16} />}
+                       {tab}
+                     </motion.button>
+                   ))}
+                 </div>
+               </div>
+
+              <motion.div 
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: { transition: { staggerChildren: 0.1 } }
+                }}
+                style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2.5rem', padding: '0 2rem 4rem' }}
               >
-                Choose later
-              </button>
-
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
-                {tabs.map(tab => (
-                  <button 
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    style={{ 
-                      padding: '0.6rem 1.25rem', borderRadius: '12px', border: 'none',
-                      background: activeTab === tab ? 'var(--primary)' : 'rgba(255,255,255,0.03)',
-                      color: activeTab === tab ? 'white' : 'var(--text-muted)',
-                      fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer',
-                      display: 'flex', alignItems: 'center', gap: '0.5rem',
-                      transition: 'all 0.2s',
-                      boxShadow: activeTab === tab ? '0 10px 20px var(--primary-glow)' : 'none'
-                    }}
-                  >
-                    {tab === 'All Templates' && <LayoutIcon size={16} />}
-                    {tab === 'ATS' && <FileCheck size={16} />}
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
-                {templates.map(t => (
+                {templates.filter(t => activeTab === 'All templates' || t.tag === activeTab).map(t => (
                   <motion.div 
                     key={t.name}
-                    whileHover={{ y: -10 }}
-                    onClick={() => { setSelectedTemplate(t.name); setStep(4); }}
+                    variants={{
+                      hidden: { opacity: 0, y: 30 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+                    }}
+                    whileHover={{ y: -15, scale: 1.02 }}
+                    onClick={() => { setSelectedTemplate(t.name); }}
                     style={{ 
                       background: 'rgba(255,255,255,0.02)', 
-                      borderRadius: '24px', 
-                      border: selectedTemplate === t.name ? '2px solid var(--primary)' : '1px solid var(--border)',
-                      padding: '1.5rem',
+                      borderRadius: '32px', 
+                      border: selectedTemplate === t.name ? '3px solid var(--primary)' : '1px solid var(--border)',
+                      padding: '1.25rem',
                       cursor: 'pointer',
-                      transition: 'all 0.3s'
+                      transition: 'border 0.3s, box-shadow 0.3s',
+                      textAlign: 'left',
+                      boxShadow: selectedTemplate === t.name ? '0 20px 40px var(--primary-glow)' : 'none'
                     }}
+                    className="template-card-premium"
                   >
-                    <div style={{ height: '180px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                       <FileCheck size={48} color="rgba(255,255,255,0.1)" />
+                    <div style={{ 
+                      height: '320px', 
+                      borderRadius: '24px', marginBottom: '1.5rem', 
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      overflow: 'hidden', position: 'relative',
+                      background: 'linear-gradient(225deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%)',
+                      border: '1px solid rgba(255,255,255,0.1)'
+                    }}>
+                        {/* Resume Preview Image */}
+                        {renderTemplateMockup(t)}
+                       {/* Selected Overlay */}
+                       {selectedTemplate === t.name && (
+                         <motion.div 
+                           initial={{ opacity: 0 }}
+                           animate={{ opacity: 1 }}
+                           style={{ position: 'absolute', inset: 0, background: 'rgba(0, 163, 255, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)' }}
+                         >
+                            <div style={{ background: 'var(--primary)', color: 'white', padding: '0.75rem 1.5rem', borderRadius: '14px', fontWeight: 900, fontSize: '0.9rem', boxShadow: '0 10px 20px rgba(0, 163, 255, 0.4)' }}>SELECTED</div>
+                         </motion.div>
+                       )}
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 800, color: 'var(--text-main)' }}>{t.name}</span>
-                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {selectedTemplate === t.name && <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--primary)' }} />}
-                      </div>
+
+                    <div style={{ padding: '0 0.5rem 1rem' }}>
+                      <h4 style={{ fontWeight: 900, color: 'var(--text-main)', fontSize: '1.3rem', marginBottom: '0.4rem' }}>{t.name}</h4>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600, lineHeight: 1.5 }}>{t.description}</p>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.5rem' }}>
+                       <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          {t.colors.map(c => (
+                            <div key={c} style={{ width: '16px', height: '16px', borderRadius: '50%', background: c, border: '1px solid rgba(255,255,255,0.1)' }} />
+                          ))}
+                       </div>
+                       <div style={{ padding: '5px 12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          {t.tag}
+                       </div>
                     </div>
                   </motion.div>
                 ))}
-              </div>
+              </motion.div>
+
+              {selectedTemplate && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', paddingBottom: '3rem' }}
+                >
+                  <button 
+                    onClick={() => setStep(6)}
+                    className="glass-btn btn-primary"
+                    style={{ padding: '1.25rem 4rem', fontSize: '1.1rem', fontWeight: 950, borderRadius: '20px', boxShadow: '0 15px 30px var(--primary-glow)' }}
+                  >
+                    PROCEED TO EDITOR <ChevronRight size={20} style={{ marginLeft: '10px' }} />
+                  </button>
+                </motion.div>
+              )}
             </motion.div>
           )}
 
-          {/* STEP 4: EDITING & PREVIEW */}
-          {step === 4 && (
+          {/* STEP 6: EDITING & PREVIEW (FORMERLY STEP 5) */}
+          {step === 6 && (
             <motion.div 
-              key="step4" 
+              key="step6" 
               variants={stepVariants} 
               initial="initial" 
               animate="animate" 
@@ -352,7 +675,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <button 
-                    onClick={() => setStep(5)}
+                    onClick={() => setStep(7)}
                     className="glass-btn btn-primary"
                     style={{ padding: '1rem 3rem', fontSize: '1rem', fontWeight: 900, borderRadius: '16px' }}
                   >
@@ -421,10 +744,10 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
             </motion.div>
           )}
 
-          {/* STEP 5: FINAL SUCCESS */}
-          {step === 5 && (
+          {/* STEP 7: FINAL SUCCESS (FORMERLY STEP 6) */}
+          {step === 7 && (
             <motion.div 
-              key="step5" 
+              key="step7" 
               variants={stepVariants} 
               initial="initial" 
               animate="animate" 
@@ -458,7 +781,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                    Your resume is looking great — download it and start applying.
                  </p>
                  <button 
-                  onClick={() => { onComplete(formData); onClose(); setStep(1); }}
+                  onClick={() => { onComplete(formData); onClose(); setStep(1); setUploadedFile(null); }}
                   className="glass-btn btn-primary"
                   style={{ padding: '1rem 5rem', fontSize: '1.1rem', fontWeight: 900, borderRadius: '16px' }}
                  >

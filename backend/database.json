@@ -2323,6 +2323,50 @@
           "date": "28/3/2026, 11:58:37 am"
         }
       ]
+    },
+    {
+      "id": "1774937801562",
+      "timestamp": "31/3/2026, 11:46:41 am",
+      "name": "resume_5",
+      "fileName": "resume_5.pdf",
+      "score": 0,
+      "matchPercentage": 0,
+      "matchedSkills": [],
+      "skills": [],
+      "missingSkills": [
+        "Git",
+        "Communication",
+        "Teamwork",
+        "Agile",
+        "Leadership",
+        "Problem Solving"
+      ],
+      "strengths": [
+        "Strong professional formatting and document structure"
+      ],
+      "weaknesses": [
+        "Keyword gap for UX Developer requirements"
+      ],
+      "reasons": [
+        "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+      ],
+      "status": "Rejected",
+      "role": "UX Developer",
+      "email": "pooja@example.com",
+      "notifications": [
+        {
+          "id": "1774937801562-1",
+          "type": "Confirmation",
+          "message": "Application received successfully. AI initial screening in progress.",
+          "date": "31/3/2026, 11:46:41 am"
+        },
+        {
+          "id": "1774937801562-2",
+          "type": "Rejected",
+          "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+          "date": "31/3/2026, 11:46:41 am"
+        }
+      ]
     }
   ]
 }
