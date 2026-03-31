@@ -2,10 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 
-// Import utilities from backend
-const { extractTextFromPDF, extractTextFromDOCX } = require('../backend/utils/pdfParser');
-const { parseResumeContent, analyzeResume, optimizeResume, generateCareerRoadmap, roleKeywords } = require('../backend/utils/aiPrompt');
-const candidateController = require('../backend/controllers/candidateController');
+// Import utilities from local api subdirectories для Vercel
+const { extractTextFromPDF, extractTextFromDOCX } = require('./utils/pdfParser');
+const { parseResumeContent, analyzeResume, optimizeResume, generateCareerRoadmap, roleKeywords } = require('./utils/aiPrompt');
+const candidateController = require('./controllers/candidateController');
 
 const app = express();
 
@@ -15,9 +15,9 @@ app.use(express.json());
 const storage = multer.memoryStorage();
 const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 }, storage });
 
-// Health check
+// Health check (normalized to strip /api prefix internally)
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Backend is running (serverless)' });
+  res.json({ status: 'ok', message: 'Backend is running (serverless self-contained)' });
 });
 
 // Resume Analysis
