@@ -658,8 +658,16 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.details || errorData.error || 'Server error during analysis');
+        let errorMsg = 'Server error during analysis';
+        try {
+          const errorData = await response.json();
+          errorMsg = errorData.details || errorData.error || errorMsg;
+        } catch (jsonErr) {
+          // If not JSON, get raw text (could be Vercel error page)
+          const rawText = await response.text().catch(() => '');
+          if (rawText) errorMsg = `Server Error: ${rawText.slice(0, 100)}...`;
+        }
+        throw new Error(errorMsg);
       }
 
       const result = await response.json();
