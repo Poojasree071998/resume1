@@ -6,21 +6,30 @@ const { sendUploadConfirmation, sendInterviewEmail, sendSelectionEmail, sendReje
 
 const DB_PATH = path.join(__dirname, '..', 'database.json');
 
+let inMemoryDB = { candidates: [] };
+
 const readDB = () => {
     try {
-        const data = fs.readFileSync(DB_PATH, 'utf8');
-        return JSON.parse(data);
+        if (fs.existsSync(DB_PATH)) {
+            const data = fs.readFileSync(DB_PATH, 'utf8');
+            const parsed = JSON.parse(data);
+            inMemoryDB = parsed; // Sync in-memory with file if possible
+            return parsed;
+        }
+        return inMemoryDB;
     } catch (error) {
         console.error('Error reading database:', error);
-        return { candidates: [] };
+        return inMemoryDB;
     }
 };
 
 const writeDB = (data) => {
     try {
+        inMemoryDB = data; // Always update in-memory
         fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
     } catch (error) {
-        console.error('Error writing database:', error);
+        // This is expected on Vercel/Serverless
+        console.warn('Database write failed (likely read-only filesystem). Data persists in memory for this session.', error.message);
     }
 };
 

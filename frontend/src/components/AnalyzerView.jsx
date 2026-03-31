@@ -657,14 +657,18 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Analysis failed');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.details || errorData.error || 'Server error during analysis');
+      }
 
       const result = await response.json();
       onAnalysisComplete(result, file.name);
       setStep(3);
     } catch (error) {
       console.error('Analysis error:', error);
-      alert('Failed to analyze resume.');
+      const detailMsg = error.message || 'Unknown error';
+      alert(`Failed to analyze resume: ${detailMsg}`);
     } finally {
       setAnalyzing(false);
     }
@@ -794,7 +798,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
       setStep(3);
     } catch (err) {
       console.error('Batch error:', err);
-      alert('Batch analysis encountered a critical error. Please see console for details.');
+      alert(`Batch analysis encountered an error: ${err.message || 'Check console for details'}`);
     } finally {
       setProgress(100);
       setAnalyzing(false);

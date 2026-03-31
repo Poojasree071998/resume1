@@ -74,8 +74,6 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
     });
   } catch (error) {
     console.error('CRITICAL Analysis error:', error);
-    const fs = require('fs');
-    fs.appendFileSync('error.log', `[${new Date().toISOString()}] ${error.message}\n${error.stack}\n\n`);
     res.status(500).json({ 
       error: 'Failed to analyze resume', 
       details: error.message,
@@ -102,8 +100,6 @@ app.post('/api/analyze/optimize', async (req, res) => {
     });
   } catch (error) {
     console.error('CRITICAL Optimization error:', error);
-    const fs = require('fs');
-    fs.appendFileSync('error.log', `[OPTIMIZE ${new Date().toISOString()}] ${error.stack}\n`);
     res.status(500).json({ error: 'Failed to optimize resume' });
   }
 });
@@ -201,8 +197,6 @@ app.get('/api/interviews/validate/:token', candidateController.validateToken);
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('GLOBAL ERROR:', err);
-  const fs = require('fs');
-  fs.appendFileSync('error.log', `[GLOBAL ${new Date().toISOString()}] ${err.message}\n${err.stack}\n\n`);
   res.status(500).json({ 
     error: 'Internal Server Error', 
     details: err.message,
