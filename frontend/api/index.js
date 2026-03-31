@@ -1,18 +1,20 @@
-const express = require('express');
-const cors = require('cors');
-const multer = require('multer');
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
+import mammoth from 'mammoth';
+import axios from 'axios';
+import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 const pdfParse = require('pdf-parse');
-const mammoth = require('mammoth');
-const axios = require('axios');
-const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
 
 // --- CONFIGURATION ---
 const BREVO_API_KEY = process.env.BREVO_API_KEY || 'your_brevo_api_key_here';
 const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
-const DB_PATH = path.join('/tmp', 'database.json'); // Use /tmp for serverless write attempts (though we still fallback)
+const DB_PATH = path.join('/tmp', 'database.json');
 
 let inMemoryDB = { candidates: [] };
 
@@ -157,7 +159,7 @@ app.use(express.json());
 
 const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 }, storage: multer.memoryStorage() });
 
-router.get('/health', (req, res) => res.json({ status: 'ok', environment: 'Atomic Serverless V3', timestamp: new Date().toISOString() }));
+router.get('/health', (req, res) => res.json({ status: 'ok', environment: 'Atomic Serverless V3 ESM', timestamp: new Date().toISOString() }));
 
 router.post('/analyze', upload.single('resume'), async (req, res) => {
     try {
@@ -215,4 +217,4 @@ router.post('/interviews/generate', (req, res) => {
 app.use('/api', router);
 app.use('/', router);
 
-module.exports = app;
+export default app;
