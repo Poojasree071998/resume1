@@ -2,6 +2,7 @@
   "name": "resume-analyzer-root",
   "version": "1.0.0",
   "scripts": {
+    "start": "node backend/index.js",
     "start:frontend": "cd frontend && npm run dev",
     "start:backend": "cd backend && npm run dev",
     "dev": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
