@@ -2411,6 +2411,50 @@
           "date": "31/3/2026, 2:55:29 pm"
         }
       ]
+    },
+    {
+      "id": "1774951478918",
+      "timestamp": "31/3/2026, 3:34:39 pm",
+      "name": "resume_5",
+      "fileName": "resume_5.pdf",
+      "score": 0,
+      "matchPercentage": 0,
+      "matchedSkills": [],
+      "skills": [],
+      "missingSkills": [
+        "Git",
+        "Communication",
+        "Teamwork",
+        "Agile",
+        "Leadership",
+        "Problem Solving"
+      ],
+      "strengths": [
+        "Strong professional formatting and document structure"
+      ],
+      "weaknesses": [
+        "Keyword gap for React Developer requirements"
+      ],
+      "reasons": [
+        "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+      ],
+      "status": "Rejected",
+      "role": "React Developer",
+      "email": "pooja@example.com",
+      "notifications": [
+        {
+          "id": "1774951478918-1",
+          "type": "Confirmation",
+          "message": "Application received successfully. AI initial screening in progress.",
+          "date": "31/3/2026, 3:34:38 pm"
+        },
+        {
+          "id": "1774951478918-2",
+          "type": "Rejected",
+          "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+          "date": "31/3/2026, 3:34:39 pm"
+        }
+      ]
     }
   ]
 }

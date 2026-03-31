@@ -2,12 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 
-// Import utilities from local api subdirectories для Vercel
+// Import utilities from local api subdirectories for Vercel
 const { extractTextFromPDF, extractTextFromDOCX } = require('./utils/pdfParser');
 const { parseResumeContent, analyzeResume, optimizeResume, generateCareerRoadmap, roleKeywords } = require('./utils/aiPrompt');
 const candidateController = require('./controllers/candidateController');
 
 const app = express();
+const router = express.Router();
 
 app.use(cors());
 app.use(express.json());
@@ -15,13 +16,13 @@ app.use(express.json());
 const storage = multer.memoryStorage();
 const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 }, storage });
 
-// Health check (normalized to strip /api prefix internally)
-app.get('/api/health', (req, res) => {
+// Health check
+router.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running (serverless self-contained)' });
 });
 
 // Resume Analysis
-app.post('/api/analyze', upload.single('resume'), async (req, res) => {
+router.post('/analyze', upload.single('resume'), async (req, res) => {
   try {
     const file = req.file;
     const role = req.body.role || 'General';
@@ -58,7 +59,7 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
 });
 
 // Optimization
-app.post('/api/analyze/optimize', async (req, res) => {
+router.post('/analyze/optimize', async (req, res) => {
   try {
     const { analysis, role, jd } = req.body;
     if (!analysis) return res.status(400).json({ error: 'Missing analysis data' });
@@ -71,7 +72,7 @@ app.post('/api/analyze/optimize', async (req, res) => {
 });
 
 // Job Matcher
-app.post('/api/match', (req, res) => {
+router.post('/match', (req, res) => {
   const { resumeText, jobDescription } = req.body;
   if (!resumeText || !jobDescription) {
     return res.status(400).json({ error: 'Missing resume text or job description' });
@@ -99,7 +100,7 @@ app.post('/api/match', (req, res) => {
 });
 
 // Interview Questions
-app.post('/api/interview', (req, res) => {
+router.post('/interview', (req, res) => {
   res.json([
     { type: 'Technical', title: 'State Management', question: 'How would you handle global state in a multi-tenant dashboard?' },
     { type: 'Technical', title: 'Optimization', question: 'Explain your strategy for reducing Time to Interactive (TTI) in a heavy data visualization dashboard.' },
@@ -109,18 +110,22 @@ app.post('/api/interview', (req, res) => {
 });
 
 // Candidate Routes
-app.get('/api/candidates', candidateController.getCandidates);
-app.post('/api/candidates', candidateController.addCandidate);
-app.patch('/api/candidates/:id', candidateController.updateCandidate);
-app.delete('/api/candidates/:id', candidateController.deleteCandidate);
-app.post('/api/candidates/rank', candidateController.rankCandidates);
+router.get('/candidates', candidateController.getCandidates);
+router.post('/candidates', candidateController.addCandidate);
+router.patch('/candidates/:id', candidateController.updateCandidate);
+router.delete('/candidates/:id', candidateController.deleteCandidate);
+router.post('/candidates/rank', candidateController.rankCandidates);
 
 // Interview Token Routes
-app.post('/api/interviews/generate', (req, res) => {
+router.post('/interviews/generate', (req, res) => {
   const { userRole } = req.body;
   if (userRole !== 'HR') return res.status(403).json({ error: 'Only HR can generate interview links' });
   candidateController.generateInterviewToken(req, res);
 });
-app.get('/api/interviews/validate/:token', candidateController.validateToken);
+router.get('/interviews/validate/:token', candidateController.validateToken);
+
+// Mount router at both /api and / to handle all routing scenarios
+app.use('/api', router);
+app.use('/', router);
 
 module.exports = app;
