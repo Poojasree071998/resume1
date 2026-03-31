@@ -1,9 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-// Re-implementing logic from backend/utils/aiPrompt.js to avoid path issues in serverless
-const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
 const roleKeywords = {
     'Frontend': ['React', 'JavaScript', 'TypeScript', 'Tailwind', 'Next.js', 'Redux', 'Architecture', 'TTI', 'Core Web Vitals', 'Performant', 'Accessible'],
     'Backend': ['Node.js', 'Go', 'Python', 'Microservices', 'distributed systems', 'high-availability', 'concurrency', 'API engineering', 'PostgreSQL', 'Kubernetes'],
@@ -36,7 +33,6 @@ const optimizeResume = (analysis, targetRole, jd = '') => {
     const { extractedText = "" } = analysis;
     const details = extractPersonalDetails(extractedText);
     
-    // Simplified version of the massive mapping from aiPrompt.js
     const roleOptimizations = {
         'Frontend': {
             objective: "Expert Frontend Engineer specializing in high-performance React architectures. Focused on Core Web Vitals and user-centric design.",
@@ -71,18 +67,28 @@ const generateCareerRoadmap = (analysis, targetRole) => {
 };
 
 export default async function handler(req, res) {
-    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
-    try {
-        const { analysis, role = 'General', jd = '' } = req.body;
-        if (!analysis) return res.status(400).json({ error: 'Missing analysis data' });
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
 
-        const optimization = optimizeResume(analysis, role, jd);
-        const roadmap = generateCareerRoadmap(analysis, role);
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-        return res.status(200).json({ ...optimization, roadmap });
-    } catch (error) {
-        console.error('Optimization error:', error);
-        return res.status(500).json({ error: 'Optimization failed' });
-    }
+  try {
+    const { analysis, role = 'General', jd = '' } = req.body;
+    if (!analysis) return res.status(400).json({ error: 'Missing analysis data' });
+
+    const optimization = optimizeResume(analysis, role, jd);
+    const roadmap = generateCareerRoadmap(analysis, role);
+
+    return res.status(200).json({ ...optimization, roadmap });
+  } catch (error) {
+    console.error('Optimization error:', error);
+    return res.status(500).json({ error: 'Optimization failed' });
+  }
 }

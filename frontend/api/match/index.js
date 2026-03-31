@@ -10,6 +10,16 @@ const roleKeywords = {
 };
 
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { resumeText = "", jobDescription = "" } = req.body;
@@ -17,7 +27,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing resume text or job description' });
   }
 
-  // Identify role from JD
   let detectedRole = 'General';
   const jdLower = jobDescription.toLowerCase();
   
@@ -28,14 +37,12 @@ export default async function handler(req, res) {
 
   const keywords = roleKeywords[detectedRole] || roleKeywords['General'];
   
-  // keyword matching
   const matchingSkills = keywords.filter(k => 
     new RegExp(`\\b${escapeRegExp(k.trim())}\\b`, 'i').test(resumeText)
   );
   
   const missingSkills = keywords.filter(k => !matchingSkills.includes(k));
   
-  // Calculate percentage
   const percentage = Math.round((matchingSkills.length / keywords.length) * 100);
   const finalPercentage = Math.min(98, Math.max(5, percentage + (Math.floor(Math.random() * 10) - 5)));
 

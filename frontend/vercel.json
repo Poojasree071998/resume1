@@ -2,48 +2,8 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/debug",
-      "destination": "/api/debug.js"
-    },
-    {
       "source": "/api/health",
       "destination": "/api/health.js"
-    },
-    {
-      "source": "/api/analyze/optimize",
-      "destination": "/api/analyze-optimize.js"
-    },
-    {
-      "source": "/api/analyze",
-      "destination": "/api/analyze.js"
-    },
-    {
-      "source": "/api/match",
-      "destination": "/api/match.js"
-    },
-    {
-      "source": "/api/interview",
-      "destination": "/api/interview.js"
-    },
-    {
-      "source": "/api/interviews/generate",
-      "destination": "/api/interviews-generate.js"
-    },
-    {
-      "source": "/api/interviews/validate/(?<token>.*)",
-      "destination": "/api/interviews-validate.js?token=:token"
-    },
-    {
-      "source": "/api/candidates/rank",
-      "destination": "/api/candidates-rank.js"
-    },
-    {
-      "source": "/api/candidates",
-      "destination": "/api/candidates.js"
-    },
-    {
-      "source": "/api/candidates/(?<id>.*)",
-      "destination": "/api/candidates.js?id=:id"
     },
     {
       "source": "/((?!api/).*)",

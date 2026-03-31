@@ -8,7 +8,17 @@ const pdfParse = require('pdf-parse');
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).single('resume');
 
-// --- UTILS: PDF & DOCX ---
+const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const roleKeywords = {
+    'Frontend': ['React', 'JavaScript', 'TypeScript', 'Tailwind', 'Next.js', 'Redux', 'Architecture', 'TTI', 'Core Web Vitals', 'Performant', 'Accessible'],
+    'Backend': ['Node.js', 'Go', 'Python', 'Microservices', 'distributed systems', 'high-availability', 'concurrency', 'API engineering', 'PostgreSQL', 'Kubernetes'],
+    'Fullstack': ['React', 'Next.js', 'TypeScript', 'Node.js', 'tRPC', 'Prisma', 'E2E testing', 'SaaS', 'System Design'],
+    'BDA': ['Data', 'Analytics', 'SQL', 'Tableau', 'Power BI'],
+    'Sales': ['Revenue', 'Market Expansion', 'CRM', 'Lead Generation', 'B2B', 'GTM'],
+    'General': ['Git', 'Communication', 'Teamwork', 'Agile', 'Leadership']
+};
+
 const extractTextFromPDF = async (buffer) => {
     try {
         if (!buffer || buffer.length === 0) return "";
@@ -28,18 +38,6 @@ const extractTextFromDOCX = async (buffer) => {
         console.error('Error parsing DOCX:', error);
         return "";
     }
-};
-
-// --- ANALYSIS LOGIC ---
-const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-const roleKeywords = {
-    'Frontend': ['React', 'JavaScript', 'TypeScript', 'Tailwind', 'Next.js', 'Redux', 'Architecture', 'TTI', 'Core Web Vitals', 'Performant', 'Accessible'],
-    'Backend': ['Node.js', 'Go', 'Python', 'Microservices', 'distributed systems', 'high-availability', 'concurrency', 'API engineering', 'PostgreSQL', 'Kubernetes'],
-    'Fullstack': ['React', 'Next.js', 'TypeScript', 'Node.js', 'tRPC', 'Prisma', 'E2E testing', 'SaaS', 'System Design'],
-    'BDA': ['Data', 'Analytics', 'SQL', 'Tableau', 'Power BI'],
-    'Sales': ['Revenue', 'Market Expansion', 'CRM', 'Lead Generation', 'B2B', 'GTM'],
-    'General': ['Git', 'Communication', 'Teamwork', 'Agile', 'Leadership']
 };
 
 const analyzeResume = (text, targetRole = 'General') => {
@@ -64,7 +62,6 @@ const analyzeResume = (text, targetRole = 'General') => {
     };
 };
 
-// Help helper for multer in Vercel
 const runMiddleware = (req, res, fn) => {
   return new Promise((resolve, reject) => {
     fn(req, res, (result) => {
@@ -74,9 +71,20 @@ const runMiddleware = (req, res, fn) => {
   });
 };
 
-export const config = { api: { bodyParser: false } }; // Disable body parser for multer
+export const config = { api: { bodyParser: false } };
 
 export default async function handler(req, res) {
+  // --- ADDED CORS HEADERS FOR PRODUCTION STABILITY ---
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') return res.status(405).send({ message: 'Only POST allowed' });
 
   try {

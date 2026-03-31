@@ -1,4 +1,4 @@
-export default function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -9,9 +9,15 @@ export default function handler(req, res) {
     return;
   }
 
-  res.status(200).json({ 
-    status: 'ok', 
-    engine: 'Vercel Serverless Functions (Native)',
-    timestamp: new Date().toISOString()
-  });
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const { candidates = [] } = req.body;
+  
+  if (!candidates || candidates.length === 0) {
+    return res.status(400).json({ error: 'No candidates provided for ranking' });
+  }
+
+  const ranked = [...candidates].sort((a, b) => (b.score || 0) - (a.score || 0));
+
+  return res.status(200).json(ranked);
 }
