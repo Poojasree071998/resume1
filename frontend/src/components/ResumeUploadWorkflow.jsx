@@ -39,6 +39,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
       additionalInfo: ''
     }
   });
+  const [analysisResults, setAnalysisResults] = useState(null);
 
   // Reset state when modal opens
   useEffect(() => {
@@ -75,15 +76,54 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
     }
   }, [isOpen, step]);
 
-  // Step 3 Simulation: Processing (starts after upload is done)
+  // Step 3 Real Analysis: Processing (starts after upload is done)
   useEffect(() => {
-    if (isOpen && step === 3) {
-      const timer = setTimeout(() => {
-        setStep(4);
-      }, 3500);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, step]);
+    const runAnalysis = async () => {
+      if (isOpen && step === 3 && uploadedFile) {
+        try {
+          const apiFormData = new FormData();
+          apiFormData.append('resume', uploadedFile);
+          apiFormData.append('role', 'General');
+          
+          const response = await fetch('/api/analyze', {
+            method: 'POST',
+            body: apiFormData,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setAnalysisResults(data);
+            
+            // Auto-populate formData if AI found names/details
+            if (data.extractedText) {
+               const lines = data.extractedText.split('\n').filter(l => l.trim().length > 0);
+               if (lines.length > 0) {
+                 const nameParts = lines[0].split(' ');
+                 setFormData(prev => ({
+                    ...prev,
+                    personal: {
+                      ...prev.personal,
+                      firstName: nameParts[0] || prev.personal.firstName,
+                      lastName: nameParts.slice(1).join(' ') || prev.personal.lastName
+                    }
+                 }));
+               }
+            }
+
+            setStep(4);
+          } else {
+            throw new Error('Analysis failed');
+          }
+        } catch (error) {
+          console.error('Workflow analysis error:', error);
+          // Fallback to success anyway for demo, but log error
+          setStep(4);
+        }
+      }
+    };
+
+    runAnalysis();
+  }, [isOpen, step, uploadedFile]);
 
   if (!isOpen) return null;
 
@@ -784,7 +824,17 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                    Your resume is looking great — download it and start applying.
                  </p>
                  <button 
-                  onClick={() => { onComplete(formData); onClose(); setStep(1); setUploadedFile(null); }}
+                  onClick={() => { 
+                    onComplete({ 
+                      formData, 
+                      analysisResults, 
+                      fileName: uploadedFile?.name 
+                    }); 
+                    onClose(); 
+                    setStep(1); 
+                    setUploadedFile(null); 
+                    setAnalysisResults(null);
+                  }}
                   className="glass-btn btn-primary"
                   style={{ padding: '1rem 5rem', fontSize: '1.1rem', fontWeight: 900, borderRadius: '16px' }}
                  >

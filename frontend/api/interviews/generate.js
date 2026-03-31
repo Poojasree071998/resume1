@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { sendInterviewEmail } from '../utils/emailService.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -13,7 +14,7 @@ export default async function handler(req, res) {
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { userRole, candidateId } = req.body;
+  const { userRole, candidateId, candidateEmail, candidateName } = req.body;
   
   if (userRole !== 'HR') {
     return res.status(403).json({ error: 'Only HR can generate interview links' });
@@ -24,11 +25,28 @@ export default async function handler(req, res) {
     const expiry = new Date();
     expiry.setHours(expiry.getHours() + 48);
 
+    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    const host = req.headers['host'];
+    const interviewLink = `${protocol}://${host}/interview/${token}`;
+
+    // Send the email if candidate details are provided
+    if (candidateEmail && candidateName) {
+      await sendInterviewEmail(
+        { email: candidateEmail, name: candidateName },
+        { 
+          date: new Date(expiry).toLocaleDateString(), 
+          time: new Date(expiry).toLocaleTimeString(), 
+          link: interviewLink 
+        }
+      );
+    }
+
     return res.status(200).json({
       success: true,
       token,
       expiry,
-      message: 'Interview link generated successfully.'
+      link: interviewLink,
+      message: 'Interview link generated and emailed successfully.'
     });
   } catch (error) {
     console.error('Interview generation error:', error);

@@ -1,3 +1,5 @@
+import { sendUploadConfirmation } from '../utils/emailService.js';
+
 // VERCEL SERVERLESS FUNCTIONS ARE STATELESS
 // To make this persistent, connect a real database like MongoDB Atlas or Supabase
 let candidates = []; 
@@ -29,6 +31,15 @@ export default async function handler(req, res) {
       };
       
       candidates.push(newCandidate);
+
+      // --- SEND CONFIRMATION EMAIL ---
+      if (newCandidate.email && newCandidate.email.includes('@')) {
+        await sendUploadConfirmation({
+          email: newCandidate.email,
+          name: newCandidate.name
+        });
+      }
+
       return res.status(201).json(newCandidate);
     }
 

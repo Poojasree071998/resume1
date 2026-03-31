@@ -506,10 +506,13 @@ function App() {
       <ResumeUploadWorkflow 
         isOpen={showResumeUploadWorkflow} 
         onClose={() => setShowResumeUploadWorkflow(false)}
-        onComplete={(data) => {
-          console.log('Upload workflow completed:', data);
-          fetchRecentAnalyses();
-          setActiveView('analyzer');
+        onComplete={({ analysisResults, fileName }) => {
+          if (analysisResults) {
+            handleAnalysisComplete(analysisResults, fileName);
+          } else {
+            fetchRecentAnalyses();
+            setActiveView('analyzer');
+          }
         }}
       />
     </>
