@@ -36,7 +36,7 @@ const CandidateListView = ({ candidates, onShortlist, onReject, onReset, onUpdat
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
 
-  const filteredCandidates = candidates.filter(can => {
+  const filteredCandidates = Array.isArray(candidates) ? candidates.filter(can => {
     const normalize = (str) => str?.toLowerCase().replace(/[^a-z0-9]/g, '') || '';
     const searchLower = normalize(searchTerm);
     if (!searchLower) {
@@ -49,11 +49,11 @@ const CandidateListView = ({ candidates, onShortlist, onReject, onReset, onUpdat
                           
     const matchesFilter = activeFilter === 'All' || can.status === activeFilter;
     return matchesSearch && matchesFilter;
-  });
+  }) : [];
 
   const downloadCSV = () => {
     const headers = ["DATE", "CANDIDATE NAME", "SCORE", "MATCH %", "STATUS", "SKILLS"];
-    const rows = candidates.map(c => {
+    const rows = (Array.isArray(candidates) ? candidates : []).map(c => {
       const displaySkills = (c.matchedSkills && c.matchedSkills.length > 0) 
         ? c.matchedSkills 
         : (c.skills || []);
