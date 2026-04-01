@@ -56,8 +56,8 @@ const ResumeBuilderModal = ({ isOpen, onClose, onComplete }) => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: formData.personal.name,
-            email: formData.personal.email,
+            name: formData?.personal?.name || 'Unknown',
+            email: formData?.personal?.email || 'N/A',
             role: 'Builder Profile',
             status: 'Applied',
             skills: formData.skills,
@@ -197,10 +197,10 @@ const ResumeBuilderModal = ({ isOpen, onClose, onComplete }) => {
                 <motion.div key="s4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                    <div style={{ padding: '1.5rem', background: 'linear-gradient(135deg, #001f3f, #003366)', borderRadius: '24px', color: '#fff', boxShadow: '0 10px 30px rgba(0,31,63,0.2)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                         <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#F4C400', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontWeight: 900, fontSize: '1.2rem' }}>{formData.personal.name[0] || 'U'}</div>
+                         <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#F4C400', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontWeight: 900, fontSize: '1.2rem' }}>{formData?.personal?.name?.[0] || 'U'}</div>
                          <div>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 900, margin: 0 }}>{formData.personal.name || 'Untitled Profile'}</h3>
-                            <p style={{ fontSize: '0.8rem', opacity: 0.7, margin: 0 }}>{formData.personal.email || 'No email provided'}</p>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 900, margin: 0 }}>{formData?.personal?.name || 'Untitled Profile'}</h3>
+                            <p style={{ fontSize: '0.8rem', opacity: 0.7, margin: 0 }}>{formData?.personal?.email || 'No email provided'}</p>
                          </div>
                       </div>
                       <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', marginBottom: '1rem' }} />

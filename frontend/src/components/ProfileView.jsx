@@ -150,8 +150,8 @@ const ProfileView = ({ user, onUpdateUser }) => {
             cursor: isEditing ? 'pointer' : 'default'
           }}>
             <img 
-              src={user.avatar} 
-              alt={user.name} 
+              src={user?.avatar || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"} 
+              alt={user?.name || "User Avatar"} 
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
             {isEditing && (
@@ -207,8 +207,8 @@ const ProfileView = ({ user, onUpdateUser }) => {
               </div>
             ) : (
               <>
-                <h2 style={{ fontSize: '2.4rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{user.name}</h2>
-                <p style={{ fontSize: '1.2rem', fontWeight: 500, color: 'var(--text-muted)' }}>{user.role}</p>
+                <h2 style={{ fontSize: '2.4rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{user?.name || 'HR Manager'}</h2>
+                <p style={{ fontSize: '1.2rem', fontWeight: 500, color: 'var(--text-muted)' }}>{user?.role || 'Professional'}</p>
               </>
             )}
           </div>
@@ -219,21 +219,21 @@ const ProfileView = ({ user, onUpdateUser }) => {
           <DetailItem 
             icon={Mail} 
             label="Email" 
-            value={isEditing ? formData.email : user.email} 
+            value={isEditing ? (formData.email || '') : (user?.email || 'N/A')} 
             isEditing={isEditing}
             onChange={(val) => handleChange('email', val)}
           />
           <DetailItem 
             icon={Phone} 
             label="Phone" 
-            value={isEditing ? formData.phone : user.phone} 
+            value={isEditing ? (formData.phone || '') : (user?.phone || 'N/A')} 
             isEditing={isEditing}
             onChange={(val) => handleChange('phone', val)}
           />
           <DetailItem 
             icon={Star} 
             label="Membership" 
-            value={user.membership} 
+            value={user?.membership || 'Elite Member'} 
             isMembership 
           />
         </div>

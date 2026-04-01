@@ -660,7 +660,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>First name</label>
                     <input 
                       name="firstName" 
-                      value={formData.personal.firstName} 
+                      value={formData?.personal?.firstName || ''} 
                       onChange={handleInputChange}
                       style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} 
                     />
@@ -669,7 +669,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Last name</label>
                     <input 
                       name="lastName" 
-                      value={formData.personal.lastName} 
+                      value={formData?.personal?.lastName || ''} 
                       onChange={handleInputChange}
                       style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} 
                     />
@@ -680,7 +680,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                   <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Desired job title</label>
                   <input 
                     name="jobTitle" 
-                    value={formData.personal.jobTitle} 
+                    value={formData?.personal?.jobTitle || ''} 
                     onChange={handleInputChange}
                     style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} 
                   />
@@ -695,7 +695,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                        </div>
                        <input 
                         name="phone" 
-                        value={formData.personal.phone.replace('+91 ', '')} 
+                        value={formData?.personal?.phone?.replace('+91 ', '') || ''} 
                         onChange={(e) => setFormData(p => ({ ...p, personal: { ...p.personal, phone: '+91 ' + e.target.value } }))}
                         style={{ flex: 1, padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} 
                        />
@@ -705,7 +705,7 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Email</label>
                     <input 
                       name="email" 
-                      value={formData.personal.email} 
+                      value={formData?.personal?.email || ''} 
                       onChange={handleInputChange}
                       style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} 
                     />
@@ -750,16 +750,16 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                    <div style={{ display: 'flex', height: '100%' }}>
                       <div style={{ flex: 0.35, background: '#f8fafc', padding: '3rem 1.5rem', borderRight: '1px solid #e2e8f0' }}>
                          <div style={{ marginBottom: '2rem' }}>
-                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', marginBottom: '0.25rem', textTransform: 'uppercase' }}>{formData.personal.firstName} {formData.personal.lastName}</div>
-                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>{formData.personal.jobTitle}</div>
+                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', marginBottom: '0.25rem', textTransform: 'uppercase' }}>{formData?.personal?.firstName || 'User'} {formData?.personal?.lastName || ''}</div>
+                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>{formData?.personal?.jobTitle || 'Professional'}</div>
                          </div>
                          <div style={{ marginBottom: '2rem' }}>
                             <div style={{ fontSize: '0.6rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.1em' }}>Details</div>
                             <div style={{ fontSize: '0.7rem', color: '#334155', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <Mail size={10} color="#6366f1" /> {formData.personal.email}
+                              <Mail size={10} color="#6366f1" /> {formData?.personal?.email || 'N/A'}
                             </div>
                             <div style={{ fontSize: '0.7rem', color: '#334155', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <Phone size={10} color="#6366f1" /> {formData.personal.phone}
+                              <Phone size={10} color="#6366f1" /> {formData?.personal?.phone || 'N/A'}
                             </div>
                          </div>
                          <div>

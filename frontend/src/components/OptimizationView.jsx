@@ -138,11 +138,11 @@ const OptimizationView = ({ optimization, role, onBack }) => {
                                 
                                 <div class="sidebar-h3" style="margin-top: 40pt;">Contact</div>
                                 <div class="sidebar-label">Email</div>
-                                <div class="sidebar-text">${structuredData.contact.email}</div>
+                                <div class="sidebar-text">${structuredData?.contact?.email || 'N/A'}</div>
                                 <div class="sidebar-label">Phone</div>
-                                <div class="sidebar-text">${structuredData.contact.phone}</div>
+                                <div class="sidebar-text">${structuredData?.contact?.phone || 'N/A'}</div>
                                 <div class="sidebar-label">Location</div>
-                                <div class="sidebar-text">${structuredData.contact.location}</div>
+                                <div class="sidebar-text">${structuredData?.contact?.location || 'N/A'}</div>
 
                                 <div class="sidebar-h3">Technical Stack</div>
                                 ${Object.entries(structuredData.skills).map(([k, v]) => `
@@ -192,11 +192,11 @@ const OptimizationView = ({ optimization, role, onBack }) => {
                               <td class="sidebar" valign="top" style="border-left: 1pt solid #e2e8f0;">
                                 <div class="sidebar-h3" style="margin-top: 0;">Connection</div>
                                 <div class="sidebar-label">Email</div>
-                                <div class="sidebar-text">${structuredData.contact.email}</div>
+                                <div class="sidebar-text">${structuredData?.contact?.email || 'N/A'}</div>
                                 <div class="sidebar-label">Phone</div>
-                                <div class="sidebar-text">${structuredData.contact.phone}</div>
+                                <div class="sidebar-text">${structuredData?.contact?.phone || 'N/A'}</div>
                                 <div class="sidebar-label">Location</div>
-                                <div class="sidebar-text">${structuredData.contact.location}</div>
+                                <div class="sidebar-text">${structuredData?.contact?.location || 'N/A'}</div>
 
                                 <div class="sidebar-h3" style="margin-top: 30pt;">Expertise</div>
                                 ${Object.entries(structuredData.skills).map(([k, v]) => `
