@@ -10,14 +10,14 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-const JobMatcherView = ({ resumeText, resumeName }) => {
+const JobMatcherView = ({ resumeText, resumeName, setActiveView }) => {
   const [jd, setJd] = useState('');
   const [matching, setMatching] = useState(false);
   const [result, setResult] = useState(null);
 
   const runMatch = async () => {
-    if (!resumeText) {
-      alert("Please upload and analyze a resume first in the AI Analyzer tab.");
+    if (!resumeText || resumeText.length < 20) {
+      alert("No valid resume text found. Please ensure you have analyzed a text-based PDF first.");
       return;
     }
     
@@ -64,9 +64,17 @@ const JobMatcherView = ({ resumeText, resumeName }) => {
         </h2>
 
         {!resumeText && (
-          <div style={{ marginBottom: '2rem', padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 700 }}>
-             <AlertTriangle size={20} />
-             <span>No active resume found. Please analyze a resume first.</span>
+          <div style={{ marginBottom: '2rem', padding: '1.25rem', background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', fontWeight: 700 }}>
+             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <AlertTriangle size={20} />
+              <span>No active resume data found. Please analyze a resume first.</span>
+             </div>
+             <button 
+              onClick={() => setActiveView('analyzer')}
+              style={{ padding: '0.5rem 1rem', borderRadius: '10px', background: '#ef4444', color: 'white', border: 'none', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 900 }}
+             >
+               Go to AI Analyzer
+             </button>
           </div>
         )}
 
@@ -79,10 +87,10 @@ const JobMatcherView = ({ resumeText, resumeName }) => {
               </div>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>Active Resume</h3>
             </div>
-            <div style={{ padding: '1.5rem', border: `2px dashed ${resumeText ? 'rgba(16, 185, 129, 0.2)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '16px', textAlign: 'center', background: resumeText ? 'rgba(16, 185, 129, 0.02)' : 'transparent' }}>
-              <p style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem', color: resumeText ? 'var(--text-main)' : 'var(--text-muted)' }}>{resumeName || 'No Resume Selected'}</p>
-              <p style={{ fontSize: '0.75rem', color: resumeText ? '#10b981' : 'var(--text-muted)', fontWeight: 600 }}>
-                {resumeText ? 'Ready for Matching' : resumeName ? 'Text Extraction Failed / Scanned PDF' : 'Select a candidate in Dashboard/Pipeline'}
+            <div style={{ padding: '1.5rem', border: `2px dashed ${resumeText?.length > 20 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`, borderRadius: '16px', textAlign: 'center', background: resumeText?.length > 20 ? 'rgba(16, 185, 129, 0.02)' : 'rgba(239, 68, 68, 0.02)' }}>
+              <p style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>{resumeName || 'No Resume Selected'}</p>
+              <p style={{ fontSize: '0.75rem', color: resumeText?.length > 20 ? '#10b981' : '#ef4444', fontWeight: 600 }}>
+                {resumeText?.length > 20 ? 'Ready for Matching' : resumeName ? 'Partial Extraction / Scanned PDF Error' : 'Select a candidate in Dashboard/Pipeline'}
               </p>
             </div>
           </div>

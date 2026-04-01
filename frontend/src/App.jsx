@@ -255,16 +255,22 @@ function App() {
         const data = await response.json();
         if (Array.isArray(data)) {
           const formatted = data.map(cand => ({
-          id: cand._id || cand.id,
-          name: cand.name,
-          fileName: cand.fileName || '',
-          role: cand.role || 'General',
-          score: cand.score || 0,
-          matchPercentage: cand.matchPercentage || 0,
-          matchedSkills: cand.matchedSkills || [],
-          status: cand.status || 'Applied',
-          date: cand.timestamp ? new Date(cand.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }) : 'Today'
-        })).sort((a, b) => b.id - a.id);
+            id: cand._id || cand.id,
+            name: cand.name,
+            fileName: cand.fileName || '',
+            role: cand.role || 'General',
+            score: cand.score || 0,
+            matchPercentage: cand.matchPercentage || 0,
+            matchedSkills: cand.matchedSkills || [],
+            missingSkills: cand.missingSkills || [],
+            skills: cand.skills || [],
+            strengths: cand.strengths || [],
+            weaknesses: cand.weaknesses || [],
+            reasons: cand.reasons || [],
+            extractedText: cand.extractedText || '',
+            status: cand.status || 'Applied',
+            date: cand.timestamp ? new Date(cand.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }) : 'Today'
+          })).sort((a, b) => b.id - a.id);
           
           setRecentAnalyses(formatted.slice(0, 15));
         } else {
@@ -477,7 +483,7 @@ function App() {
                         user={user}
                       />
                     )}
-                    {activeView === 'matcher' && <JobMatcherView resumeText={resumeText} resumeName={resumeName} />}
+                    {activeView === 'matcher' && <JobMatcherView resumeText={resumeText} resumeName={resumeName} setActiveView={setActiveView} />}
                     {activeView === 'profile' && <ProfileView user={user} onUpdateUser={handleUpdateUser} />}
                     {activeView === 'reports' && <ReportsView recentAnalyses={recentAnalyses} />}
                     {activeView === 'mail' && <InboxView setActiveView={setActiveView} />}

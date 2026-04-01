@@ -22,12 +22,24 @@ const roleKeywords = {
 // Use a simpler approach for pdfjs in serverless
 const extractTextFromPDF = async (buffer) => {
     try {
-        if (!buffer || buffer.length === 0) return "";
+        if (!buffer || buffer.length === 0) {
+            console.error("PDF Parsing Error: Buffer is empty or undefined");
+            return "";
+        }
+        
+        console.log(`Attempting PDF extraction for buffer of size: ${buffer.length} bytes`);
         const data = await pdfParse(buffer);
-        console.log(`PDF Extraction Success: ${data.text?.length || 0} chars`);
-        return data.text || "";
+        
+        const extractedText = data.text || "";
+        if (extractedText.trim().length < 5) {
+            console.warn("PDF Parsing Warning: Extracted text is suspiciously short or empty.");
+        } else {
+            console.log(`PDF Extraction Success: ${extractedText.length} characters extracted.`);
+        }
+        
+        return extractedText;
     } catch (error) {
-        console.error('PDF Parsing Error:', error);
+        console.error('PDF Parsing Critical Error:', error.message);
         return "";
     }
 };
