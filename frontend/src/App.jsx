@@ -386,7 +386,7 @@ function App() {
               onUpload={handleUpload}
               analyzing={analyzing}
               onEnterApp={() => handleEnterApp(true)}
-              onPrompt={setShowSignInPrompt}
+              onPrompt={() => setShowLoginModal(true)}
               selectedRole={selectedRole}
               setSelectedRole={setSelectedRole}
               isLoggedIn={isLoggedIn}
