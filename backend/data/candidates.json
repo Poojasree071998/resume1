@@ -641,5 +641,52 @@
     ],
     "timestamp": "2026-04-01T11:47:52.629Z",
     "createdAt": "2026-04-01T11:47:52.629Z"
+  },
+  {
+    "_id": "1775045581094",
+    "id": "1775045581094",
+    "name": "Pooji  (2)",
+    "fileName": "Pooji  (2).pdf",
+    "score": 40,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for UI Developer requirements"
+    ],
+    "reasons": [
+      "Keyword gap for UI Developer requirements"
+    ],
+    "status": "Rejected",
+    "role": "UI Developer",
+    "email": "pooja@example.com",
+    "extractedText": "\n\n1\n\n2\n\n3\n\n4",
+    "notifications": [
+      {
+        "id": "1775045581093-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 5:43:01 pm"
+      },
+      {
+        "id": "1775045581093-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 5:43:01 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T12:13:01.094Z",
+    "createdAt": "2026-04-01T12:13:01.094Z"
   }
 ]

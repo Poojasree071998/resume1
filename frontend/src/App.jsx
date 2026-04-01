@@ -282,6 +282,13 @@ function App() {
     }
   }, [appEntered]);
   
+  const handleSelectCandidate = (candidate) => {
+    setResults(candidate);
+    setResumeName(candidate.fileName || candidate.name);
+    setResumeText(candidate.extractedText || "No extractable text found.");
+    setActiveView('analyzer');
+  };
+
   const handleAnalysisComplete = async (data, fileName) => {
     setResults(data);
     if (data.extractedText) setResumeText(data.extractedText);
@@ -443,6 +450,7 @@ function App() {
                         recruiterMode={recruiterMode}
                         onRefresh={fetchRecentAnalyses}
                         onUploadNew={() => setShowResumeUploadWorkflow(true)}
+                        onSelectCandidate={handleSelectCandidate}
                       />
                     )}
                     {activeView === 'analyzer' && (
