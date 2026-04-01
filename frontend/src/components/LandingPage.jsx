@@ -275,7 +275,7 @@ const TestimonialCard = ({ name, role, company, text, rating, delay }) => (
 
 /* ─── Main Component ──────────────────────────────────────────── */
 function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelectedRole }) {
-  const [isDragging, setIsDragging] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.3]);
@@ -449,75 +449,120 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
               <p style={{ fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.85rem' }}>
                 Optimize for
               </p>
-              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
                 {roles.map(r => (
                   <RolePill
                     key={r.id} role={r.id} icon={r.icon}
                     active={selectedRole === r.id}
-                    onClick={setSelectedRole} color={r.color}
+                    onClick={(role) => { setSelectedRole(role); setShowUpload(false); }} 
+                    color={r.color}
                   />
                 ))}
               </div>
             </motion.div>
 
-            {/* Upload area */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <div
-                onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={handleDrop}
-                onClick={() => document.getElementById('lp-file-input').click()}
-                style={{
-                  padding: '1.75rem 2rem',
-                  borderRadius: 20,
-                  border: isDragging
-                    ? `2px solid ${activeRole.color}`
-                    : '1.5px dashed rgba(255,255,255,0.15)',
-                  background: isDragging
-                    ? `${activeRole.color}08`
-                    : 'rgba(255,255,255,0.025)',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  display: 'flex', alignItems: 'center', gap: '1.5rem',
-                  boxShadow: isDragging ? `0 0 40px ${activeRole.color}20` : 'none'
-                }}
-              >
-                <input id="lp-file-input" type="file" hidden multiple accept=".pdf,.docx" onChange={handleFileChange} />
-                <motion.div
-                  animate={{ rotate: analyzing ? 360 : 0 }}
-                  transition={{ duration: 2, repeat: analyzing ? Infinity : 0, ease: 'linear' }}
+            {/* Guided Proceed Button */}
+            <AnimatePresence>
+              {!showUpload && (
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  whileHover={{ scale: 1.05, boxShadow: `0 0 30px ${activeRole.color}40` }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowUpload(true)}
                   style={{
-                    width: 56, height: 56, borderRadius: 16, flexShrink: 0,
-                    background: 'linear-gradient(135deg, #F4C400, #FFB700)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#0A1628', boxShadow: '0 8px 24px rgba(244,196,0,0.4)'
+                    padding: '1.25rem 2.5rem',
+                    borderRadius: 18,
+                    background: activeRole.color,
+                    border: 'none',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    fontWeight: 900,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    boxShadow: `0 15px 30px ${activeRole.color}30`,
+                    marginBottom: '2rem',
+                    letterSpacing: '0.02em'
                   }}
                 >
-                  {analyzing ? <Sparkles size={24} /> : <Upload size={24} />}
-                </motion.div>
-                <div>
-                  <p style={{ fontWeight: 800, fontSize: '1rem', color: '#fff', marginBottom: '0.25rem' }}>
-                    {analyzing ? 'Analyzing your resume...' : 'Drop your resume here'}
-                  </p>
-                  <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
-                    PDF or DOCX · Max 5MB · Instant results
-                  </p>
-                </div>
-                <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
-                  <div style={{
-                    padding: '0.5rem 1.1rem', borderRadius: 10,
-                    background: 'rgba(244,196,0,0.12)',
-                    border: '1px solid rgba(244,196,0,0.2)',
-                    fontSize: '0.78rem', fontWeight: 700, color: '#F4C400'
-                  }}>Browse</div>
-                </div>
-              </div>
+                  PROCEED TO SCAN <ChevronRight size={20} strokeWidth={3} />
+                </motion.button>
+              )}
+            </AnimatePresence>
 
-              {/* Or enter app */}
+            {/* Upload area - Guided Reveal */}
+            <AnimatePresence>
+              {showUpload && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, y: 20 }}
+                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <div
+                    onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={handleDrop}
+                    onClick={() => document.getElementById('lp-file-input').click()}
+                    style={{
+                      padding: '1.75rem 2rem',
+                      borderRadius: 20,
+                      border: isDragging
+                        ? `2px solid ${activeRole.color}`
+                        : '1.5px dashed rgba(255,255,255,0.15)',
+                      background: isDragging
+                        ? `${activeRole.color}08`
+                        : 'rgba(255,255,255,0.025)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      display: 'flex', alignItems: 'center', gap: '1.5rem',
+                      boxShadow: isDragging ? `0 0 40px ${activeRole.color}20` : 'none',
+                      marginBottom: '1rem'
+                    }}
+                  >
+                    <input id="lp-file-input" type="file" hidden multiple accept=".pdf,.docx" onChange={handleFileChange} />
+                    <motion.div
+                      animate={{ rotate: analyzing ? 360 : 0 }}
+                      transition={{ duration: 2, repeat: analyzing ? Infinity : 0, ease: 'linear' }}
+                      style={{
+                        width: 56, height: 56, borderRadius: 16, flexShrink: 0,
+                        background: 'linear-gradient(135deg, #F4C400, #FFB700)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: '#0A1628', boxShadow: '0 8px 24px rgba(244,196,0,0.4)'
+                      }}
+                    >
+                      {analyzing ? <Sparkles size={24} /> : <Upload size={24} />}
+                    </motion.div>
+                    <div>
+                      <p style={{ fontWeight: 800, fontSize: '1rem', color: '#fff', marginBottom: '0.25rem' }}>
+                        {analyzing ? 'Analyzing your resume...' : 'Drop your resume here'}
+                      </p>
+                      <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
+                        PDF or DOCX · Max 5MB · Instant results
+                      </p>
+                    </div>
+                    <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
+                      <div style={{
+                        padding: '0.5rem 1.1rem', borderRadius: 10,
+                        background: 'rgba(244,196,0,0.12)',
+                        border: '1px solid rgba(244,196,0,0.2)',
+                        fontSize: '0.78rem', fontWeight: 700, color: '#F4C400'
+                      }}>Browse</div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Always show recruitment link under either Proceed or Upload */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1.25rem' }}>
                 <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
                 <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.25)', fontWeight: 600 }}>or</span>
