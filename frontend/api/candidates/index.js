@@ -16,11 +16,19 @@ export default async function handler(req, res) {
 
   try {
     // Initializing Database connection
-    await dbConnect();
+    const db = await dbConnect();
+    
+    // Fallback if DB is not configured yet
+    if (!db) {
+      if (req.method === 'GET') {
+        return res.status(200).json([]); // Return empty list instead of 500
+      }
+      return res.status(503).json({ error: 'Database not configured. Please set MONGODB_URI.' });
+    }
 
     if (req.method === 'GET') {
       const candidates = await Candidate.find({}).sort({ createdAt: -1 }).limit(100);
-      return res.status(200).json(candidates);
+      return res.status(200).json(candidates || []);
     } 
 
     if (req.method === 'POST') {
@@ -50,6 +58,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
     console.error('Candidates API Error:', error);
+    if (req.method === 'GET') {
+      return res.status(200).json([]);
+    }
     return res.status(500).json({ error: 'Failed to process candidate request', details: error.message });
   }
 }

@@ -14,28 +14,23 @@ const InboxView = ({ setActiveView }) => {
       if (response.ok) {
         const candidates = await response.json();
         // Flatten notifications into "Email" objects
-        const allMsgs = candidates.flatMap(c => 
+        const allMsgs = (candidates || []).flatMap(c => 
           (c.notifications || []).map(n => ({
             id: n.id || Date.now().toString(),
             from: "AI Recruitment Assistant",
-            candidate: c.name,
-            subject: `${n.type}: ${c.name} Update`,
-            body: n.message,
-            time: n.date,
-            type: n.type,
-            link: n.link,
+            candidate: c.name || 'Unknown Candidate',
+            subject: `${n.type || 'Update'}: ${c.name || 'Candidate'} Update`,
+            body: n.message || '',
+            time: n.date || new Date().toISOString(),
+            type: n.type || 'General',
+            link: n.link || null,
             avatar: c.avatar || null,
             email: c.email || 'N/A'
           }))
         ).sort((a, b) => {
-          const [timeA, seqA] = a.id.split('-');
-          const [timeB, seqB] = b.id.split('-');
-          
-          const floatA = parseFloat(timeA) || 0;
-          const floatB = parseFloat(timeB) || 0;
-          
-          if (floatA !== floatB) return floatB - floatA;
-          return (parseInt(seqB) || 0) - (parseInt(seqA) || 0);
+          const timeA = new Date(a.time).getTime() || 0;
+          const timeB = new Date(b.time).getTime() || 0;
+          return timeB - timeA;
         });
         
         setMessages(allMsgs);
@@ -131,8 +126,8 @@ const InboxView = ({ setActiveView }) => {
                   <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: 'var(--grad-main)' }} />
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: getStatusColor(msg.type), letterSpacing: '0.05em' }}>{msg.type.toUpperCase()}</span>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{msg.time.split(',')[1] || msg.time}</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: getStatusColor(msg.type), letterSpacing: '0.05em' }}>{(msg.type || 'Update').toUpperCase()}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{msg.time ? new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now'}</span>
                 </div>
                 <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800, marginBottom: '0.2rem' }}>{msg.candidate}</p>
                 <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>

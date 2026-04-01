@@ -40,20 +40,11 @@ const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark, onLogout }) =>
     };
   }, []);
 
-  // Flatten all notifications and sort by numeric timestamp descending (newest first)
+  // Flatten all notifications and sort by date
   const sortNotifications = (candidates) => {
-    return candidates
-      .flatMap(c => (c.notifications || []).map(n => ({ ...n, candidateName: c.name })))
-      .sort((a, b) => {
-        const [timeA, seqA] = (a.id || "").split('-');
-        const [timeB, seqB] = (b.id || "").split('-');
-        
-        const floatA = parseFloat(timeA) || 0;
-        const floatB = parseFloat(timeB) || 0;
-        
-        if (floatA !== floatB) return floatB - floatA;
-        return (parseInt(seqB) || 0) - (parseInt(seqA) || 0);
-      });
+    return (candidates || [])
+      .flatMap(c => (c.notifications || []).map(n => ({ ...n, candidateName: c.name || 'Unknown' })))
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   };
 
   const handleMarkAllRead = () => {
@@ -224,8 +215,8 @@ const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark, onLogout }) =>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', width: '100%' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 800 }}>{n.type}</p>
-                              <p style={{ margin: 0, fontSize: '0.65rem', color: 'var(--text-muted)' }}>{n.date.split(',')[1] || n.date}</p>
+                              <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 800 }}>{n.type || 'Update'}</p>
+                              <p style={{ margin: 0, fontSize: '0.65rem', color: 'var(--text-muted)' }}>{n.date ? new Date(n.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now'}</p>
                             </div>
                             <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.4, fontWeight: 500 }}>
                               <strong>{n.candidateName}:</strong> {n.message}

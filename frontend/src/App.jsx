@@ -250,7 +250,7 @@ function App() {
       if (response.ok) {
         const data = await response.json();
         const formatted = data.map(cand => ({
-          id: cand.id,
+          id: cand._id || cand.id,
           name: cand.name,
           fileName: cand.fileName || '',
           role: cand.role || 'General',
@@ -258,7 +258,7 @@ function App() {
           matchPercentage: cand.matchPercentage || 0,
           matchedSkills: cand.matchedSkills || [],
           status: cand.status || 'Applied',
-          date: cand.timestamp?.split(',')[1]?.trim() || 'Today'
+          date: cand.timestamp ? new Date(cand.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }) : 'Today'
         })).sort((a, b) => b.id - a.id);
         
         setRecentAnalyses(formatted.slice(0, 15));

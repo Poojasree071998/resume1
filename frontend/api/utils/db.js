@@ -21,12 +21,17 @@ async function dbConnect() {
     return cached.conn;
   }
 
+  if (!MONGODB_URI) {
+    console.error('CRITICAL: MONGODB_URI is not defined. Database operations will fail.');
+    return null;
+  }
+
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI || 'mongodb://localhost:27017/resume-analyzer', opts).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
       console.log('MongoDB connection established');
       return mongoose;
     });
