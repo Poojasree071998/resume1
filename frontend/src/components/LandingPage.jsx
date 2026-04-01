@@ -10,6 +10,72 @@ import {
 } from 'lucide-react';
 import ContactModal from './ContactModal';
 
+/* ─── Mouse Position Hook ────────────────────────────────────── */
+const useMousePosition = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    const handleMouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+  return mousePosition;
+};
+
+/* ─── Magnetic Wrapper ────────────────────────────────────────── */
+const MagneticWrapper = ({ children, strength = 0.2 }) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const ref = useRef(null);
+
+  const handleMouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const moveX = (clientX - centerX) * strength;
+    const moveY = (clientY - centerY) * strength;
+    setPosition({ x: moveX, y: moveY });
+  };
+
+  const reset = () => setPosition({ x: 0, y: 0 });
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: 'spring', damping: 15, stiffness: 150, mass: 0.1 }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+/* ─── Character Reveal ────────────────────────────────────────── */
+const CharacterReveal = ({ text, delay = 0 }) => {
+  const words = text.split(' ');
+  return (
+    <span style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top' }}>
+      {words.map((word, i) => (
+        <span key={i} style={{ display: 'inline-block', overflow: 'hidden', marginRight: '0.3em' }}>
+          <motion.span
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            transition={{
+              duration: 0.8,
+              delay: delay + i * 0.1,
+              ease: [0.33, 1, 0.68, 1]
+            }}
+            style={{ display: 'inline-block' }}
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+};
+
 /* ─── Animated Counter ───────────────────────────────────────── */
 const AnimatedCounter = ({ target, suffix = '', prefix = '' }) => {
   const [count, setCount] = useState(0);
@@ -47,8 +113,16 @@ const GridBackground = () => (
   <div style={{
     position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0
   }}>
-    {/* Grid lines */}
-    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.04 }}>
+    {/* Animated Shimmer Grid */}
+    <div style={{
+      position: 'absolute', inset: 0,
+      background: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)',
+      backgroundSize: '40px 40px',
+      maskImage: 'radial-gradient(circle at 50% 50%, black, transparent)',
+      animation: 'shimmer 20s linear infinite'
+    }} />
+    
+    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.03 }}>
       <defs>
         <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
           <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="0.5"/>
@@ -56,35 +130,39 @@ const GridBackground = () => (
       </defs>
       <rect width="100%" height="100%" fill="url(#grid)" />
     </svg>
-    {/* Floating orbs */}
+
+    {/* Elegant Orbs */}
     <motion.div
-      animate={{ x: [0, 60, 0], y: [0, -40, 0], scale: [1, 1.2, 1] }}
-      transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+      animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.3, 1] }}
+      transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
       style={{
-        position: 'absolute', top: '8%', right: '12%',
+        position: 'absolute', top: '-10%', right: '5%',
+        width: 800, height: 800,
+        background: 'radial-gradient(circle, rgba(244,196,0,0.08) 0%, transparent 65%)',
+        borderRadius: '50%', filter: 'blur(80px)'
+      }}
+    />
+    <motion.div
+      animate={{ x: [0, -80, 0], y: [0, 40, 0], scale: [1, 1.1, 1] }}
+      transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+      style={{
+        position: 'absolute', bottom: '0%', left: '-10%',
         width: 600, height: 600,
-        background: 'radial-gradient(circle, rgba(244,196,0,0.12) 0%, transparent 70%)',
-        borderRadius: '50%', filter: 'blur(40px)'
+        background: 'radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 65%)',
+        borderRadius: '50%', filter: 'blur(100px)'
       }}
     />
+    
+    {/* Floating 3D Elements */}
     <motion.div
-      animate={{ x: [0, -50, 0], y: [0, 60, 0], scale: [1, 1.15, 1] }}
-      transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
+      animate={{ rotate: 360, y: [0, -20, 0] }}
+      transition={{ rotate: { duration: 30, repeat: Infinity, ease: 'linear' }, y: { duration: 5, repeat: Infinity, ease: 'easeInOut' } }}
       style={{
-        position: 'absolute', bottom: '10%', left: '5%',
-        width: 500, height: 500,
-        background: 'radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 70%)',
-        borderRadius: '50%', filter: 'blur(60px)'
-      }}
-    />
-    <motion.div
-      animate={{ x: [0, 30, 0], y: [0, 30, 0] }}
-      transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-      style={{
-        position: 'absolute', top: '40%', left: '20%',
-        width: 300, height: 300,
-        background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
-        borderRadius: '50%', filter: 'blur(40px)'
+        position: 'absolute', top: '20%', right: '25%',
+        width: 120, height: 40, borderRadius: 100,
+        border: '1px solid rgba(255,255,255,0.05)',
+        background: 'rgba(255,255,255,0.01)',
+        backdropFilter: 'blur(5px)', transform: 'perspective(1000px) rotateX(45deg)'
       }}
     />
   </div>
@@ -279,6 +357,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
   const [showContactModal, setShowContactModal] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const { scrollY } = useScroll();
+  const mousePos = useMousePosition();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.3]);
   const heroY = useTransform(scrollY, [0, 400], [0, -60]);
 
@@ -313,6 +392,17 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
       position: 'relative'
     }}>
       <GridBackground />
+
+      {/* Global Cursor Glow */}
+      <motion.div
+        animate={{ x: mousePos.x - 400, y: mousePos.y - 400 }}
+        transition={{ type: 'spring', damping: 30, stiffness: 200, mass: 0.5 }}
+        style={{
+          position: 'fixed', inset: 0, width: 800, height: 800,
+          background: 'radial-gradient(circle, rgba(244,196,0,0.05) 0%, transparent 70%)',
+          borderRadius: '50%', pointerEvents: 'none', zIndex: 1, filter: 'blur(60px)'
+        }}
+      />
 
       {/* ── Navbar ────────────────────────────────────── */}
       <motion.nav
@@ -403,29 +493,25 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
             </motion.div>
 
             {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                fontSize: 'clamp(2.8rem, 5vw, 4rem)',
-                fontWeight: 900, lineHeight: 1.08,
-                letterSpacing: '-0.04em',
-                marginBottom: '1.5rem'
-              }}
-            >
-              Hire smarter.{' '}
-              <br />
-              Rank faster.{' '}
-              <br />
-              <span style={{
-                background: 'linear-gradient(135deg, #F4C400 0%, #FFD700 50%, #E8A000 100%)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
+            <h1 style={{
+                fontSize: 'clamp(2.8rem, 5vw, 4.25rem)',
+                fontWeight: 900, lineHeight: 1.05,
+                letterSpacing: '-0.05em',
+                marginBottom: '1.5rem',
+                position: 'relative'
               }}>
-                Win every role.
-              </span>
-            </motion.h1>
+                <CharacterReveal text="Hire smarter." delay={0.2} />
+                <br />
+                <CharacterReveal text="Rank faster." delay={0.4} />
+                <br />
+                <span style={{
+                  background: 'linear-gradient(135deg, #F4C400 0%, #FFD700 50%, #E8A000 100%)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text', display: 'inline-block'
+                }}>
+                  <CharacterReveal text="Win every role." delay={0.6} />
+                </span>
+              </h1>
 
             {/* Subheadline */}
             <motion.p
@@ -465,38 +551,41 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
             {/* Guided Proceed Button */}
             <AnimatePresence>
               {!showUpload && (
-                <motion.button
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  whileHover={{ scale: 1.05, boxShadow: `0 0 30px ${activeRole.color}40` }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => {
-                    if (!isLoggedIn) {
-                      onPrompt(true);
-                      return;
-                    }
-                    setShowUpload(true);
-                  }}
-                  style={{
-                    padding: '1.25rem 2.5rem',
-                    borderRadius: 18,
-                    background: activeRole.color,
-                    border: 'none',
-                    color: '#fff',
-                    fontSize: '1rem',
-                    fontWeight: 900,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    boxShadow: `0 15px 30px ${activeRole.color}30`,
-                    marginBottom: '2rem',
-                    letterSpacing: '0.02em'
-                  }}
-                >
-                  PROCEED TO SCAN <ChevronRight size={20} strokeWidth={3} />
-                </motion.button>
+                <MagneticWrapper strength={0.15}>
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    whileHover={{ scale: 1.05, boxShadow: `0 0 40px ${activeRole.color}50` }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      if (!isLoggedIn) {
+                        onPrompt(true);
+                        return;
+                      }
+                      setShowUpload(true);
+                    }}
+                    style={{
+                      padding: '1.25rem 2.5rem',
+                      borderRadius: 20,
+                      background: `linear-gradient(135deg, ${activeRole.color}, ${activeRole.color}dd)`,
+                      border: 'none',
+                      color: '#fff',
+                      fontSize: '1.05rem',
+                      fontWeight: 900,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.85rem',
+                      boxShadow: `0 20px 40px ${activeRole.color}30`,
+                      marginBottom: '2rem',
+                      letterSpacing: '0.03em',
+                      textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }}
+                  >
+                    PROCEED TO SCAN <ChevronRight size={22} strokeWidth={3} />
+                  </motion.button>
+                </MagneticWrapper>
               )}
             </AnimatePresence>
 

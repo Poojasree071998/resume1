@@ -81,7 +81,7 @@ const RecruitmentTimeline = ({ notifications = [] }) => (
   </div>
 );
 
-const ResultDashboard = ({ analysis, onReset, recruiterMode, onOptimize, optimizing, user }) => {
+const ResultDashboard = ({ analysis = {}, onReset, recruiterMode, onOptimize, optimizing, user }) => {
   const { 
     score = 0, 
     verdict: status = 'Consider', 
@@ -97,7 +97,7 @@ const ResultDashboard = ({ analysis, onReset, recruiterMode, onOptimize, optimiz
     role = 'General',
     detailedMatch = { score: 0, highlights: [], gaps: [] },
     interviewPrep = { technical: [], behavioural: [] }
-  } = analysis;
+  } = (analysis || {});
 
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' or 'interview'
 

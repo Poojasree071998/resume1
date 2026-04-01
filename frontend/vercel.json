@@ -6,6 +6,22 @@
       "destination": "/api/health.js"
     },
     {
+      "source": "/api/analyze/optimize",
+      "destination": "/api/analyze/optimize.js"
+    },
+    {
+      "source": "/api/analyze",
+      "destination": "/api/analyze/index.js"
+    },
+    {
+      "source": "/api/candidates/:id",
+      "destination": "/api/candidates/index.js?id=$id"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }

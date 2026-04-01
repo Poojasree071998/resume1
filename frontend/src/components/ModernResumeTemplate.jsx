@@ -11,9 +11,16 @@ const ModernResumeTemplate = ({ data, role }) => {
   if (!data) return null;
 
   const { 
-    name, contact, objective, education, skills, projects, 
-    training, personalDetails, department = 'Fullstack'
-  } = data;
+    name = "CANDIDATE NAME", 
+    contact = {}, 
+    objective = "Professional summary not available.", 
+    education = [], 
+    skills = {}, 
+    projects = [], 
+    training = [], 
+    personalDetails = {}, 
+    department = 'Fullstack'
+  } = (data || {});
 
   const globalStyles = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap');
@@ -50,18 +57,18 @@ const ModernResumeTemplate = ({ data, role }) => {
       <div style={{ background: theme.sidebarBg, color: 'white', padding: '3rem 2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
         <div style={{ marginBottom: '1rem' }}>
           <div style={{ marginBottom: '1.5rem' }}><ForgeLogo size={28} showText={false} /></div>
-          <h1 style={{ fontSize: '2.8rem', fontWeight: 900, lineHeight: 1.1, textTransform: 'uppercase' }}>{name.split(' ')[0]}<br/>{name.split(' ')[1] || ''}</h1>
+          <h1 style={{ fontSize: '2.8rem', fontWeight: 900, lineHeight: 1.1, textTransform: 'uppercase' }}>{(name || "CANDIDATE").split(' ')[0]}<br/>{(name || "").split(' ')[1] || ''}</h1>
         </div>
         
         <section className="sidebar-item">
           <h3 style={{ fontSize: '1rem', fontWeight: 800, borderBottom: '2px solid rgba(255,255,255,0.3)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>CERTIFICATION</h3>
-          {training.map((t, i) => <p key={i} style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t}</p>)}
+          {(training || []).map((t, i) => <p key={i} style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '0.5rem' }}>{t}</p>)}
         </section>
 
         <section className="sidebar-item">
           <h3 style={{ fontSize: '1rem', fontWeight: 800, borderBottom: '2px solid rgba(255,255,255,0.3)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>INDUSTRY SKILLS</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {Object.entries(skills).map(([cat, val], i) => (
+            {Object.entries(skills || {}).map(([cat, val], i) => (
               <div key={i}>
                 <p style={{ fontSize: '0.75rem', fontWeight: 900, opacity: 0.7, textTransform: 'uppercase', marginBottom: '0.25rem' }}>{cat}</p>
                 <p style={{ fontSize: '0.85rem', fontWeight: 600 }}>{val}</p>

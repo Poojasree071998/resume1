@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import ModernResumeTemplate from './ModernResumeTemplate';
 
-const OptimizationView = ({ optimization, role, onBack }) => {
+const OptimizationView = ({ optimization = {}, role = 'General', onBack }) => {
   const { 
     improvedResume = '', 
     changesMade = [], 

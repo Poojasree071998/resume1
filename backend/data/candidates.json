@@ -594,5 +594,52 @@
     ],
     "timestamp": "2026-04-01T11:26:12.747Z",
     "createdAt": "2026-04-01T11:26:12.748Z"
+  },
+  {
+    "_id": "1775044072629",
+    "id": "1775044072629",
+    "name": "resume_4",
+    "fileName": "resume_4.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Node.js Developer requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "Node.js Developer",
+    "email": "pooja@example.com",
+    "extractedText": "",
+    "notifications": [
+      {
+        "id": "1775044072629-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 5:17:52 pm"
+      },
+      {
+        "id": "1775044072629-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 5:17:52 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T11:47:52.629Z",
+    "createdAt": "2026-04-01T11:47:52.629Z"
   }
 ]
