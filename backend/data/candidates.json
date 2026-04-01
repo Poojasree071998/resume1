@@ -1,0 +1,158 @@
+[
+  {
+    "_id": "1775029575104",
+    "id": "1775029575104",
+    "name": "resume_3",
+    "fileName": "resume_3.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Database Engineer requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "Database Engineer",
+    "email": "pooja@example.com",
+    "notifications": [
+      {
+        "id": "1775029575103-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 1:16:14 pm"
+      },
+      {
+        "id": "1775029575104-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 1:16:14 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T07:46:15.104Z",
+    "createdAt": "2026-04-01T07:46:15.104Z"
+  },
+  {
+    "_id": "1775030517872",
+    "id": "1775030517872",
+    "name": "resume_4",
+    "fileName": "resume_4.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Revenue",
+      "Market Expansion",
+      "CRM",
+      "Lead Generation",
+      "B2B",
+      "GTM",
+      "Negotiation",
+      "Strategic"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Sales requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Interview",
+    "role": "Sales",
+    "email": "pooja@example.com",
+    "extractedText": "Experienced Node.js and React developer with 5 years of experience in building SaaS platforms. Skilled in JavaScript, TypeScript, MongoDB, and AWS.",
+    "notifications": [
+      {
+        "id": "1775030517871-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 1:31:57 pm"
+      },
+      {
+        "id": "1775030517872-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 1:31:57 pm"
+      },
+      {
+        "id": "1775030639460",
+        "type": "Interview",
+        "message": "Your interview has been scheduled for 2026-04-01 at 13:34. Please check the meeting link to join.",
+        "link": "http://localhost:5173/interview/154bd4abe3a5296a929a090e15f90fab",
+        "date": "1/4/2026, 1:33:59 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T08:01:57.872Z",
+    "createdAt": "2026-04-01T08:01:57.873Z",
+    "interview": {
+      "date": "2026-04-01",
+      "time": "13:34",
+      "link": "http://localhost:5173/interview/154bd4abe3a5296a929a090e15f90fab",
+      "meetLink": "http://localhost:5173/interview-room/1775030517872",
+      "token": "57fda8f2b182fd4069ee42a0f663d04b"
+    }
+  },
+  {
+    "_id": "1775031810474",
+    "id": "1775031810474",
+    "name": "resume_4",
+    "fileName": "resume_4.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for MERN Developer requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "MERN Developer",
+    "email": "pooja@example.com",
+    "extractedText": "",
+    "notifications": [
+      {
+        "id": "1775031810473-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 1:53:30 pm"
+      },
+      {
+        "id": "1775031810473-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 1:53:30 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T08:23:30.474Z",
+    "createdAt": "2026-04-01T08:23:30.474Z"
+  }
+]

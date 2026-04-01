@@ -1,5 +1,3 @@
-const dns = require('node:dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']); // Force Google DNS for SRV resolution
 
 const express = require('express');
 const cors = require('cors');
@@ -167,7 +165,7 @@ app.post('/api/match', (req, res) => {
 
   res.json({
     percentage: finalPercentage,
-    matchingSkills: matchingSkills.length > 0 ? matchingSkills : ["Communication", "Agile"],
+    matchedSkills: matchingSkills.length > 0 ? matchingSkills : ["Communication", "Agile"],
     missingSkills: missingSkills.slice(0, 4),
     recommendation: recommendation
   });

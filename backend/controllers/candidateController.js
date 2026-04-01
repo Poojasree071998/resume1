@@ -5,10 +5,38 @@ const { sendUploadConfirmation, sendInterviewEmail, sendSelectionEmail, sendReje
 
 // DB persistence is now managed by Mongoose/MongoDB
 
+const fs = require('fs');
+const path = require('path');
+
+const DB_PATH = path.join(__dirname, '../data/candidates.json');
+
+// Ensure data directory exists
+if (!fs.existsSync(path.dirname(DB_PATH))) {
+    fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+}
+
+// Helper to read/write local data
+const getLocalData = () => {
+    if (!fs.existsSync(DB_PATH)) return [];
+    const data = fs.readFileSync(DB_PATH, 'utf8');
+    return JSON.parse(data || '[]');
+};
+
+const saveLocalData = (data) => {
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+};
+
+const isDBConnected = () => mongoose.connection.readyState === 1;
+
 const getCandidates = async (req, res) => {
     try {
-        const candidates = await Candidate.find({}).sort({ createdAt: -1 });
-        res.json(candidates);
+        if (isDBConnected()) {
+            const candidates = await Candidate.find({}).sort({ createdAt: -1 });
+            return res.json(candidates);
+        }
+        // Fallback
+        const locals = getLocalData().sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+        res.json(locals);
     } catch (error) {
         console.error('Error fetching candidates:', error);
         res.status(500).json({ error: 'Failed to fetch candidates' });
@@ -18,14 +46,14 @@ const getCandidates = async (req, res) => {
 const addCandidate = async (req, res) => {
     try {
         const status = req.body.status || 'Applied';
-        const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
+        const timestampStr = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
         
         const notifications = [
             {
                 id: `${Date.now()}-1`,
                 type: 'Confirmation',
                 message: 'Application received successfully. AI initial screening in progress.',
-                date: timestamp
+                date: timestampStr
             }
         ];
 
@@ -34,22 +62,40 @@ const addCandidate = async (req, res) => {
                 id: `${Date.now()}-2`,
                 type: 'Selected',
                 message: 'Congratulations! You have been selected for the next round.',
-                date: timestamp
+                date: timestampStr
             });
         } else if (status === 'Rejected') {
             notifications.push({
                 id: `${Date.now()}-2`,
                 type: 'Rejected',
                 message: 'Thank you for your interest. Unfortunately, we will not be moving forward with your application.',
-                date: timestamp
+                date: timestampStr
             });
         }
 
-        const newCandidate = await Candidate.create({
-            ...req.body,
-            status,
-            notifications
-        });
+        let newCandidate;
+        if (isDBConnected()) {
+            newCandidate = await Candidate.create({
+                ...req.body,
+                status,
+                notifications
+            });
+        } else {
+            // Local persistence fallback
+            const locals = getLocalData();
+            newCandidate = {
+                _id: Date.now().toString(),
+                id: Date.now().toString(),
+                ...req.body,
+                status,
+                notifications,
+                extractedText: req.body.extractedText || '',
+                timestamp: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            };
+            locals.push(newCandidate);
+            saveLocalData(locals);
+        }
 
         if (newCandidate.email && newCandidate.email !== 'candidate@example.com') {
             try {
@@ -69,14 +115,29 @@ const addCandidate = async (req, res) => {
 const updateCandidate = async (req, res) => {
     const { id } = req.params;
     try {
-        const candidate = await Candidate.findById(id);
+        let candidate;
+        if (isDBConnected()) {
+            candidate = await Candidate.findById(id);
+        } else {
+            const locals = getLocalData();
+            candidate = locals.find(c => c._id === id || c.id === id);
+        }
+
         if (!candidate) return res.status(404).json({ error: 'Candidate not found' });
 
         const oldStatus = candidate.status;
         const newStatus = req.body.status || oldStatus;
         
+        // Preserve secure interview token before assignment
+        const existingToken = candidate.interview?.token;
+
         // Update candidate fields
         Object.assign(candidate, req.body);
+
+        // Restore token if it was overwritten
+        if (existingToken && req.body.interview) {
+            candidate.interview.token = existingToken;
+        }
         
         if (req.body.status && req.body.status !== oldStatus) {
             let message = `Status updated to ${req.body.status.toUpperCase()}.`;
@@ -90,6 +151,7 @@ const updateCandidate = async (req, res) => {
                 link = meetLink;
             }
 
+            if (!candidate.notifications) candidate.notifications = [];
             candidate.notifications.push({
                 id: Date.now().toString(),
                 type: req.body.status,
@@ -118,7 +180,14 @@ const updateCandidate = async (req, res) => {
             }
         }
 
-        await candidate.save();
+        if (isDBConnected()) {
+            await candidate.save();
+        } else {
+            const locals = getLocalData();
+            const idx = locals.findIndex(c => c._id === id || c.id === id);
+            locals[idx] = candidate;
+            saveLocalData(locals);
+        }
         res.json(candidate);
     } catch (error) {
         console.error('Error updating candidate:', error);
@@ -129,7 +198,12 @@ const updateCandidate = async (req, res) => {
 const deleteCandidate = async (req, res) => {
     const { id } = req.params;
     try {
-        await Candidate.findByIdAndDelete(id);
+        if (isDBConnected()) {
+            await Candidate.findByIdAndDelete(id);
+        } else {
+            const locals = getLocalData().filter(c => c._id !== id && c.id !== id);
+            saveLocalData(locals);
+        }
         res.status(204).send();
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete candidate' });
@@ -138,8 +212,12 @@ const deleteCandidate = async (req, res) => {
 
 const rankCandidates = async (req, res) => {
     try {
-        const ranked = await Candidate.find({}).sort({ score: -1 });
-        res.json(ranked);
+        if (isDBConnected()) {
+            const ranked = await Candidate.find({}).sort({ score: -1 });
+            return res.json(ranked);
+        }
+        const locals = getLocalData().sort((a,b) => (b.score || 0) - (a.score || 0));
+        res.json(locals);
     } catch (error) {
         res.status(500).json({ error: 'Failed to rank candidates' });
     }
@@ -148,13 +226,28 @@ const rankCandidates = async (req, res) => {
 const generateInterviewToken = async (req, res) => {
     const { candidateId } = req.body;
     try {
-        const candidate = await Candidate.findById(candidateId);
+        let candidate;
+        if (isDBConnected()) {
+            candidate = await Candidate.findById(candidateId);
+        } else {
+            const locals = getLocalData();
+            candidate = locals.find(c => c._id === candidateId || c.id === candidateId);
+        }
+
         if (!candidate) return res.status(404).json({ error: 'Candidate not found' });
 
         if (!candidate.interview?.token) {
             candidate.interview = candidate.interview || {};
             candidate.interview.token = crypto.randomBytes(16).toString('hex');
-            await candidate.save();
+            
+            if (isDBConnected()) {
+                await candidate.save();
+            } else {
+                const locals = getLocalData();
+                const idx = locals.findIndex(c => c._id === candidateId || c.id === candidateId);
+                locals[idx] = candidate;
+                saveLocalData(locals);
+            }
         }
         res.json({ token: candidate.interview.token });
     } catch (error) {
@@ -165,7 +258,13 @@ const generateInterviewToken = async (req, res) => {
 const validateToken = async (req, res) => {
     const { token } = req.params;
     try {
-        const candidate = await Candidate.findOne({ 'interview.token': token });
+        let candidate;
+        if (isDBConnected()) {
+            candidate = await Candidate.findOne({ 'interview.token': token });
+        } else {
+            candidate = getLocalData().find(c => c.interview?.token === token);
+        }
+
         if (!candidate) return res.status(404).json({ error: 'Invalid link' });
 
         res.json({

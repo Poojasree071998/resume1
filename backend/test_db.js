@@ -1,5 +1,3 @@
-const dns = require('node:dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']); // Force Google DNS to resolve SRV records
 require('dotenv').config();
 const mongoose = require('mongoose');
 

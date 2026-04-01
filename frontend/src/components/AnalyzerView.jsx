@@ -500,7 +500,7 @@ const subRolesMap = {
   'Sales': ['Business Development', 'Sales Executive', 'Marketing Specialist']
 };
 
-const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, onBatchComplete, onReset, clearResults, recruiterMode, setRecruiterMode, onUpdateUser, initialFile, initialRole, onSetRole, uploadedResumes, setUploadedResumes, setShowDuplicateModal, user }) => {
+const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, onBatchComplete, onReset, clearResults, recruiterMode, setRecruiterMode, onUpdateUser, initialFile, initialRole, onSetRole, uploadedResumes, setUploadedResumes, setShowDuplicateModal, user, setResults, setResumeText, setResumeName }) => {
   // If user is HR and recruiterMode is active, start at Step 3 (Results/Pipeline)
   const [step, setStep] = useState(results || (recruiterMode && user?.userRole === 'HR') ? 3 : 1);
 
@@ -753,6 +753,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
                 improvementSkills: result.improvementSkills || [],
                 status: result.verdict || 'Considered',
                 role: role || 'General',
+                extractedText: result.extractedText || '',
                 timestamp: new Date().toLocaleString(),
                 remarks: result.reasons?.[0] || result.suggestions?.[0] || "Profile review complete"
               };
@@ -858,6 +859,12 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
 
   const handleSelectCandidate = (cand) => {
     setSelectedCandidateEntry(cand);
+    
+    // Synchronize with global active resume for Job Matcher
+    if (setResults) setResults(cand);
+    if (setResumeText) setResumeText(cand.extractedText || '');
+    if (setResumeName) setResumeName(cand.fileName || cand.name);
+
     // Smooth scroll to top of view container
     setTimeout(() => {
       const viewContainer = document.querySelector('.view-container');

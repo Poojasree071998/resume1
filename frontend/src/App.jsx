@@ -294,7 +294,8 @@ function App() {
         reasons: data.reasons || [],
         status: data.verdict || 'Consider',
         role: data.role || selectedRole || 'General',
-        email: user?.email || 'N/A'
+        email: user?.email || 'N/A',
+        extractedText: data.extractedText || ''
       };
 
       await fetch('/api/candidates', {
@@ -449,6 +450,9 @@ function App() {
                         initialRole={selectedRole}
                         onUpdateUser={handleUpdateUser}
                         onSetRole={setSelectedRole}
+                        setResults={setResults}
+                        setResumeText={setResumeText}
+                        setResumeName={setResumeName}
                         uploadedResumes={uploadedResumes}
                         setUploadedResumes={setUploadedResumes}
                         setShowDuplicateModal={setShowDuplicateModal}

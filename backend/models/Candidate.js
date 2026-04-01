@@ -17,6 +17,7 @@ const CandidateSchema = new mongoose.Schema({
   strengths: [String],
   weaknesses: [String],
   reasons: [String],
+  extractedText: { type: String },
   
   // Interview Integration
   interview: {
@@ -25,6 +26,14 @@ const CandidateSchema = new mongoose.Schema({
     time: String,
     meetLink: String
   },
+  
+  notifications: [{
+    id: { type: String },
+    type: { type: String },
+    message: { type: String },
+    link: { type: String },
+    date: { type: String }
+  }],
   
   // Persistence
   timestamp: { type: Date, default: Date.now },

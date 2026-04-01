@@ -1,5 +1,3 @@
-import dns from 'node:dns';
-dns.setServers(['8.8.8.8', '8.8.4.4']); // Force Google DNS for SRV resolution
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;

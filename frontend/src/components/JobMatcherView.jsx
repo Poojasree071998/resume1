@@ -79,9 +79,11 @@ const JobMatcherView = ({ resumeText, resumeName }) => {
               </div>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>Active Resume</h3>
             </div>
-            <div style={{ padding: '1.5rem', border: '2px dashed rgba(0,0,0,0.05)', borderRadius: '16px', textAlign: 'center' }}>
-              <p style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>{resumeName || 'No Resume Uploaded'}</p>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{resumeName ? 'Ready for Matching' : 'Upload in AI Analyzer'}</p>
+            <div style={{ padding: '1.5rem', border: `2px dashed ${resumeText ? 'rgba(16, 185, 129, 0.2)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '16px', textAlign: 'center', background: resumeText ? 'rgba(16, 185, 129, 0.02)' : 'transparent' }}>
+              <p style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem', color: resumeText ? 'var(--text-main)' : 'var(--text-muted)' }}>{resumeName || 'No Resume Selected'}</p>
+              <p style={{ fontSize: '0.75rem', color: resumeText ? '#10b981' : 'var(--text-muted)', fontWeight: 600 }}>
+                {resumeText ? 'Ready for Matching' : resumeName ? 'Text Extraction Failed / Scanned PDF' : 'Select a candidate in Dashboard/Pipeline'}
+              </p>
             </div>
           </div>
 
@@ -147,7 +149,7 @@ const JobMatcherView = ({ resumeText, resumeName }) => {
                     <AlertTriangle size={14} /> MISSING KEY SKILLS
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignContent: 'flex-start' }}>
-                    {result.missingSkills.map((s, i) => (
+                    {result.missingSkills?.map((s, i) => (
                       <span key={i} style={{ padding: '0.45rem 0.9rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800, border: '1px solid rgba(239, 68, 68, 0.1)' }}>{s}</span>
                     ))}
                   </div>
@@ -157,7 +159,7 @@ const JobMatcherView = ({ resumeText, resumeName }) => {
                     <CheckCircle2 size={14} /> MATCHING STACK
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    {result.matchedSkills.map((s, i) => (
+                    {result.matchedSkills?.map((s, i) => (
                       <span key={i} style={{ padding: '0.4rem 0.8rem', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800 }}>{s}</span>
                     ))}
                   </div>

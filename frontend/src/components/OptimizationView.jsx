@@ -26,7 +26,7 @@ const OptimizationView = ({ optimization, role, onBack }) => {
     beforeAfter = null,
     baseMatch = 0,
     structuredData = null
-  } = optimization;
+  } = (optimization || {});
 
   return (
     <div className="animate-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -106,7 +106,7 @@ const OptimizationView = ({ optimization, role, onBack }) => {
                       'BDA': { primary: '#ef4444', sidebarBg: '#ffffff', text: '#ef4444' },
                       'Sales': { primary: '#f59e0b', sidebarBg: '#fff7ed', text: '#92400e' }
                     };
-                    const dept = structuredData.department || 'Fullstack';
+                    const dept = structuredData?.department || 'Fullstack';
                     const theme = themes[dept] || themes['Fullstack'];
                     const isSidebarLeft = ['Frontend', 'Sales'].includes(dept);
                     
@@ -268,7 +268,7 @@ const OptimizationView = ({ optimization, role, onBack }) => {
                   lineHeight: '1.7',
                   color: '#334155'
                 }}>
-                  {improvedResume.split('\n').map((line, i) => {
+                  {(improvedResume || '').split('\n').map((line, i) => {
                     if (line.startsWith('# ')) return <h1 key={i} style={{ fontSize: '2rem', fontWeight: 900, textAlign: 'center' }}>{line.replace('# ', '')}</h1>;
                     if (line.startsWith('### ')) return <h3 key={i} style={{ fontSize: '1.2rem', fontWeight: 800, marginTop: '2rem', borderBottom: '1px solid #e2e8f0' }}>{line.replace('### ', '')}</h3>;
                     return <p key={i}>{line}</p>;
