@@ -19,6 +19,16 @@ const CandidateSchema = new mongoose.Schema({
   reasons: [String],
   extractedText: { type: String },
   
+  // Additional Personal Details
+  address: { type: String },
+  city: { type: String },
+  postalCode: { type: String },
+  country: { type: String },
+  drivingLicense: { type: String },
+  nationality: { type: String },
+  placeOfBirth: { type: String },
+  dateOfBirth: { type: String },
+  
   // Interview Integration
   interview: {
     token: String,

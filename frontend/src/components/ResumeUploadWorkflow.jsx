@@ -29,6 +29,103 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   
+  const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  const [additionalInfoStep, setAdditionalInfoStep] = useState(1);
+
+  const handleDownload = () => {
+    const { personal, experience, education, skills, summary } = formData;
+    const fullName = `${personal.firstName} ${personal.lastName}`;
+    
+    const htmlContent = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head>
+        <meta charset='utf-8'>
+        <title>${fullName} - Resume</title>
+        <style>
+          body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #1e293b; padding: 40pt; }
+          .header { border-bottom: 2pt solid #6366f1; padding-bottom: 10pt; margin-bottom: 20pt; }
+          .name { font-size: 26pt; font-weight: 900; color: #0f172a; text-transform: uppercase; margin: 0; }
+          .title { font-size: 14pt; color: #6366f1; font-weight: 700; margin-top: 5pt; }
+          .contact { font-size: 10pt; color: #64748b; margin-top: 5pt; }
+          h2 { font-size: 14pt; font-weight: 800; color: #0f172a; text-transform: uppercase; border-bottom: 1pt solid #e2e8f0; padding-bottom: 5pt; margin-top: 25pt; margin-bottom: 10pt; }
+          .section { margin-bottom: 15pt; }
+          .item-header { display: flex; justify-content: space-between; font-weight: 800; font-size: 11pt; color: #0f172a; }
+          .company { color: #6366f1; font-weight: 700; font-size: 10.5pt; margin-bottom: 3pt; }
+          .date { color: #94a3b8; font-size: 9pt; }
+          .desc { font-size: 10pt; color: #475569; margin-top: 5pt; }
+          .skills-box { background: #f8fafc; padding: 10pt; border-radius: 6pt; border: 1pt solid #e2e8f0; }
+          .skill-tag { display: inline-block; padding: 3pt 8pt; background: #eef2ff; color: #4f46e5; border-radius: 4pt; font-size: 9pt; font-weight: 700; margin-right: 5pt; margin-bottom: 5pt; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="name">${fullName}</div>
+          <div class="title">${personal.jobTitle || 'Professional'}</div>
+          <div class="contact">
+            ${personal.email} | ${personal.phone} | ${personal.city}, ${personal.country}
+          </div>
+        </div>
+
+        ${summary ? `
+          <div class="section">
+            <h2>Professional Summary</h2>
+            <p class="desc">${summary}</p>
+          </div>
+        ` : ''}
+
+        ${experience.length > 0 ? `
+          <div class="section">
+            <h2>Work Experience</h2>
+            ${experience.map(exp => `
+              <div style="margin-bottom: 15pt;">
+                <div class="item-header">
+                  <span>${exp.position}</span>
+                  <span class="date">${exp.duration}</span>
+                </div>
+                <div class="company">${exp.company}</div>
+                <div class="desc">${exp.description}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${education.length > 0 ? `
+          <div class="section">
+            <h2>Education</h2>
+            ${education.map(edu => `
+              <div style="margin-bottom: 10pt;">
+                <div class="item-header">
+                  <span>${edu.degree}</span>
+                  <span class="date">${edu.year}</span>
+                </div>
+                <div class="desc">${edu.school}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${skills.length > 0 ? `
+          <div class="section">
+            <h2>Technical Expertise</h2>
+            <div class="skills-box">
+              ${skills.map(s => `<span class="skill-tag">${s}</span>`).join(' ')}
+            </div>
+          </div>
+        ` : ''}
+      </body>
+      </html>
+    `;
+    
+    const blob = new Blob([htmlContent], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Resume_${fullName.replace(/\s+/g, '_')}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
   const [formData, setFormData] = useState({
     personal: {
       firstName: '',
@@ -36,8 +133,19 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
       jobTitle: '',
       phone: '',
       email: '',
-      additionalInfo: ''
-    }
+      address: '',
+      city: '',
+      postalCode: '',
+      country: '',
+      drivingLicense: '',
+      nationality: '',
+      placeOfBirth: '',
+      dateOfBirth: ''
+    },
+    experience: [],
+    education: [],
+    skills: [],
+    summary: ''
   });
   const [analysisResults, setAnalysisResults] = useState(null);
 
@@ -45,6 +153,8 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
   useEffect(() => {
     if (isOpen) {
       setStep(1);
+      setShowAdditionalInfo(false);
+      setAdditionalInfoStep(1);
       setFormData({
         personal: {
           firstName: '',
@@ -52,8 +162,19 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
           jobTitle: '',
           phone: '',
           email: '',
-          additionalInfo: ''
-        }
+          address: '',
+          city: '',
+          postalCode: '',
+          country: '',
+          drivingLicense: '',
+          nationality: '',
+          placeOfBirth: '',
+          dateOfBirth: ''
+        },
+        experience: [],
+        education: [],
+        skills: [],
+        summary: ''
       });
     }
   }, [isOpen]);
@@ -201,13 +322,22 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
   };
 
   const RenderStepper = () => {
-    const steps = [
+    const steps = step < 6 ? [
       { id: 1, label: 'Upload & Scan' },
       { id: 5, label: 'Choose template' },
       { id: 6, label: 'Finalize & Download' }
+    ] : [
+      { id: 6, label: 'Contacts' },
+      { id: 7, label: 'Experience' },
+      { id: 8, label: 'Education' },
+      { id: 9, label: 'Skills' },
+      { id: 10, label: 'Summary' },
+      { id: 11, label: 'Finalize' }
     ];
 
-    const currentIdx = step <= 3 ? 0 : step === 5 ? 1 : 2;
+    const currentIdx = step < 6 
+      ? (step <= 3 ? 0 : step === 5 ? 1 : 2)
+      : (step - 6);
 
     return (
       <div style={{ 
@@ -712,85 +842,435 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--primary)', fontWeight: 800, cursor: 'pointer', marginBottom: '4rem' }}>
-                  Additional information <ChevronDown size={18} />
+                <div 
+                  onClick={() => setShowAdditionalInfo(!showAdditionalInfo)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--primary)', fontWeight: 800, cursor: 'pointer', marginBottom: showAdditionalInfo ? '1.5rem' : '4rem' }}
+                >
+                  Additional information <motion.div animate={{ rotate: showAdditionalInfo ? 180 : 0 }} transition={{ duration: 0.3 }}><ChevronDown size={18} /></motion.div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <button 
-                    onClick={() => setStep(7)}
-                    className="glass-btn btn-primary"
-                    style={{ padding: '1rem 3rem', fontSize: '1rem', fontWeight: 900, borderRadius: '16px' }}
-                  >
-                    Next: Experience
-                  </button>
-                </div>
+                <AnimatePresence>
+                  {showAdditionalInfo && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      style={{ overflow: 'hidden', marginBottom: '3rem', border: '1px solid var(--border)', borderRadius: '24px', padding: '1.5rem', background: 'rgba(255,255,255,0.01)' }}
+                    >
+                      {/* Sub-step Indicator */}
+                      <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', justifyContent: 'center' }}>
+                        {[1, 2, 3].map(s => (
+                          <div key={s} style={{ width: s === additionalInfoStep ? '30px' : '10px', height: '6px', borderRadius: '3px', background: s === additionalInfoStep ? 'var(--primary)' : 'rgba(0,0,0,0.1)', transition: 'all 0.3s' }} />
+                        ))}
+                      </div>
+
+                      <AnimatePresence mode="wait">
+                        {additionalInfoStep === 1 && (
+                          <motion.div 
+                            key="sub1" 
+                            initial={{ opacity: 0, x: 20 }} 
+                            animate={{ opacity: 1, x: 0 }} 
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 900, color: 'var(--primary)', marginBottom: '1rem', textTransform: 'uppercase' }}>Step 1: Location Details</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                              <div className="input-group">
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Address</label>
+                                <input name="address" value={formData.personal.address} onChange={handleInputChange} placeholder="e.g. 123 Main St" style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} />
+                              </div>
+                              <div className="input-group">
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>City</label>
+                                <input name="city" value={formData.personal.city} onChange={handleInputChange} placeholder="e.g. Chennai" style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} />
+                              </div>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                              <div className="input-group">
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Postal Code</label>
+                                <input name="postalCode" value={formData.personal.postalCode} onChange={handleInputChange} placeholder="e.g. 600001" style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} />
+                              </div>
+                              <div className="input-group">
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Country</label>
+                                <input name="country" value={formData.personal.country} onChange={handleInputChange} placeholder="e.g. India" style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} />
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+
+                        {additionalInfoStep === 2 && (
+                          <motion.div 
+                            key="sub2" 
+                            initial={{ opacity: 0, x: 20 }} 
+                            animate={{ opacity: 1, x: 0 }} 
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 900, color: 'var(--primary)', marginBottom: '1rem', textTransform: 'uppercase' }}>Step 2: Identification</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                              <div className="input-group">
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Driving License</label>
+                                <input name="drivingLicense" value={formData.personal.drivingLicense} onChange={handleInputChange} placeholder="if applicable" style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} />
+                              </div>
+                              <div className="input-group">
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Nationality</label>
+                                <input name="nationality" value={formData.personal.nationality} onChange={handleInputChange} placeholder="e.g. Indian" style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} />
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+
+                        {additionalInfoStep === 3 && (
+                          <motion.div 
+                            key="sub3" 
+                            initial={{ opacity: 0, x: 20 }} 
+                            animate={{ opacity: 1, x: 0 }} 
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 900, color: 'var(--primary)', marginBottom: '1rem', textTransform: 'uppercase' }}>Step 3: Personal Details</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                              <div className="input-group">
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Place of Birth</label>
+                                <input name="placeOfBirth" value={formData.personal.placeOfBirth} onChange={handleInputChange} placeholder="e.g. Chennai" style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} />
+                              </div>
+                              <div className="input-group">
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Date of Birth</label>
+                                <input name="dateOfBirth" type="date" value={formData.personal.dateOfBirth} onChange={handleInputChange} style={{ width: '100%', padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem', fontWeight: 600 }} />
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {/* Sub-navigation Controls */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2.5rem', borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
+                        <button 
+                          style={{ 
+                            background: 'transparent', 
+                            border: '1px solid var(--border)', 
+                            color: 'var(--text-main)', 
+                            padding: '0.75rem 1.5rem', 
+                            borderRadius: '12px', 
+                            fontSize: '0.85rem', 
+                            fontWeight: 800, 
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            visibility: additionalInfoStep === 1 ? 'hidden' : 'visible' 
+                          }}
+                          onClick={() => setAdditionalInfoStep(prev => prev - 1)}
+                        >
+                          <ChevronLeft size={16} /> BACK
+                        </button>
+                        
+                        <div style={{ display: 'flex', gap: '1rem' }}>
+                          <button 
+                            className="glass-btn btn-primary"
+                            style={{ 
+                              padding: '0.75rem 2rem', 
+                              borderRadius: '12px', 
+                              fontSize: '0.85rem', 
+                              fontWeight: 900,
+                              minWidth: '100px'
+                            }}
+                            onClick={() => {
+                              if (additionalInfoStep < 3) {
+                                setAdditionalInfoStep(prev => prev + 1);
+                              } else {
+                                setShowAdditionalInfo(false);
+                              }
+                            }}
+                          >
+                            {additionalInfoStep === 3 ? 'FINISH' : 'NEXT'} {additionalInfoStep < 3 && <ChevronRight size={16} style={{marginLeft: '4px'}} />}
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {!showAdditionalInfo && (
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <button 
+                      onClick={() => setStep(7)}
+                      className="glass-btn btn-primary"
+                      style={{ padding: '1rem 3rem', fontSize: '1rem', fontWeight: 900, borderRadius: '16px' }}
+                    >
+                      Next: Experience <ChevronRight size={18} style={{ marginLeft: '8px' }} />
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {/* Right Column: Preview */}
-              <div style={{ flex: 0.4, background: 'rgba(255,255,255,0.015)', padding: '2.5rem', overflow: 'hidden', position: 'relative' }}>
-                {/* Score Badge */}
-                <div style={{ 
-                  position: 'absolute', top: '24px', left: '24px', zIndex: 5,
-                  padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.05)', 
-                  border: '1px solid var(--border)', borderRadius: '12px',
-                  display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8rem', fontWeight: 800
-                }}>
-                  <div style={{ color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)', padding: '2px 8px', borderRadius: '4px' }}>60%</div>
-                  Your resume score <span style={{ fontSize: '1rem' }}>🤩</span>
-                </div>
-
-                {/* Resume Mockup */}
-                <div style={{ 
-                  background: 'white', height: '100%', borderRadius: '4px', boxAlpha: '0.1', 
-                  transform: 'scale(1)', transformOrigin: 'top center',
-                  display: 'flex', flexDirection: 'column', boxSizing: 'border-box',
-                  boxShadow: '0 20px 50px rgba(0,0,0,0.2)'
-                }}>
-                   <div style={{ display: 'flex', height: '100%' }}>
-                      <div style={{ flex: 0.35, background: '#f8fafc', padding: '3rem 1.5rem', borderRight: '1px solid #e2e8f0' }}>
-                         <div style={{ marginBottom: '2rem' }}>
-                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', marginBottom: '0.25rem', textTransform: 'uppercase' }}>{formData?.personal?.firstName || 'User'} {formData?.personal?.lastName || ''}</div>
-                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>{formData?.personal?.jobTitle || 'Professional'}</div>
-                         </div>
-                         <div style={{ marginBottom: '2rem' }}>
-                            <div style={{ fontSize: '0.6rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.1em' }}>Details</div>
-                            <div style={{ fontSize: '0.7rem', color: '#334155', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <Mail size={10} color="#6366f1" /> {formData?.personal?.email || 'N/A'}
-                            </div>
-                            <div style={{ fontSize: '0.7rem', color: '#334155', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <Phone size={10} color="#6366f1" /> {formData?.personal?.phone || 'N/A'}
-                            </div>
-                         </div>
-                         <div>
-                            <div style={{ fontSize: '0.6rem', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.1em' }}>Skills</div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                               {['Flutter', 'Dart', 'React Native'].map(s => <div key={s} style={{ fontSize: '0.7rem', color: '#334155', fontWeight: 600 }}>• {s}</div>)}
-                            </div>
-                         </div>
-                      </div>
-                      <div style={{ flex: 0.65, padding: '3rem 2rem' }}>
-                         <div style={{ marginBottom: '2rem' }}>
-                            <div style={{ fontSize: '0.7rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', borderBottom: '1.5px solid #e2e8f0', paddingBottom: '0.4rem', marginBottom: '1rem' }}>Education</div>
-                            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0f172a' }}>Bachelor of Computer Applications</div>
-                            <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>University of Madras</div>
-                         </div>
-                         <div>
-                            <div style={{ fontSize: '0.7rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', borderBottom: '1.5px solid #e2e8f0', paddingBottom: '0.4rem', marginBottom: '1rem' }}>Projects</div>
-                            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0f172a' }}>AI Resume Analyzer</div>
-                            <p style={{ fontSize: '0.65rem', color: '#64748b', marginTop: '0.4rem', lineHeight: 1.5 }}>Developed a high-fidelity AI powered resume reconstruction platform.</p>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-              </div>
+              <ResumePreview formData={formData} />
             </motion.div>
           )}
 
-          {/* STEP 7: FINAL SUCCESS (FORMERLY STEP 6) */}
+          {/* STEP 7: EXPERIENCE */}
           {step === 7 && (
+            <motion.div key="step7" variants={stepVariants} initial="initial" animate="animate" exit="exit" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+              <div style={{ flex: 0.6, padding: '3.5rem', overflowY: 'auto', borderRight: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <h2 style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text-main)' }}>Experience</h2>
+                  <button 
+                    onClick={() => setFormData(prev => ({ ...prev, experience: [...prev.experience, { company: '', position: '', duration: '', description: '' }] }))}
+                    style={{ padding: '0.5rem 1rem', background: 'var(--primary-glow)', border: '1px solid var(--primary)', borderRadius: '10px', color: 'var(--primary)', fontWeight: 800, fontSize: '0.8rem', cursor: 'pointer' }}
+                  >
+                    + Add Experience
+                  </button>
+                </div>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '2.5rem' }}>List your work history, starting with your most recent role.</p>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                  {formData.experience.map((exp, index) => (
+                    <div key={index} style={{ padding: '1.5rem', borderRadius: '20px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)', position: 'relative' }}>
+                      <button 
+                        onClick={() => setFormData(prev => ({ ...prev, experience: prev.experience.filter((_, i) => i !== index) }))}
+                        style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}
+                      >
+                        <X size={18} />
+                      </button>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                        <div className="input-group">
+                          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Company</label>
+                          <input 
+                            value={exp.company} 
+                            onChange={(e) => {
+                              const newExp = [...formData.experience];
+                              newExp[index].company = e.target.value;
+                              setFormData(prev => ({ ...prev, experience: newExp }));
+                            }}
+                            style={{ width: '100%', padding: '0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '0.9rem' }} 
+                          />
+                        </div>
+                        <div className="input-group">
+                          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Position</label>
+                          <input 
+                            value={exp.position} 
+                            onChange={(e) => {
+                              const newExp = [...formData.experience];
+                              newExp[index].position = e.target.value;
+                              setFormData(prev => ({ ...prev, experience: newExp }));
+                            }}
+                            style={{ width: '100%', padding: '0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '0.9rem' }} 
+                          />
+                        </div>
+                      </div>
+                      <div className="input-group" style={{ marginBottom: '1.5rem' }}>
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Duration (e.g. 2020 - Present)</label>
+                        <input 
+                          value={exp.duration} 
+                          onChange={(e) => {
+                            const newExp = [...formData.experience];
+                            newExp[index].duration = e.target.value;
+                            setFormData(prev => ({ ...prev, experience: newExp }));
+                          }}
+                          style={{ width: '100%', padding: '0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '0.9rem' }} 
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Description</label>
+                        <textarea 
+                          value={exp.description} 
+                          onChange={(e) => {
+                            const newExp = [...formData.experience];
+                            newExp[index].description = e.target.value;
+                            setFormData(prev => ({ ...prev, experience: newExp }));
+                          }}
+                          rows={3}
+                          style={{ width: '100%', padding: '0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '0.9rem', resize: 'none' }} 
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  {formData.experience.length === 0 && (
+                    <div style={{ padding: '3rem', textAlign: 'center', border: '2px dashed var(--border)', borderRadius: '24px', color: 'var(--text-muted)' }}>
+                      No experience added yet. Click the button above to add your work history.
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem' }}>
+                  <button onClick={() => setStep(6)} style={{ padding: '1rem 2rem', background: 'transparent', border: '1px solid var(--border)', borderRadius: '16px', color: 'var(--text-main)', fontWeight: 800, cursor: 'pointer' }}>Back</button>
+                  <button onClick={() => setStep(8)} className="glass-btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1rem', fontWeight: 900, borderRadius: '16px' }}>Next: Education</button>
+                </div>
+              </div>
+              <ResumePreview formData={formData} />
+            </motion.div>
+          )}
+
+          {/* STEP 8: EDUCATION */}
+          {step === 8 && (
+            <motion.div key="step8" variants={stepVariants} initial="initial" animate="animate" exit="exit" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+              <div style={{ flex: 0.6, padding: '3.5rem', overflowY: 'auto', borderRight: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <h2 style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text-main)' }}>Education</h2>
+                  <button 
+                    onClick={() => setFormData(prev => ({ ...prev, education: [...prev.education, { school: '', degree: '', year: '' }] }))}
+                    style={{ padding: '0.5rem 1rem', background: 'var(--primary-glow)', border: '1px solid var(--primary)', borderRadius: '10px', color: 'var(--primary)', fontWeight: 800, fontSize: '0.8rem', cursor: 'pointer' }}
+                  >
+                    + Add Education
+                  </button>
+                </div>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '2.5rem' }}>Add your educational background and qualifications.</p>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {formData.education.map((edu, index) => (
+                    <div key={index} style={{ padding: '1.5rem', borderRadius: '20px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)', position: 'relative' }}>
+                      <button 
+                        onClick={() => setFormData(prev => ({ ...prev, education: prev.education.filter((_, i) => i !== index) }))}
+                        style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}
+                      >
+                        <X size={18} />
+                      </button>
+                      <div className="input-group" style={{ marginBottom: '1.5rem' }}>
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>School / University</label>
+                        <input 
+                          value={edu.school} 
+                          onChange={(e) => {
+                            const newEdu = [...formData.education];
+                            newEdu[index].school = e.target.value;
+                            setFormData(prev => ({ ...prev, education: newEdu }));
+                          }}
+                          style={{ width: '100%', padding: '0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '0.9rem' }} 
+                        />
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                        <div className="input-group">
+                          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Degree / Field of Study</label>
+                          <input 
+                            value={edu.degree} 
+                            onChange={(e) => {
+                              const newEdu = [...formData.education];
+                              newEdu[index].degree = e.target.value;
+                              setFormData(prev => ({ ...prev, education: newEdu }));
+                            }}
+                            style={{ width: '100%', padding: '0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '0.9rem' }} 
+                          />
+                        </div>
+                        <div className="input-group">
+                          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.6rem', textTransform: 'uppercase' }}>Graduation Year</label>
+                          <input 
+                            value={edu.year} 
+                            onChange={(e) => {
+                              const newEdu = [...formData.education];
+                              newEdu[index].year = e.target.value;
+                              setFormData(prev => ({ ...prev, education: newEdu }));
+                            }}
+                            style={{ width: '100%', padding: '0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '0.9rem' }} 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem' }}>
+                  <button onClick={() => setStep(7)} style={{ padding: '1rem 2rem', background: 'transparent', border: '1px solid var(--border)', borderRadius: '16px', color: 'var(--text-main)', fontWeight: 800, cursor: 'pointer' }}>Back</button>
+                  <button onClick={() => setStep(9)} className="glass-btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1rem', fontWeight: 900, borderRadius: '16px' }}>Next: Skills</button>
+                </div>
+              </div>
+              <ResumePreview formData={formData} />
+            </motion.div>
+          )}
+
+          {/* STEP 9: SKILLS */}
+          {step === 9 && (
+            <motion.div key="step9" variants={stepVariants} initial="initial" animate="animate" exit="exit" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+              <div style={{ flex: 0.6, padding: '3.5rem', overflowY: 'auto', borderRight: '1px solid var(--border)' }}>
+                <h2 style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '1rem' }}>Skills</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '2.5rem' }}>Add relevant skills to showcase your expertise.</p>
+                
+                <div style={{ marginBottom: '2rem' }}>
+                  <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+                    <input 
+                      id="skill-input"
+                      placeholder="e.g. React.js" 
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && e.target.value.trim()) {
+                          setFormData(prev => ({ ...prev, skills: [...prev.skills, e.target.value.trim()] }));
+                          e.target.value = '';
+                        }
+                      }}
+                      style={{ flex: 1, padding: '1rem', borderRadius: '14px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '1rem', outline: 'none' }} 
+                    />
+                    <button 
+                      onClick={() => {
+                        const input = document.getElementById('skill-input');
+                        if (input.value.trim()) {
+                          setFormData(prev => ({ ...prev, skills: [...prev.skills, input.value.trim()] }));
+                          input.value = '';
+                        }
+                      }}
+                      className="glass-btn btn-primary" 
+                      style={{ padding: '0 2rem', borderRadius: '14px' }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                    {formData.skills.map((skill, index) => (
+                      <motion.div 
+                        key={index} 
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        style={{ padding: '0.6rem 1.2rem', background: 'var(--primary-glow)', border: '1px solid var(--primary)', borderRadius: '12px', color: 'var(--primary)', fontWeight: 800, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                      >
+                        {skill}
+                        <X size={14} style={{ cursor: 'pointer' }} onClick={() => setFormData(prev => ({ ...prev, skills: prev.skills.filter((_, i) => i !== index) }))} />
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem' }}>
+                  <button onClick={() => setStep(8)} style={{ padding: '1rem 2rem', background: 'transparent', border: '1px solid var(--border)', borderRadius: '16px', color: 'var(--text-main)', fontWeight: 800, cursor: 'pointer' }}>Back</button>
+                  <button onClick={() => setStep(10)} className="glass-btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1rem', fontWeight: 900, borderRadius: '16px' }}>Next: Summary</button>
+                </div>
+              </div>
+              <ResumePreview formData={formData} />
+            </motion.div>
+          )}
+
+          {/* STEP 10: SUMMARY */}
+          {step === 10 && (
+            <motion.div key="step10" variants={stepVariants} initial="initial" animate="animate" exit="exit" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+              <div style={{ flex: 0.6, padding: '3.5rem', overflowY: 'auto', borderRight: '1px solid var(--border)' }}>
+                <h2 style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '1rem' }}>Summary</h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '2.5rem' }}>Write a short professional summary to grab the recruiter's attention.</p>
+                
+                <div className="input-group">
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '1rem', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
+                    Professional Summary
+                    <span style={{ color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => setFormData(prev => ({ ...prev, summary: analysisResults?.objective || prev.summary }))}>
+                      <Sparkles size={14} /> Use AI Suggestion
+                    </span>
+                  </label>
+                  <textarea 
+                    value={formData.summary} 
+                    onChange={(e) => setFormData(prev => ({ ...prev, summary: e.target.value }))}
+                    placeholder="e.g. Experienced Frontend Developer with a strong background in React..."
+                    rows={8}
+                    style={{ width: '100%', padding: '1.5rem', borderRadius: '20px', border: '1px solid var(--border)', background: 'var(--bg-hover)', color: 'var(--text-main)', fontSize: '1.1rem', lineHeight: 1.6, outline: 'none', resize: 'none' }} 
+                  />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4rem' }}>
+                  <button onClick={() => setStep(9)} style={{ padding: '1rem 2rem', background: 'transparent', border: '1px solid var(--border)', borderRadius: '16px', color: 'var(--text-main)', fontWeight: 800, cursor: 'pointer' }}>Back</button>
+                  <button onClick={() => setStep(11)} className="glass-btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1rem', fontWeight: 900, borderRadius: '16px' }}>Next: Finalize</button>
+                </div>
+              </div>
+              <ResumePreview formData={formData} />
+            </motion.div>
+          )}
+
+          {/* STEP 11: FINALIZE */}
+          {step === 11 && (
             <motion.div 
-              key="step7" 
+              key="step11" 
               variants={stepVariants} 
               initial="initial" 
               animate="animate" 
@@ -798,48 +1278,52 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
               style={{ padding: '0 0 4rem 0', textAlign: 'center', display: 'flex', flexDirection: 'column' }}
             >
                <div style={{ 
-                 height: '240px', background: 'linear-gradient(180deg, rgba(244, 196, 0, 0.1) 0%, transparent 100%)',
+                 height: '240px', background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%)',
                  display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
                }}>
                  <div style={{ position: 'relative' }}>
-                    <div style={{ width: '120px', height: '160px', borderRadius: '12px', background: 'white', opacity: 0.05, transform: 'rotate(10deg) translateX(40px) translateY(20px)' }} />
                     <div style={{ width: '120px', height: '160px', borderRadius: '12px', background: 'white', opacity: 0.1, transform: 'rotate(-5deg) translateX(-20px)' }} />
-                    <div style={{ width: '130px', height: '170px', borderRadius: '12px', background: 'white', position: 'absolute', top: -5, left: 5, boxShadow: '0 20px 40px rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', padding: '1rem' }}>
-                       <div style={{ width: '100%', height: '8px', background: '#f1f5f9', borderRadius: '4px', marginBottom: '8px' }} />
-                       <div style={{ width: '60%', height: '8px', background: '#f1f5f9', borderRadius: '4px', marginBottom: '12px' }} />
-                       <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
-                          {[1,2,3,4,5].map(i => <div key={i} style={{ width: '16px', height: '16px', borderRadius: '50%', background: i===1 ? '#3b82f6' : i===2 ? '#10b981' : i===3 ? '#f59e0b' : '#f1f5f9' }} />)}
+                    <div style={{ width: '120px', height: '160px', borderRadius: '12px', background: 'white', position: 'absolute', top: 0, left: 10, boxShadow: '0 20px 40px rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                       <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: '#10b981', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                         <Check size={30} />
                        </div>
-                       <div style={{ marginTop: 'auto', width: '100%', height: '24px', background: 'var(--primary)', borderRadius: '6px' }} />
                     </div>
                  </div>
-                 {/* Sparkles */}
-                 <motion.div animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.2, 0.8] }} transition={{ duration: 2, repeat: Infinity }} style={{ position: 'absolute', top: '30%', left: '30%' }}><Sparkles size={32} color="#F4C400"/></motion.div>
-                 <motion.div animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.2, 0.8] }} transition={{ duration: 2, repeat: Infinity, delay: 0.4 }} style={{ position: 'absolute', bottom: '25%', right: '35%' }}><Sparkles size={24} color="#F4C400"/></motion.div>
+                 <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }} style={{ position: 'absolute', top: '40%', right: '35%' }}><Sparkles size={24} color="#10b981"/></motion.div>
+                 <motion.div animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity, delay: 0.5 }} style={{ position: 'absolute', bottom: '30%', left: '35%' }}><Sparkles size={20} color="#10b981"/></motion.div>
                </div>
                
                <div style={{ padding: '0 3rem' }}>
-                 <h2 style={{ fontSize: '2.8rem', fontWeight: 900, marginBottom: '0.75rem', color: 'var(--text-main)' }}>Great work!</h2>
+                 <h2 style={{ fontSize: '2.8rem', fontWeight: 900, marginBottom: '0.75rem', color: 'var(--text-main)' }}>Your resume is ready!</h2>
                  <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', fontWeight: 500, marginBottom: '2.5rem' }}>
-                   Your resume is looking great — download it and start applying.
+                   You've completed all the steps. You can now download your recruiter-ready resume.
                  </p>
-                 <button 
-                  onClick={() => { 
-                    onComplete({ 
-                      formData, 
-                      analysisResults, 
-                      fileName: uploadedFile?.name 
-                    }); 
-                    onClose(); 
-                    setStep(1); 
-                    setUploadedFile(null); 
-                    setAnalysisResults(null);
-                  }}
-                  className="glass-btn btn-primary"
-                  style={{ padding: '1rem 5rem', fontSize: '1.1rem', fontWeight: 900, borderRadius: '16px' }}
-                 >
-                   Continue
-                 </button>
+                 <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
+                    <button 
+                      onClick={() => setStep(10)} 
+                      style={{ padding: '1rem 2rem', background: 'transparent', border: '1px solid var(--border)', borderRadius: '16px', color: 'var(--text-main)', fontWeight: 800, cursor: 'pointer' }}
+                    >
+                      Back
+                    </button>
+                    <button 
+                      onClick={() => { 
+                        handleDownload();
+                        onComplete({ 
+                          formData, 
+                          analysisResults, 
+                          fileName: uploadedFile?.name 
+                        }); 
+                        onClose(); 
+                        setStep(1); 
+                        setUploadedFile(null); 
+                        setAnalysisResults(null);
+                      }}
+                      className="glass-btn btn-primary"
+                      style={{ padding: '1rem 4rem', fontSize: '1.1rem', fontWeight: 900, borderRadius: '16px' }}
+                    >
+                      Finish & Download
+                    </button>
+                 </div>
                </div>
             </motion.div>
           )}
@@ -849,6 +1333,81 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
     </div>
   );
 };
+
+// Internal Preview Component
+const ResumePreview = ({ formData }) => (
+  <div style={{ flex: 0.4, background: 'rgba(255,255,255,0.015)', padding: '2.5rem', overflow: 'hidden', position: 'relative' }}>
+    <div style={{ 
+      position: 'absolute', top: '24px', left: '24px', zIndex: 5,
+      padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.05)', 
+      border: '1px solid var(--border)', borderRadius: '12px',
+      display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8rem', fontWeight: 800
+    }}>
+      <div style={{ color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)', padding: '2px 8px', borderRadius: '4px' }}>PRO</div>
+      Live Preview <Sparkles size={14} color="#f59e0b" />
+    </div>
+
+    <div style={{ background: 'white', height: '100%', borderRadius: '8px', padding: '2rem', color: '#1e293b', overflowY: 'auto' }}>
+      <div style={{ borderBottom: '2px solid #f1f5f9', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 900, margin: 0, textTransform: 'uppercase' }}>{formData.personal.firstName} {formData.personal.lastName}</h1>
+        <p style={{ color: 'var(--primary)', fontWeight: 700, margin: '0.25rem 0' }}>{formData.personal.jobTitle || 'Professional'}</p>
+        <div style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', gap: '1rem' }}>
+          <span>{formData.personal.email}</span>
+          <span>{formData.personal.phone}</span>
+        </div>
+      </div>
+
+      {formData.summary && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h4 style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', color: '#94a3b8', marginBottom: '0.5rem' }}>Summary</h4>
+          <p style={{ fontSize: '0.85rem', lineHeight: 1.5 }}>{formData.summary}</p>
+        </div>
+      )}
+
+      {formData.experience.length > 0 && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h4 style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', color: '#94a3b8', marginBottom: '0.5rem' }}>Experience</h4>
+          {formData.experience.map((exp, i) => (
+            <div key={i} style={{ marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '0.9rem' }}>
+                <span>{exp.position || 'Position'}</span>
+                <span style={{ color: '#64748b' }}>{exp.duration}</span>
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 700 }}>{exp.company || 'Company'}</div>
+              <p style={{ fontSize: '0.8rem', margin: '4px 0', color: '#475569' }}>{exp.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {formData.education.length > 0 && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h4 style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', color: '#94a3b8', marginBottom: '0.5rem' }}>Education</h4>
+          {formData.education.map((edu, i) => (
+            <div key={i} style={{ marginBottom: '0.75rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '0.85rem' }}>
+                <span>{edu.degree || 'Degree'}</span>
+                <span style={{ color: '#64748b' }}>{edu.year}</span>
+              </div>
+              <div style={{ fontSize: '0.8rem', color: '#475569' }}>{edu.school || 'Institution'}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {formData.skills.length > 0 && (
+        <div>
+          <h4 style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', color: '#94a3b8', marginBottom: '0.5rem' }}>Skills</h4>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {formData.skills.map((s, i) => (
+              <span key={i} style={{ padding: '4px 8px', background: '#f1f5f9', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>{s}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+);
 
 // Internal Helper
 const ChevronDown = ({ size = 20 }) => (

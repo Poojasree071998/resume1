@@ -58,7 +58,7 @@ function App() {
         const parsedUser = JSON.parse(savedUser);
         setUser(parsedUser);
         setIsLoggedIn(true);
-        setAppEntered(true);
+        // setAppEntered(true); <- Removed to ensure Landing Page shows first
       } catch (e) {
         console.error('Failed to restore session:', e);
         localStorage.removeItem('userdb');
@@ -136,8 +136,12 @@ function App() {
     setActiveView('analyzer');
   };
 
-  const handleEnterApp = () => {
+  const handleEnterApp = (forceLogin = false) => {
     if (!isLoggedIn) {
+      setShowSignInPrompt(true);
+      return;
+    }
+    if (forceLogin) {
       setShowLoginModal(true);
       return;
     }
@@ -381,9 +385,11 @@ function App() {
             <LandingPage
               onUpload={handleUpload}
               analyzing={analyzing}
-              onEnterApp={handleEnterApp}
+              onEnterApp={() => handleEnterApp(true)}
+              onPrompt={setShowSignInPrompt}
               selectedRole={selectedRole}
               setSelectedRole={setSelectedRole}
+              isLoggedIn={isLoggedIn}
             />
           </motion.div>
         ) : (
@@ -514,9 +520,11 @@ function App() {
       <ResumeUploadWorkflow 
         isOpen={showResumeUploadWorkflow} 
         onClose={() => setShowResumeUploadWorkflow(false)}
-        onComplete={({ analysisResults, fileName }) => {
+        onComplete={({ analysisResults, fileName, formData }) => {
           if (analysisResults) {
-            handleAnalysisComplete(analysisResults, fileName);
+            // Priority: User Edited Fields (personal) > Analysis Results
+            const finalData = { ...analysisResults, ...formData?.personal };
+            handleAnalysisComplete(finalData, fileName);
           } else {
             fetchRecentAnalyses();
             setActiveView('analyzer');

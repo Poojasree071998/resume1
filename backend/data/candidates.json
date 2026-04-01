@@ -403,5 +403,196 @@
       "meetLink": "http://localhost:5173/interview-room/1775037125668",
       "token": "9bf149c34757d1324c91de6506158509"
     }
+  },
+  {
+    "_id": "1775041387121",
+    "id": "1775041387121",
+    "name": "resume_5",
+    "fileName": "resume_5.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Could use more quantifiable metrics"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "General",
+    "email": "pooja@example.com",
+    "extractedText": "",
+    "notifications": [
+      {
+        "id": "1775041387120-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 4:33:07 pm"
+      },
+      {
+        "id": "1775041387120-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 4:33:07 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T11:03:07.121Z",
+    "createdAt": "2026-04-01T11:03:07.121Z"
+  },
+  {
+    "_id": "1775041665735",
+    "id": "1775041665735",
+    "name": "resume_8",
+    "fileName": "resume_8.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Could use more quantifiable metrics"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "General",
+    "email": "pooja@example.com",
+    "extractedText": "",
+    "notifications": [
+      {
+        "id": "1775041665734-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 4:37:45 pm"
+      },
+      {
+        "id": "1775041665734-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 4:37:45 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T11:07:45.735Z",
+    "createdAt": "2026-04-01T11:07:45.735Z"
+  },
+  {
+    "_id": "1775042363352",
+    "id": "1775042363353",
+    "name": "resume_4",
+    "fileName": "resume_4.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for MERN Developer requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "MERN Developer",
+    "email": "pooja@example.com",
+    "extractedText": "",
+    "notifications": [
+      {
+        "id": "1775042363351-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 4:49:23 pm"
+      },
+      {
+        "id": "1775042363351-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 4:49:23 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T11:19:23.353Z",
+    "createdAt": "2026-04-01T11:19:23.353Z"
+  },
+  {
+    "_id": "1775042772747",
+    "id": "1775042772747",
+    "name": "resume_5",
+    "fileName": "resume_5.pdf",
+    "score": 47,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [
+      "Python",
+      "SQL"
+    ],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Frontend Engineer requirements"
+    ],
+    "reasons": [
+      "Keyword gap for Frontend Engineer requirements"
+    ],
+    "status": "Rejected",
+    "role": "Frontend Engineer",
+    "email": "pooja@example.com",
+    "extractedText": "\n\nSneha M\nRole: Data Analyst\nSkills:\n- Python\n- SQL\n- Power BI\nExperience:\n- 3 yrs analytics\nEducation:\n- BSc Maths",
+    "notifications": [
+      {
+        "id": "1775042772746-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 4:56:12 pm"
+      },
+      {
+        "id": "1775042772746-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 4:56:12 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T11:26:12.747Z",
+    "createdAt": "2026-04-01T11:26:12.748Z"
   }
 ]

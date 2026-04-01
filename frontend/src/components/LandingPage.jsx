@@ -274,9 +274,10 @@ const TestimonialCard = ({ name, role, company, text, rating, delay }) => (
 );
 
 /* ─── Main Component ──────────────────────────────────────────── */
-function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelectedRole }) {
+function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, setSelectedRole, isLoggedIn }) {
   const [showUpload, setShowUpload] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.3]);
   const heroY = useTransform(scrollY, [0, 400], [0, -60]);
@@ -470,7 +471,13 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
                   exit={{ opacity: 0, scale: 0.95 }}
                   whileHover={{ scale: 1.05, boxShadow: `0 0 30px ${activeRole.color}40` }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowUpload(true)}
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      onPrompt(true);
+                      return;
+                    }
+                    setShowUpload(true);
+                  }}
                   style={{
                     padding: '1.25rem 2.5rem',
                     borderRadius: 18,
@@ -571,7 +578,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={onEnterApp}
+                onClick={() => onEnterApp(true)}
                 style={{
                   width: '100%', marginTop: '1rem', padding: '0.9rem',
                   borderRadius: 14, border: '1px solid rgba(255,255,255,0.1)',
@@ -868,9 +875,13 @@ function LandingPage({ onUpload, analyzing, onEnterApp, selectedRole, setSelecte
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <motion.button
-              whileHover={{ scale: 1.04, boxShadow: '0 12px 40px rgba(244,196,0,0.4)' }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => document.getElementById('lp-file-input').click()}
+              onClick={() => {
+                if (!isLoggedIn) {
+                  onPrompt(true);
+                  return;
+                }
+                document.getElementById('lp-file-input').click();
+              }}
               style={{
                 padding: '1rem 2.5rem', borderRadius: 14,
                 background: 'linear-gradient(135deg, #F4C400, #FFB700)',
