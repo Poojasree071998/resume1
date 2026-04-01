@@ -13,9 +13,10 @@ const InboxView = ({ setActiveView }) => {
       const response = await fetch('/api/candidates');
       if (response.ok) {
         const candidates = await response.json();
-        // Flatten notifications into "Email" objects
-        const allMsgs = (candidates || []).flatMap(c => 
-          (c.notifications || []).map(n => ({
+        if (Array.isArray(candidates)) {
+          // Flatten notifications into "Email" objects
+          const allMsgs = candidates.flatMap(c => 
+            (c.notifications || []).map(n => ({
             id: n.id || Date.now().toString(),
             from: "AI Recruitment Assistant",
             candidate: c.name || 'Unknown Candidate',
@@ -32,9 +33,12 @@ const InboxView = ({ setActiveView }) => {
           const timeB = new Date(b.time).getTime() || 0;
           return timeB - timeA;
         });
-        
-        setMessages(allMsgs);
-        if (allMsgs.length > 0 && !selectedMsg) setSelectedMsg(allMsgs[0]);
+          
+          setMessages(allMsgs);
+          if (allMsgs.length > 0 && !selectedMsg) setSelectedMsg(allMsgs[0]);
+        } else {
+          console.error("API did not return an array:", candidates);
+        }
       }
     } catch (err) {
       console.error('Failed to fetch mail:', err);

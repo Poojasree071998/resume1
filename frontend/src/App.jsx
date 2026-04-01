@@ -249,7 +249,8 @@ function App() {
       const response = await fetch('/api/candidates');
       if (response.ok) {
         const data = await response.json();
-        const formatted = data.map(cand => ({
+        if (Array.isArray(data)) {
+          const formatted = data.map(cand => ({
           id: cand._id || cand.id,
           name: cand.name,
           fileName: cand.fileName || '',
@@ -260,8 +261,11 @@ function App() {
           status: cand.status || 'Applied',
           date: cand.timestamp ? new Date(cand.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }) : 'Today'
         })).sort((a, b) => b.id - a.id);
-        
-        setRecentAnalyses(formatted.slice(0, 15));
+          
+          setRecentAnalyses(formatted.slice(0, 15));
+        } else {
+          console.error("API did not return an array:", data);
+        }
       }
     } catch (err) {
       console.error('Failed to sync dashboard data:', err);

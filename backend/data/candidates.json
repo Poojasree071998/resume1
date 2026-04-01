@@ -154,5 +154,254 @@
     ],
     "timestamp": "2026-04-01T08:23:30.474Z",
     "createdAt": "2026-04-01T08:23:30.474Z"
+  },
+  {
+    "_id": "1775036180718",
+    "id": "1775036180718",
+    "name": "resume_4",
+    "email": "candidate@example.com",
+    "fileName": "resume_4.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "Tailwind",
+      "Next.js",
+      "Redux",
+      "Architecture",
+      "TTI",
+      "Core Web Vitals",
+      "Performant",
+      "Accessible"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Frontend requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "suggestedRoles": [],
+    "improvementSkills": [
+      "React",
+      "JavaScript",
+      "TypeScript"
+    ],
+    "status": "Interview",
+    "role": "Frontend",
+    "extractedText": "",
+    "timestamp": "2026-04-01T09:36:20.718Z",
+    "remarks": "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF.",
+    "notifications": [
+      {
+        "id": "1775036180717-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 3:06:20 pm"
+      },
+      {
+        "id": "1775036180717-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 3:06:20 pm"
+      },
+      {
+        "id": "1775036402357",
+        "type": "Interview",
+        "message": "Your interview has been scheduled for 2026-04-01 at 15:09. Please check the meeting link to join.",
+        "link": "http://localhost:5173/interview/0c5cb53b3884bde63907f9e4b469d0ad",
+        "date": "1/4/2026, 3:10:02 pm"
+      }
+    ],
+    "createdAt": "2026-04-01T09:36:20.718Z",
+    "interview": {
+      "date": "2026-04-01",
+      "time": "15:24",
+      "link": "http://localhost:5173/interview/0c5cb53b3884bde63907f9e4b469d0ad",
+      "meetLink": "http://localhost:5173/interview-room/1775036180718",
+      "token": "0c5cb53b3884bde63907f9e4b469d0ad"
+    }
+  },
+  {
+    "_id": "1775036505129",
+    "id": "1775036505129",
+    "name": "resume_6",
+    "email": "candidate@example.com",
+    "fileName": "resume_6.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Node.js",
+      "Go",
+      "Python",
+      "Microservices",
+      "distributed systems",
+      "high-availability",
+      "concurrency",
+      "API engineering",
+      "PostgreSQL",
+      "Kubernetes"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Backend requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "suggestedRoles": [],
+    "improvementSkills": [
+      "Node.js",
+      "Go",
+      "Python"
+    ],
+    "status": "Rejected",
+    "role": "Backend",
+    "extractedText": "",
+    "timestamp": "2026-04-01T09:41:45.129Z",
+    "remarks": "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF.",
+    "notifications": [
+      {
+        "id": "1775036505128-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 3:11:44 pm"
+      },
+      {
+        "id": "1775036505128-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 3:11:44 pm"
+      }
+    ],
+    "createdAt": "2026-04-01T09:41:45.129Z"
+  },
+  {
+    "_id": "1775036542352",
+    "id": "1775036542352",
+    "name": "resume_5",
+    "email": "candidate@example.com",
+    "fileName": "resume_5.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Node.js",
+      "Go",
+      "Python",
+      "Microservices",
+      "distributed systems",
+      "high-availability",
+      "concurrency",
+      "API engineering",
+      "PostgreSQL",
+      "Kubernetes"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Backend requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "suggestedRoles": [],
+    "improvementSkills": [
+      "Node.js",
+      "Go",
+      "Python"
+    ],
+    "status": "Rejected",
+    "role": "Backend",
+    "extractedText": "",
+    "timestamp": "2026-04-01T09:42:22.352Z",
+    "remarks": "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF.",
+    "notifications": [
+      {
+        "id": "1775036542351-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 3:12:22 pm"
+      },
+      {
+        "id": "1775036542351-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 3:12:22 pm"
+      }
+    ],
+    "createdAt": "2026-04-01T09:42:22.352Z"
+  },
+  {
+    "_id": "1775037125668",
+    "id": "1775037125668",
+    "name": "RESUME VAIDEESWARI",
+    "fileName": "RESUME VAIDEESWARI.pdf",
+    "score": 63,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "Tailwind",
+      "Next.js",
+      "Redux",
+      "Architecture",
+      "TTI",
+      "Core Web Vitals",
+      "Performant",
+      "Accessible"
+    ],
+    "strengths": [
+      "Strong use of action verbs to describe professional impact",
+      "Uses quantifiable metrics to demonstrate impact",
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Frontend requirements"
+    ],
+    "reasons": [],
+    "status": "Interview",
+    "role": "Frontend",
+    "email": "pooja@example.com",
+    "extractedText": "\n\n      RESUME \nV. VAIDEESWARI \nContact  :  8428491232 \nEmail ID  :  vaideeswari8@gmail.com \n  \nAddress:  \nD/O S. VAITHEESWARAN, \n2/886, Nelli Nagar, Pidamaneri ,  \nDharmapuri – 636 701 \n=============================================================================== \nObjective: \nTo  secure  an  Entry-Level  Position  in  a  Reputable  Organization  Where  I  can  apply  my \nMechanical Engineering Skills and Knowledge to Contribute to the Company's Growth and Success. \n \nEducation: \n “Diploma in Computer Science Engineering” -  MARUTAM NELLI Polytechnic College \n-Dharmapuri, [Dote], [2022 -2025] at 77%. \n \" S.S.L.C ” -  Government Hr Secondary School  -Dharmapuri, [ State Board ] , [2021 - \n2022 ]at 58%. \n \nRelevant Course Work: \n System Work.  \n \nProjects: \n Project  : “IOT BASED HEART ATTACK AND HEART MONITORING SYSTEM ” in  This \nAchieve Less Time & Secure our Health . \n \nTraining: \n Training Will Attend – “SKMT Project Center” at Salem main Road – Dharmapuri. \n \nSoft Skills & Strength  \n Quick learner with strong problem-solving skills \n Ability to work in a team as well as independently \n Good communication and adaptability \n Time management and adaptability \n \nPersonal Data: \n D.O.B     :   22-06-2007 \n Gender  :    Female  \n Nationality  : Indian  \n \nDeclaration : \n I  here  by  that  Information  provided  in  this  Resume is  True  and  Accurate  to  the  Best  of  My \nKnowledge. \n \n \nDATE   :                                                                                                                                    Your’s Faithfully \nPLACE  :                                       V. VAIDEESWARI \n ",
+    "notifications": [
+      {
+        "id": "1775037125667-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 3:22:04 pm"
+      },
+      {
+        "id": "1775037333450",
+        "type": "Interview",
+        "message": "Your interview has been scheduled for 2026-04-01 at 15:26. Please check the meeting link to join.",
+        "link": "http://localhost:5173/interview/9bf149c34757d1324c91de6506158509",
+        "date": "1/4/2026, 3:25:33 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T09:52:05.668Z",
+    "createdAt": "2026-04-01T09:52:05.668Z",
+    "interview": {
+      "date": "2026-04-01",
+      "time": "15:26",
+      "link": "http://localhost:5173/interview/9bf149c34757d1324c91de6506158509",
+      "meetLink": "http://localhost:5173/interview-room/1775037125668",
+      "token": "9bf149c34757d1324c91de6506158509"
+    }
   }
 ]

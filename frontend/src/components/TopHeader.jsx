@@ -14,9 +14,13 @@ const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark, onLogout }) =>
       const response = await fetch('/api/candidates');
       if (response.ok) {
         const candidates = await response.json();
-        const allNotifications = sortNotifications(candidates);
-        setNotifications(allNotifications.slice(0, 15)); // Keep latest 15
-        setUnreadCount(allNotifications.length); // For now, all fetched are considered new
+        if (Array.isArray(candidates)) {
+          const allNotifications = sortNotifications(candidates);
+          setNotifications(allNotifications.slice(0, 15)); // Keep latest 15
+          setUnreadCount(allNotifications.length); 
+        } else {
+          console.error('API did not return an array:', candidates);
+        }
       }
     } catch (error) {
       console.error('Failed to fetch notifications:', error);

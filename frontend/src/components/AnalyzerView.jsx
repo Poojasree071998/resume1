@@ -67,7 +67,7 @@ const RecruitmentTimeline = ({ notifications = [] }) => (
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: note.type === 'Selected' ? '#10b981' : note.type === 'Rejected' ? '#ef4444' : 'var(--primary)' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-main)', textTransform: 'uppercase' }}>{note.type}</span>
               <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{note.date}</span>
             </div>
@@ -536,8 +536,14 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
   React.useEffect(() => {
     if (recruiterMode) {
       fetch('/api/candidates')
-        .then(res => res.json())
-        .then(data => setCandidates(data))
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch API data');
+          return res.json();
+        })
+        .then(data => {
+          if (Array.isArray(data)) setCandidates(data);
+          else console.error('API did not return an array:', data);
+        })
         .catch(err => console.error('Error fetching candidates:', err));
     }
   }, [recruiterMode]);
@@ -900,8 +906,12 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
         
         // Refresh candidates list
         const updatedRes = await fetch('/api/candidates');
-        const updatedData = await updatedRes.json();
-        setCandidates(updatedData);
+        if (updatedRes.ok) {
+          const updatedData = await updatedRes.json();
+          if (Array.isArray(updatedData)) {
+            setCandidates(updatedData);
+          }
+        }
 
         // Update selected entry if we are viewing it
         if (selectedCandidateEntry && selectedCandidateEntry.id === updated.id) {
