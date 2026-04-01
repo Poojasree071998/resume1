@@ -384,13 +384,21 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
   const activeRole = roles.find(r => r.id === selectedRole) || roles[0];
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(160deg, #060d1a 0%, #0a1628 40%, #080f1e 100%)',
-      color: '#fff',
-      overflowX: 'hidden',
-      position: 'relative'
-    }}>
+    <div 
+      onClick={() => {
+        if (!isLoggedIn) {
+          onPrompt(true);
+        }
+      }}
+      style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(160deg, #060d1a 0%, #0a1628 40%, #080f1e 100%)',
+        color: '#fff',
+        overflowX: 'hidden',
+        position: 'relative',
+        cursor: !isLoggedIn ? 'pointer' : 'default'
+      }}
+    >
       <GridBackground />
 
       {/* Global Cursor Glow */}
@@ -423,7 +431,10 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
           <motion.button
             whileHover={{ scale: 1.05, color: '#F4C400', borderColor: 'rgba(244,196,0,0.3)' }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setShowContactModal(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowContactModal(true);
+            }}
             style={{
               display: 'flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.6rem 1.2rem', borderRadius: 12,
@@ -440,7 +451,10 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={onEnterApp}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEnterApp();
+            }}
             style={{
               padding: '0.65rem 1.6rem', borderRadius: 12,
               background: 'linear-gradient(135deg, #F4C400, #FFB700)',
@@ -558,7 +572,8 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
                     exit={{ opacity: 0, scale: 0.95 }}
                     whileHover={{ scale: 1.05, boxShadow: `0 0 40px ${activeRole.color}50` }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       if (!isLoggedIn) {
                         onPrompt(true);
                         return;
