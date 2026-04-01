@@ -737,37 +737,45 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
               body: formData,
             });
     
-            if (response.ok) {
-              const result = await response.json();
-              processedCount++;
-              setProgress(Math.round((processedCount / totalFiles) * 100));
-              console.log(`DONE: ${f.name}`);
-              
-                return {
-                  name: result.name || f.name.split('.')[0],
-                  email: result.email || fileEmails[f.name] || 'candidate@example.com',
-                  fileName: f.name,
-                  score: result.score || 0,
-                matchPercentage: result.matchPercentage || 0,
-                matchedSkills: result.matchedSkills || [],
-                skills: result.skills || [],
-                missingSkills: result.missingSkills || [],
-                strengths: result.strengths || [],
-                weaknesses: result.weaknesses || [],
-                reasons: result.reasons || [],
-                suggestedRoles: result.suggestedRoles || [],
-                improvementSkills: result.improvementSkills || [],
-                status: result.verdict || 'Considered',
-                role: role || 'General',
-                extractedText: result.extractedText || '',
-                timestamp: new Date().toLocaleString(),
-                remarks: result.reasons?.[0] || result.suggestions?.[0] || "Profile review complete"
-              };
-            } else {
-              throw new Error(`HTTP error: ${response.status}`);
+            if (!response.ok) {
+              let errorMsg = 'Server internal error';
+              try {
+                const errorData = await response.json();
+                errorMsg = errorData.details || errorData.error || errorMsg;
+              } catch (jsonErr) {
+                const rawText = await response.text().catch(() => '');
+                if (rawText) errorMsg = `Server Response: ${rawText.slice(0, 100)}...`;
+              }
+              throw new Error(`Failed to analyze ${f.name}: ${errorMsg}`);
             }
+    
+            const result = await response.json();
+            processedCount++;
+            setProgress(Math.round((processedCount / totalFiles) * 100));
+            console.log(`DONE: ${f.name}`);
+              
+            return {
+              name: result.name || f.name.split('.')[0],
+              email: result.email || fileEmails[f.name] || 'candidate@example.com',
+              fileName: f.name,
+              score: result.score || 0,
+              matchPercentage: result.matchPercentage || 0,
+              matchedSkills: result.matchedSkills || [],
+              skills: result.skills || [],
+              missingSkills: result.missingSkills || [],
+              strengths: result.strengths || [],
+              weaknesses: result.weaknesses || [],
+              reasons: result.reasons || [],
+              suggestedRoles: result.suggestedRoles || [],
+              improvementSkills: result.improvementSkills || [],
+              status: result.verdict || 'Considered',
+              role: role || 'General',
+              extractedText: result.extractedText || '',
+              timestamp: new Date().toLocaleString(),
+              remarks: result.reasons?.[0] || result.suggestions?.[0] || "Profile review complete"
+            };
           } catch (error) {
-            console.error(`FAILED: ${f.name}:`, error);
+            console.error(`FAILED: ${f.name}:`, error.message);
             processedCount++;
             setProgress(Math.round((processedCount / totalFiles) * 100));
             return {
@@ -777,7 +785,8 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
               matchedSkills: [],
               suggestedRoles: [],
               improvementSkills: [],
-              status: 'error'
+              status: 'error',
+              error: error.message
             };
           }
         })

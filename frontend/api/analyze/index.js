@@ -1,6 +1,9 @@
 import multer from 'multer';
 import mammoth from 'mammoth';
-import * as pdfjs from 'pdfjs-dist';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse/lib/pdf-parse.js');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).single('resume');
@@ -19,37 +22,12 @@ const roleKeywords = {
 // Use a simpler approach for pdfjs in serverless
 const extractTextFromPDF = async (buffer) => {
     try {
-        if (!buffer || buffer.length === 0) {
-            console.error("PDF extraction failed: Empty buffer");
-            return "";
-        }
-
-        // Buffer to Uint8Array
-        const uint8Array = new Uint8Array(buffer);
-        const loadingTask = pdfjs.getDocument({
-            data: uint8Array,
-            useSystemFonts: true,
-            disableFontFace: true, // Speeds up parsing in serverless
-            isEvalDisabled: true
-        });
-
-        const pdf = await loadingTask.promise;
-        let fullText = "";
-        
-        for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            const pageText = content.items
-                .map(item => item.str)
-                .join(' ');
-            fullText += pageText + "\n";
-        }
-        
-        console.log(`PDF Extraction Success: ${fullText.length} chars extracted`);
-        return fullText.trim();
+        if (!buffer || buffer.length === 0) return "";
+        const data = await pdfParse(buffer);
+        console.log(`PDF Extraction Success: ${data.text?.length || 0} chars`);
+        return data.text || "";
     } catch (error) {
-        console.error('PDF JS Extraction Error:', error);
-        // Fallback for simple PDFs if needed, but pdfjs-dist is usually definitive
+        console.error('PDF Parsing Error:', error);
         return "";
     }
 };
