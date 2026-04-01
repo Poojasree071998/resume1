@@ -1,6 +1,22 @@
+const dns = require('node:dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']); // Force Google DNS for SRV resolution
+
 const express = require('express');
-// Optimized for AI Analysis and Premium UI Gallery
 const cors = require('cors');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+// Database Connection
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
+if (MONGODB_URI) {
+    mongoose.connect(MONGODB_URI)
+        .then(() => console.log('Connected to MongoDB ✅'))
+        .catch(err => console.error('MongoDB connection error ❌:', err));
+} else {
+    console.warn('MONGODB_URI not found in .env. Skipping DB connection.');
+}
+
+// Optimized for AI Analysis and Premium UI Gallery
 const multer = require('multer');
 const { extractTextFromPDF, extractTextFromDOCX } = require('./utils/pdfParser');
 const { parseResumeContent, analyzeResume, optimizeResume, generateCareerRoadmap, roleKeywords } = require('./utils/aiPrompt');

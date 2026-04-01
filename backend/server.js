@@ -1,5 +1,11 @@
+const dns = require('node:dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']); // Force Google DNS for SRV resolution
+
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
 const analyzeRoute = require('./routes/analyze');
 const matchRoute = require('./routes/match');
 const candidateRoute = require('./routes/candidates');
@@ -7,6 +13,16 @@ const interviewRoute = require('./routes/interviews');
 
 const app = express();
 const port = 5000;
+
+// Database Connection
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
+if (MONGODB_URI) {
+    mongoose.connect(MONGODB_URI)
+        .then(() => console.log('Connected to MongoDB ✅'))
+        .catch(err => console.error('MongoDB connection error ❌:', err));
+} else {
+    console.warn('MONGODB_URI not found in .env. Skipping DB connection.');
+}
 
 // Middleware
 app.use(cors());

@@ -121,7 +121,7 @@ const ModernResumeTemplate = ({ data, role }) => {
             <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: theme.primary, marginTop: '0.5rem' }}>{role}</h2>
             <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1rem', color: '#6b7280', fontSize: '1rem' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={16}/> {contact?.email || 'N/A'}</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={16}/> {contact.phone}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={16}/> {contact?.phone || 'N/A'}</span>
             </div>
           </div>
           <div style={{ 
@@ -193,8 +193,8 @@ const ModernResumeTemplate = ({ data, role }) => {
         <h2 style={{ fontSize: '1.85rem', fontWeight: 600, color: '#3b82f6', marginTop: '0.5rem' }}>{role}</h2>
         <div style={{ display: 'flex', gap: '2rem', marginTop: '1.5rem', color: '#64748b', fontSize: '1rem' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={18}/> {contact?.email || 'N/A'}</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={18}/> {contact.phone}</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={18}/> {contact.location}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={18}/> {contact?.phone || 'N/A'}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={18}/> {contact?.location || 'N/A'}</span>
         </div>
       </header>
 
@@ -249,7 +249,7 @@ const ModernResumeTemplate = ({ data, role }) => {
         <h1 style={{ fontSize: '4.2rem', fontWeight: 900, color: '#111827', margin: 0, letterSpacing: '-0.02em' }}>{name}</h1>
         <h2 style={{ fontSize: '2.2rem', fontWeight: 900, color: theme.primary, textTransform: 'uppercase', marginTop: '0.25rem' }}>{role}</h2>
         <div style={{ display: 'flex', gap: '2rem', marginTop: '1.5rem', fontSize: '1rem', color: '#4b5563' }}>
-          <span>{contact.email}</span> • <span>{contact.phone}</span> • <span>{contact.location}</span>
+          <span>{contact?.email || 'N/A'}</span> • <span>{contact?.phone || 'N/A'}</span> • <span>{contact?.location || 'N/A'}</span>
         </div>
         <p style={{ fontSize: '1.15rem', color: '#4b5563', marginTop: '1.5rem', lineHeight: 1.6, maxWidth: '85%' }}>{objective}</p>
       </header>
@@ -328,8 +328,8 @@ const ModernResumeTemplate = ({ data, role }) => {
              <h3 style={{ fontSize: '0.95rem', fontWeight: 900, color: theme.text, letterSpacing: '0.1em' }}>CONTACT</h3>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontSize: '0.9rem', color: theme.text, fontWeight: 600 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><Globe size={14}/> {contact.location}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><Phone size={14}/> {contact.phone}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><Globe size={14}/> {contact?.location || 'N/A'}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><Phone size={14}/> {contact?.phone || 'N/A'}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', wordBreak: 'break-all' }}><Mail size={14}/> {contact?.email || 'N/A'}</div>
           </div>
         </section>
