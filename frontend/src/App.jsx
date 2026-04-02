@@ -323,14 +323,21 @@ function App() {
         extractedText: data.extractedText || ''
       };
 
-      await fetch('/api/candidates', {
+      const response = await fetch('/api/candidates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cand)
       });
       
+      if (!response.ok) {
+        throw new Error(`Failed to save candidate: ${response.statusText}`);
+      }
+      
+      const savedCand = await response.json();
+      console.log('Single analysis persisted:', savedCand.name, '(ID:', savedCand._id || savedCand.id, ')');
+      
       // Auto-refresh after persistence
-      fetchRecentAnalyses();
+      await fetchRecentAnalyses();
     } catch (err) {
       console.error('Failed to persist single analysis:', err);
     }

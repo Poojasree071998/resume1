@@ -818,7 +818,8 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
       }
 
       setCandidates(persistedCandidates);
-      if (onBatchComplete) onBatchComplete(persistedCandidates);
+      if (onBatchComplete) await onBatchComplete(persistedCandidates);
+      console.log('Batch analysis fully persisted and synced.');
       setStep(3);
     } catch (err) {
       console.error('Batch error:', err);
@@ -838,13 +839,14 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
       targetIndex = indexOrCandidate;
     } else {
       candidate = indexOrCandidate;
-      targetIndex = candidates.findIndex(c => c.id === candidate.id);
+      targetIndex = candidates.findIndex(c => (c.id || c._id) === (candidate.id || candidate._id));
     }
 
     if (!candidate) return;
 
     try {
-      const response = await fetch(`/api/candidates/${candidate.id}`, {
+      const candidateId = candidate.id || candidate._id;
+      const response = await fetch(`/api/candidates/${candidateId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
@@ -860,7 +862,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
         }
 
         // Update selected candidate if it's the one we're viewing
-        if (selectedCandidateEntry && selectedCandidateEntry.id === updated.id) {
+        if (selectedCandidateEntry && (selectedCandidateEntry.id || selectedCandidateEntry._id) === (updated.id || updated._id)) {
           setSelectedCandidateEntry(updated);
         }
 
@@ -902,7 +904,8 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
 
   const onScheduleConfirm = async (schedulingData) => {
     try {
-      const response = await fetch(`/api/candidates/${selectedCandidateForSchedule.id}`, {
+      const candidateId = selectedCandidateForSchedule.id || selectedCandidateForSchedule._id;
+      const response = await fetch(`/api/candidates/${candidateId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -923,7 +926,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
         }
 
         // Update selected entry if we are viewing it
-        if (selectedCandidateEntry && selectedCandidateEntry.id === updated.id) {
+        if (selectedCandidateEntry && (selectedCandidateEntry.id || selectedCandidateEntry._id) === (updated.id || updated._id)) {
           setSelectedCandidateEntry(updated);
         }
       }

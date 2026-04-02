@@ -17,6 +17,7 @@ const CandidateSchema = new mongoose.Schema({
   strengths: [String],
   weaknesses: [String],
   reasons: [String],
+  extractedText: { type: String },
   
   // Interview Integration
   interview: {

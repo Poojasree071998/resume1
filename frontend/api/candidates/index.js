@@ -38,7 +38,12 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
       console.log('[CANDIDATES API] Fetching candidates from database...');
-      const candidates = await Candidate.find({}).sort({ createdAt: -1 }).limit(100);
+      const results = await Candidate.find({}).sort({ createdAt: -1 }).limit(100);
+      const candidates = results.map(c => {
+        const obj = c.toObject();
+        obj.id = obj._id.toString();
+        return obj;
+      });
       console.log(`[CANDIDATES API] Successfully retrieved ${candidates.length} candidates.`);
       return res.status(200).json(candidates || []);
     } 
