@@ -15,9 +15,17 @@ const port = 5000;
 // Database Connection
 const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
 if (MONGODB_URI) {
-    mongoose.connect(MONGODB_URI)
-        .then(() => console.log('Connected to MongoDB ✅'))
-        .catch(err => console.error('MongoDB connection error ❌:', err));
+    const opts = {
+        connectTimeoutMS: 10000, // 10 seconds timeout for initial connection
+        serverSelectionTimeoutMS: 5000, // 5 seconds to find a server
+    };
+    
+    console.log('Attempting MongoDB connection on server.js...');
+    mongoose.connect(MONGODB_URI, opts)
+        .then(() => console.log('Connected to MongoDB (server.js) ✅'))
+        .catch(err => {
+            console.error('CRITICAL: MongoDB connection error ❌:', err.message);
+        });
 } else {
     console.warn('MONGODB_URI not found in .env. Skipping DB connection.');
 }

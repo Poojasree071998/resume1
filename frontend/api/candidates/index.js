@@ -16,14 +16,22 @@ export default async function handler(req, res) {
 
   try {
     // Initializing Database connection
-    const db = await dbConnect();
+    console.log(`[CANDIDATES API] Handling ${req.method} request...`);
+    const db = await dbConnect().catch(dbErr => {
+      console.error('[CANDIDATES API] Connection failed:', dbErr.message);
+      return null;
+    });
     
-    // Fallback if DB is not configured yet
+    // Fallback if DB is not configured or connection failed
     if (!db) {
+      console.warn('[CANDIDATES API] No active DB connection.');
       if (req.method === 'GET') {
-        return res.status(200).json([]); // Return empty list instead of 500
+        return res.status(200).json([]); // Return empty list to prevent dashboard UI crash
       }
-      return res.status(503).json({ error: 'Database not configured. Please set MONGODB_URI.' });
+      return res.status(503).json({ 
+        error: 'Database Connectivity Issue', 
+        details: 'The API is unable to reach MongoDB. Please check MONGODB_URI and IP Whitelisting.' 
+      });
     }
 
     if (req.method === 'GET') {

@@ -251,6 +251,10 @@ function App() {
   const fetchRecentAnalyses = async () => {
     try {
       const response = await fetch('/api/candidates');
+      if (response.status === 503) {
+        console.error("DATABASE OFFLINE: MONGODB_URI is likely missing from Vercel environment variables.");
+        return;
+      }
       if (response.ok) {
         const data = await response.json();
         if (Array.isArray(data)) {
@@ -395,15 +399,37 @@ function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <LandingPage
-              onUpload={handleUpload}
-              analyzing={analyzing}
-              onEnterApp={() => handleEnterApp(true)}
-              onPrompt={() => setShowLoginModal(true)}
-              selectedRole={selectedRole}
-              setSelectedRole={setSelectedRole}
-              isLoggedIn={isLoggedIn}
-            />
+            <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
+              <LandingPage
+                onUpload={handleUpload}
+                analyzing={analyzing}
+                onEnterApp={handleEnterApp}
+                onPrompt={setShowSignInPrompt}
+                selectedRole={selectedRole}
+                setSelectedRole={setSelectedRole}
+                isLoggedIn={isLoggedIn}
+              />
+              
+              {/* GLOBAL GATE: Intercepts all clicks for guests or forces transition for logged-in users */}
+              <div 
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (!isLoggedIn) {
+                    setShowSignInPrompt(true);
+                  } else {
+                    setAppEntered(true);
+                  }
+                }}
+                style={{
+                  position: 'fixed',
+                  inset: 0,
+                  zIndex: 1000, // Below modals but above all landing page content
+                  cursor: 'pointer',
+                  background: 'transparent'
+                }}
+              />
+            </div>
           </motion.div>
         ) : (
           <motion.div

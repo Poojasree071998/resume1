@@ -7,9 +7,18 @@ require('dotenv').config();
 // Database Connection
 const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
 if (MONGODB_URI) {
-    mongoose.connect(MONGODB_URI)
+    const opts = {
+        connectTimeoutMS: 10000, // 10 seconds timeout for initial connection
+        serverSelectionTimeoutMS: 5000, // 5 seconds to find a server
+    };
+    
+    console.log('Attempting MongoDB connection...');
+    mongoose.connect(MONGODB_URI, opts)
         .then(() => console.log('Connected to MongoDB ✅'))
-        .catch(err => console.error('MongoDB connection error ❌:', err));
+        .catch(err => {
+            console.error('CRITICAL: MongoDB connection error ❌:', err.message);
+            console.info('Check if votre IP est autorisée sur Atlas (Whitelist 0.0.0.0/0 recommended for dev).');
+        });
 } else {
     console.warn('MONGODB_URI not found in .env. Skipping DB connection.');
 }
@@ -18,6 +27,19 @@ if (MONGODB_URI) {
 const multer = require('multer');
 const { extractTextFromPDF, extractTextFromDOCX } = require('./utils/pdfParser');
 const { parseResumeContent, analyzeResume, optimizeResume, generateCareerRoadmap, roleKeywords } = require('./utils/aiPrompt');
+const fs = require('fs');
+const path = require('path');
+
+// Helper to load local data
+const getLocalCandidates = () => {
+  try {
+    const data = fs.readFileSync(path.join(__dirname, 'database.json'), 'utf8');
+    return JSON.parse(data).candidates || [];
+  } catch (err) {
+    console.warn('Local database fallback failed:', err.message);
+    return [];
+  }
+};
 
 const app = express();
 const port = 5000;
@@ -115,6 +137,32 @@ app.post('/api/analyze/optimize', async (req, res) => {
   } catch (error) {
     console.error('CRITICAL Optimization error:', error);
     res.status(500).json({ error: 'Failed to optimize resume' });
+  }
+});
+
+// Simplified route for candidates table with local fallback
+app.get('/api/candidates', async (req, res) => {
+  console.log('GET /api/candidates called');
+  try {
+    let candidates = [];
+    
+    // Try MongoDB first if connected
+    if (mongoose.connection.readyState === 1) {
+      const Candidate = require('./models/Candidate');
+      candidates = await Candidate.find().sort({ timestamp: -1 });
+    }
+    
+    // If MongoDB is empty or disconnected, use local fallback
+    if (candidates.length === 0) {
+      console.log('Using local database.json fallback...');
+      candidates = getLocalCandidates();
+    }
+    
+    res.json(candidates);
+  } catch (error) {
+    console.error('Error fetching candidates:', error);
+    // Even on crash, try to return local data for better dev experience
+    res.json(getLocalCandidates());
   }
 });
 

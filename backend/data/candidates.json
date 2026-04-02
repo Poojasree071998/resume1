@@ -688,5 +688,204 @@
     ],
     "timestamp": "2026-04-01T12:13:01.094Z",
     "createdAt": "2026-04-01T12:13:01.094Z"
+  },
+  {
+    "_id": "1775058919514",
+    "id": "1775058919514",
+    "name": "resume_3",
+    "fileName": "resume_3.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Node.js Developer requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "Node.js Developer",
+    "email": "pooja@example.com",
+    "extractedText": "",
+    "notifications": [
+      {
+        "id": "1775058919512-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 9:25:19 pm"
+      },
+      {
+        "id": "1775058919512-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 9:25:19 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T15:55:19.514Z",
+    "createdAt": "2026-04-01T15:55:19.514Z"
+  },
+  {
+    "_id": "1775059132941",
+    "id": "1775059132941",
+    "name": "resume_5",
+    "fileName": "resume_5.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Data Scientist requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "Data Scientist",
+    "email": "pooja@example.com",
+    "extractedText": "",
+    "notifications": [
+      {
+        "id": "1775059132940-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 9:28:52 pm"
+      },
+      {
+        "id": "1775059132940-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 9:28:52 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T15:58:52.941Z",
+    "createdAt": "2026-04-01T15:58:52.941Z"
+  },
+  {
+    "_id": "1775059601153",
+    "id": "1775059601153",
+    "name": "resume_4",
+    "fileName": "resume_4.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Git",
+      "Communication",
+      "Teamwork",
+      "Agile",
+      "Leadership",
+      "Problem Solving"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for UX Developer requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "status": "Rejected",
+    "role": "UX Developer",
+    "email": "pooja@example.com",
+    "extractedText": "",
+    "notifications": [
+      {
+        "id": "1775059601152-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 9:36:40 pm"
+      },
+      {
+        "id": "1775059601152-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 9:36:40 pm"
+      }
+    ],
+    "timestamp": "2026-04-01T16:06:41.153Z",
+    "createdAt": "2026-04-01T16:06:41.154Z"
+  },
+  {
+    "_id": "1775060724296",
+    "id": "1775060724296",
+    "name": "resume_1",
+    "email": "candidate@example.com",
+    "fileName": "resume_1.pdf",
+    "score": 0,
+    "matchPercentage": 0,
+    "matchedSkills": [],
+    "skills": [],
+    "missingSkills": [
+      "Node.js",
+      "Go",
+      "Python",
+      "Microservices",
+      "distributed systems",
+      "high-availability",
+      "concurrency",
+      "API engineering",
+      "PostgreSQL",
+      "Kubernetes"
+    ],
+    "strengths": [
+      "Strong professional formatting and document structure"
+    ],
+    "weaknesses": [
+      "Keyword gap for Backend requirements"
+    ],
+    "reasons": [
+      "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+    ],
+    "suggestedRoles": [],
+    "improvementSkills": [
+      "Node.js",
+      "Go",
+      "Python"
+    ],
+    "status": "Rejected",
+    "role": "Backend",
+    "extractedText": "",
+    "timestamp": "2026-04-01T16:25:24.296Z",
+    "remarks": "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF.",
+    "notifications": [
+      {
+        "id": "1775060724294-1",
+        "type": "Confirmation",
+        "message": "Application received successfully. AI initial screening in progress.",
+        "date": "1/4/2026, 9:55:23 pm"
+      },
+      {
+        "id": "1775060724294-2",
+        "type": "Rejected",
+        "message": "Thank you for your interest. Unfortunately, we will not be moving forward with your application.",
+        "date": "1/4/2026, 9:55:23 pm"
+      }
+    ],
+    "createdAt": "2026-04-01T16:25:24.296Z"
   }
 ]

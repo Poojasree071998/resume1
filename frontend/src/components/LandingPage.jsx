@@ -431,8 +431,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
           <motion.button
             whileHover={{ scale: 1.05, color: '#F4C400', borderColor: 'rgba(244,196,0,0.3)' }}
             whileTap={{ scale: 0.95 }}
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={() => {
               setShowContactModal(true);
             }}
             style={{
@@ -451,8 +450,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={() => {
               onEnterApp();
             }}
             style={{
@@ -572,12 +570,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
                     exit={{ opacity: 0, scale: 0.95 }}
                     whileHover={{ scale: 1.05, boxShadow: `0 0 40px ${activeRole.color}50` }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!isLoggedIn) {
-                        onPrompt(true);
-                        return;
-                      }
+                    onClick={() => {
                       setShowUpload(true);
                     }}
                     style={{

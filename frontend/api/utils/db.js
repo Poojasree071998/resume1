@@ -22,17 +22,21 @@ async function dbConnect() {
   }
 
   if (!MONGODB_URI) {
-    console.error('CRITICAL: MONGODB_URI is not defined. Database operations will fail.');
+    console.error('CRITICAL ERROR: MONGODB_URI is not defined in Vercel/Production environment.');
+    console.info('To fix: Add MONGODB_URI to your Vercel Project Settings > Environment Variables.');
     return null;
   }
 
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      connectTimeoutMS: 10000, // 10 seconds timeout for initial connection
+      serverSelectionTimeoutMS: 5000, // 5 seconds to find a server
     };
 
+    console.log('Attempting new MongoDB connection...');
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      console.log('MongoDB connection established');
+      console.log('MongoDB connection established ✅');
       return mongoose;
     });
   }
@@ -40,8 +44,8 @@ async function dbConnect() {
   try {
     cached.conn = await cached.promise;
   } catch (e) {
-    cached.promise = null;
-    console.error('Failed to connect to MongoDB:', e);
+    cached.promise = null; // Clear promise so retry is possible
+    console.error('CRITICAL: Failed to connect to MongoDB ❌:', e.message);
     throw e;
   }
 
