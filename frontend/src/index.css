@@ -86,15 +86,21 @@ body.app-mode {
   display: block !important;
 }
 
-/* Radical Scrollbar Kill for Seamless Edge */
+/* ── Scrollbar Styling ────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 8px;
+}
+::-webkit-scrollbar-track {
   background: transparent;
 }
-* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 
 body.app-mode {
   overflow: hidden; 

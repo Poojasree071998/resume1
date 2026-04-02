@@ -399,7 +399,7 @@ function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
+            <div style={{ position: 'relative', width: '100%' }}>
               <LandingPage
                 onUpload={handleUpload}
                 analyzing={analyzing}
@@ -408,26 +408,6 @@ function App() {
                 selectedRole={selectedRole}
                 setSelectedRole={setSelectedRole}
                 isLoggedIn={isLoggedIn}
-              />
-              
-              {/* GLOBAL GATE: Intercepts all clicks for guests or forces transition for logged-in users */}
-              <div 
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (!isLoggedIn) {
-                    setShowSignInPrompt(true);
-                  } else {
-                    setAppEntered(true);
-                  }
-                }}
-                style={{
-                  position: 'fixed',
-                  inset: 0,
-                  zIndex: 1000, // Below modals but above all landing page content
-                  cursor: 'pointer',
-                  background: 'transparent'
-                }}
               />
             </div>
           </motion.div>

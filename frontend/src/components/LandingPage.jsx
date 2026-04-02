@@ -385,18 +385,12 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
 
   return (
     <div 
-      onClick={() => {
-        if (!isLoggedIn) {
-          onPrompt(true);
-        }
-      }}
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(160deg, #060d1a 0%, #0a1628 40%, #080f1e 100%)',
         color: '#fff',
         overflowX: 'hidden',
-        position: 'relative',
-        cursor: !isLoggedIn ? 'pointer' : 'default'
+        position: 'relative'
       }}
     >
       <GridBackground />
