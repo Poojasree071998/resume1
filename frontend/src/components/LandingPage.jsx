@@ -469,7 +469,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
       >
         <div style={{
           maxWidth: 1280, margin: '0 auto',
-          padding: '7rem 3rem 5rem',
+          padding: '7rem 3rem 10rem',
           display: 'grid', gridTemplateColumns: '1fr 1fr',
           gap: '5rem', alignItems: 'center',
           position: 'relative'
@@ -692,7 +692,8 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
             alignItems: 'center', 
             justifyContent: 'center',
             position: 'relative',
-            minHeight: 500
+            minHeight: 650,
+            zIndex: 10
           }}>
             {/* Central card */}
             <motion.div
