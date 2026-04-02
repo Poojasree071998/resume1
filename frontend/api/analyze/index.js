@@ -6,7 +6,10 @@ const require = createRequire(import.meta.url);
 const pdfParse = require('pdf-parse/lib/pdf-parse.js');
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage }).single('resume');
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+}).single('resume');
 
 const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -23,33 +26,35 @@ const roleKeywords = {
 const extractTextFromPDF = async (buffer) => {
     try {
         if (!buffer || buffer.length === 0) {
-            console.error("PDF Parsing Error: Buffer is empty or undefined");
+            console.error("[ANALYZE API] PDF Parsing Error: Buffer is empty");
             return "";
         }
         
-        console.log(`Attempting PDF extraction for buffer of size: ${buffer.length} bytes`);
+        console.log(`[ANALYZE API] Attempting PDF extraction (${buffer.length} bytes)...`);
         const data = await pdfParse(buffer);
         
         const extractedText = data.text || "";
-        if (extractedText.trim().length < 5) {
-            console.warn("PDF Parsing Warning: Extracted text is suspiciously short or empty.");
+        if (extractedText.trim().length < 10) {
+            console.warn("[ANALYZE API] PDF Parsing Warning: Extracted text is very short.");
         } else {
-            console.log(`PDF Extraction Success: ${extractedText.length} characters extracted.`);
+            console.log(`[ANALYZE API] PDF Extraction Success: ${extractedText.length} chars.`);
         }
         
         return extractedText;
     } catch (error) {
-        console.error('PDF Parsing Critical Error:', error.message);
+        console.error('[ANALYZE API] PDF Parsing Critical Error:', error.message);
         return "";
     }
 };
 
 const extractTextFromDOCX = async (buffer) => {
     try {
+        console.log(`[ANALYZE API] Attempting DOCX extraction (${buffer.length} bytes)...`);
         const result = await mammoth.extractRawText({ buffer });
+        console.log(`[ANALYZE API] DOCX Extraction Success: ${result.value.length} chars.`);
         return result.value;
     } catch (error) {
-        console.error('Error parsing DOCX:', error);
+        console.error('[ANALYZE API] Error parsing DOCX:', error.message);
         return "";
     }
 };
@@ -63,6 +68,13 @@ const analyzeResume = (text, targetRole = 'General') => {
     const weaknesses = [];
     const suggestions = [];
 
+    if (!text || text.trim().length < 50) {
+        return {
+            score: 0,
+            error: "Document content is too sparse for analysis. Please ensure the file is not corrupted or image-based."
+        };
+    }
+
     // 1. Impact Analysis
     if (/managed|led|directed|developed|implemented/i.test(text)) {
         impactScore += 20;
@@ -75,7 +87,6 @@ const analyzeResume = (text, targetRole = 'General') => {
 
     let targetKeywords = roleKeywords[targetRole] || roleKeywords['General'];
     
-    // We handle the text analysis here since we don't have all backend utils
     const matchedKeywords = targetKeywords.filter(k => {
         try {
             return new RegExp(`\\b${escapeRegExp(k.trim())}\\b`, 'i').test(text);
@@ -159,7 +170,7 @@ const runMiddleware = (req, res, fn) => {
 export const config = { api: { bodyParser: false } };
 
 export default async function handler(req, res) {
-  // --- ADDED CORS HEADERS FOR PRODUCTION STABILITY ---
+  // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -173,20 +184,45 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send({ message: 'Only POST allowed' });
 
   try {
+    console.log('[ANALYZE API] Processing file upload...');
     await runMiddleware(req, res, upload);
+    
     const file = req.file;
     const { role = 'General' } = req.body;
     
-    if (!file) return res.status(400).json({ error: 'No file uploaded' });
+    if (!file) {
+        console.error('[ANALYZE API] No file found in request');
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
 
     let text = "";
-    if (file.mimetype === 'application/pdf') text = await extractTextFromPDF(file.buffer);
-    else if (file.mimetype.includes('word')) text = await extractTextFromDOCX(file.buffer);
+    if (file.mimetype === 'application/pdf') {
+        text = await extractTextFromPDF(file.buffer);
+    } else if (file.mimetype.includes('word') || file.mimetype.includes('officedocument')) {
+        text = await extractTextFromDOCX(file.buffer);
+    } else {
+        console.warn(`[ANALYZE API] Unsupported mimetype: ${file.mimetype}`);
+        return res.status(400).json({ error: 'Unsupported file format. Please upload PDF or DOCX.' });
+    }
+
+    if (!text || text.trim().length < 10) {
+        return res.status(422).json({ 
+            error: 'Could not extract text from document', 
+            details: 'The file might be password protected, corrupted, or an image-based PDF without OCR.' 
+        });
+    }
 
     const results = analyzeResume(text, role);
+    console.log(`[ANALYZE API] Analysis complete. Score: ${results.score}`);
+    
     return res.status(200).json({ ...results, role, extractedText: text });
   } catch (error) {
-    console.error('Analysis error:', error);
-    return res.status(500).json({ error: 'Analysis failed', details: error.message });
+    console.error('[ANALYZE API] Critical Analysis error:', error);
+    return res.status(500).json({ 
+        error: 'Analysis failed', 
+        details: error.message,
+        tip: 'Ensure the file is a valid PDF/DOCX and under 10MB.'
+    });
   }
 }
+

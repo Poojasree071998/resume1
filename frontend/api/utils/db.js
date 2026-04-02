@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
 
 if (!MONGODB_URI) {
-  console.warn('MONGODB_URI is not defined in environment variables. Falling back to local development URI.');
+  console.warn('[DB] MONGODB_URI is not defined. Falling back to local development URI.');
 }
 
 /**
@@ -18,25 +18,30 @@ if (!cached) {
 
 async function dbConnect() {
   if (cached.conn) {
+    console.log('[DB] Using cached MongoDB connection');
     return cached.conn;
   }
 
+  // VALIDATION: Fail early if no URI is provided in production
   if (!MONGODB_URI) {
-    console.error('CRITICAL ERROR: MONGODB_URI is not defined in Vercel/Production environment.');
-    console.info('To fix: Add MONGODB_URI to your Vercel Project Settings > Environment Variables.');
+    const errorMsg = 'CRITICAL ERROR: MONGODB_URI is missing in Vercel settings.';
+    console.error(`[DB] ${errorMsg}`);
+    console.info('[DB] Fix: Add MONGODB_URI to Vercel Project Settings > Environment Variables.');
     return null;
   }
 
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-      connectTimeoutMS: 10000, // 10 seconds timeout for initial connection
-      serverSelectionTimeoutMS: 5000, // 5 seconds to find a server
+      connectTimeoutMS: 15000, // Increased to 15s for slow cold starts
+      serverSelectionTimeoutMS: 8000,
+      socketTimeoutMS: 45000,
+      family: 4 // Force IPv4 to avoid DNS resolution delays
     };
 
-    console.log('Attempting new MongoDB connection...');
+    console.log('[DB] Attempting new MongoDB connection...');
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      console.log('MongoDB connection established ✅');
+      console.log('[DB] MongoDB connection established successfully ✅');
       return mongoose;
     });
   }
@@ -44,8 +49,14 @@ async function dbConnect() {
   try {
     cached.conn = await cached.promise;
   } catch (e) {
-    cached.promise = null; // Clear promise so retry is possible
-    console.error('CRITICAL: Failed to connect to MongoDB ❌:', e.message);
+    cached.promise = null; // Clear promise so retry is possible on next request
+    console.error('[DB] CRITICAL: Failed to connect to MongoDB ❌');
+    console.error(`[DB] Error Message: ${e.message}`);
+    
+    if (e.message.includes('ETIMEDOUT') || e.message.includes('selection timeout')) {
+      console.error('[DB] Recommendation: Check if your MongoDB Atlas IP Whitelist includes 0.0.0.0/0');
+    }
+    
     throw e;
   }
 
@@ -53,3 +64,4 @@ async function dbConnect() {
 }
 
 export default dbConnect;
+
