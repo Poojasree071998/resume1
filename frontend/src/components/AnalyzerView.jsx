@@ -561,9 +561,8 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
         setStep(2);
       } else { // This implies selectedFiles.length === 1
         setFile(selectedFiles[0]);
-        // If role was chosen on landing page, we can go straight to running analysis
-        // but for now let's just bypass step 2 if role is set
-        setStep(initialRole ? 3 : 2);
+        // Let the user confirm or select role and manually run the analysis
+        setStep(2);
       }
     }
   }, [initialFile, recruiterMode, setRecruiterMode, initialRole]);

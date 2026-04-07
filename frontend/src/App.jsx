@@ -306,8 +306,22 @@ function App() {
     
     // Persist to backend to trigger notifications & mail
     try {
+      let candidateName = data.name;
+      if (!candidateName && data.firstName && data.lastName) {
+        candidateName = `${data.firstName} ${data.lastName}`;
+      }
+      if (!candidateName && user && user.name) {
+        candidateName = user.name;
+      }
+      if (!candidateName && fileName) {
+        candidateName = fileName.split('.')[0];
+      }
+      if (!candidateName) {
+        candidateName = "Untitled Analysis";
+      }
+
       const cand = {
-        name: data.name || fileName.split('.')[0] || "Untitled Analysis",
+        name: candidateName,
         fileName: fileName,
         score: data.score || 0,
         matchPercentage: data.matchPercentage || 0,
