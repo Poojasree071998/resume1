@@ -64,7 +64,7 @@ const TopHeader = ({ recruiterMode, user, darkMode, onToggleDark, onLogout }) =>
   const getIconColor = (type) => {
     if (type === 'Selected') return { bg: 'rgba(16, 185, 129, 0.1)', text: '#10b981' };
     if (type === 'Rejected') return { bg: 'rgba(239, 68, 68, 0.1)', text: '#ef4444' };
-    return { bg: 'rgba(99, 102, 241, 0.1)', text: '#6366f1' };
+    return { bg: 'rgba(37, 99, 235, 0.1)', text: 'var(--primary)' };
   };
 
   return (

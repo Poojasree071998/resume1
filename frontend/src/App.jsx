@@ -352,7 +352,7 @@ function App() {
         strengths: data.strengths || [],
         weaknesses: data.weaknesses || [],
         reasons: data.reasons || [],
-        status: data.verdict || 'Consider',
+        status: 'Applied',
         role: data.role || selectedRole || 'General',
         email: user?.email || 'N/A',
         extractedText: data.extractedText || ''

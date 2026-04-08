@@ -82,7 +82,7 @@ const JobMatcherView = ({ resumeText, resumeName, setActiveView }) => {
           {/* Resume Selected */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-              <div style={{ padding: '0.5rem', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)' }}>
+              <div style={{ padding: '0.5rem', borderRadius: '10px', background: 'rgba(37, 99, 235, 0.1)', color: 'var(--primary)' }}>
                 <FileText size={20} />
               </div>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>Active Resume</h3>
@@ -98,7 +98,7 @@ const JobMatcherView = ({ resumeText, resumeName, setActiveView }) => {
           {/* JD Input */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-              <div style={{ padding: '0.5rem', borderRadius: '10px', background: 'rgba(168, 85, 247, 0.1)', color: 'var(--secondary)' }}>
+              <div style={{ padding: '0.5rem', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)' }}>
                 <Briefcase size={20} />
               </div>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>Target Job Description</h3>
@@ -113,11 +113,12 @@ const JobMatcherView = ({ resumeText, resumeName, setActiveView }) => {
                 padding: '1rem', 
                 borderRadius: '16px', 
                 background: 'rgba(0,0,0,0.02)', 
-                border: '1px solid rgba(0,0,0,0.05)', 
+                border: '1px solid var(--border)', 
                 outline: 'none', 
                 fontSize: '0.9rem', 
                 resize: 'none',
-                fontWeight: 500
+                fontWeight: 500,
+                color: 'var(--text-main)'
               }}
             />
           </div>

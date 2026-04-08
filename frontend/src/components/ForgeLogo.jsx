@@ -2,8 +2,8 @@ import React from 'react';
 
 const ForgeLogo = ({ size = 40, showText = true, variant = 'light' }) => {
   const isSidebar = variant === 'sidebar';
-  const frameColor = isSidebar ? 'white' : '#0056b8';
-  const atsTextColor = isSidebar ? 'white' : '#001f3f';
+  const frameColor = isSidebar ? '#2563eb' : '#0056b8';
+  const atsTextColor = isSidebar ? '#0f172a' : '#001f3f';
   
   return (
     <div style={{ 
@@ -25,19 +25,19 @@ const ForgeLogo = ({ size = 40, showText = true, variant = 'light' }) => {
           fill={frameColor} 
         />
         
-        {/* Central Yellow Box (Centered) */}
-        <rect x="42" y="44" width="22" height="13" fill="#ffcc00" />
+        {/* Central Accent Box (Centered) */}
+        <rect x="42" y="44" width="22" height="13" fill="#3b82f6" />
         
         {/* Elephant Silhouette Inside (Trunk Up) */}
         <path 
           d="M52 46C51 46 50.5 46.5 50.5 47C50.5 47.5 51 48 52 48H53.5V50C53.5 50.5 53 51 52.5 51H52V51.5H54.5V47.5C54.5 46.5 53.5 46 52 46Z" 
-          fill="#0056b8" 
+          fill="white" 
         />
         
-        {/* Bottom Yellow Triangle (Proportional) */}
+        {/* Bottom Accent Triangle (Proportional) */}
         <path 
           d="M20 100L54 68L88 100H20Z" 
-          fill="#ffcc00" 
+          fill="#3b82f6" 
         />
       </svg>
 
@@ -55,7 +55,7 @@ const ForgeLogo = ({ size = 40, showText = true, variant = 'light' }) => {
             color: atsTextColor,
             textTransform: 'uppercase'
           }}>
-            ATS <span style={{ color: '#ffcc00' }}>AI</span>
+            ATS <span style={{ color: '#2563eb' }}>AI</span>
           </div>
         </div>
       )}

@@ -238,8 +238,8 @@ export default async function handler(req, res) {
             score: finalData.score || 0,
             matchPercentage: finalData.matchPercentage || 0,
             verdict: finalData.verdict || 'Consider',
-            // Use AI verdict as status so HR dashboard displays it correctly
-            status: finalData.verdict || 'Consider',
+            // Default formal status to 'Applied' for all new uploads
+            status: 'Applied',
             matchedSkills: finalData.matchedSkills || [],
             skills: finalData.skills || [],
             missingSkills: finalData.missingSkills || [],

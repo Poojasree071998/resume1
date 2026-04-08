@@ -36,14 +36,15 @@ const RoleCard = ({ role, active, onClick, icon: Icon }) => (
       padding: '1.5rem', 
       cursor: 'pointer', 
       transition: 'all 0.3s ease',
-      background: active ? 'var(--grad-main)' : 'var(--glass)',
+      background: active ? 'var(--primary)' : 'var(--bg-card)',
       color: active ? 'white' : 'var(--text-main)',
-      borderColor: active ? 'transparent' : 'var(--glass-border)',
+      borderColor: active ? 'transparent' : 'var(--border)',
       textAlign: 'center',
-      minWidth: '160px'
+      minWidth: '160px',
+      boxShadow: active ? '0 10px 20px var(--primary-glow)' : 'none'
     }}
   >
-    <div style={{ marginBottom: '1rem', color: active ? '#001f3f' : 'var(--primary)' }}>
+    <div style={{ marginBottom: '1rem', color: active ? 'white' : 'var(--primary)' }}>
       <Icon size={32} />
     </div>
     <h4 style={{ fontSize: '0.9rem', fontWeight: 900 }}>{role}</h4>
@@ -56,7 +57,7 @@ const RecruitmentTimeline = ({ notifications = [] }) => (
        <Clock size={20} color="var(--primary)" /> Activity Timeline
     </h4>
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative' }}>
-      <div style={{ position: 'absolute', left: '11px', top: '10px', bottom: '10px', width: '2px', background: 'var(--glass-border)', zIndex: 0 }} />
+      <div style={{ position: 'absolute', left: '11px', top: '10px', bottom: '10px', width: '2px', background: 'var(--border)', zIndex: 0 }} />
       {notifications.length > 0 ? [...notifications].reverse().map((note, i) => (
         <div key={note.id || i} style={{ display: 'flex', gap: '1.5rem', position: 'relative', zIndex: 1 }}>
           <div style={{ 
@@ -127,7 +128,7 @@ const ResultDashboard = ({ analysis = {}, onReset, recruiterMode, onOptimize, op
                <button 
                  onClick={() => onOptimize('Rejected')}
                  className="gradient-btn-outline" 
-                 style={{ border: '1px solid #ef4444', color: '#ef4444', padding: '0.75rem 1.5rem' }}
+                 style={{ border: '1px solid #ef4444', color: '#ef4444', padding: '0.75rem 1.5rem', background: 'transparent' }}
                >
                  <XCircle size={18} /> REJECT CANDIDATE
                </button>
@@ -239,7 +240,7 @@ ${(analysis.missingSkills || []).join(', ')}
                 
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
-                    <div style={{ color: isSelected ? '#10b981' : isRejected ? '#ef4444' : '#f59e0b' }}>
+                    <div style={{ color: isSelected ? '#10b981' : isRejected ? '#ef4444' : 'var(--primary)' }}>
                       {isSelected ? <CheckCircle2 size={32} /> : isRejected ? <XCircle size={32} /> : <AlertTriangle size={32} />}
                     </div>
                     <span style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text-main)' }}>{score}/100 Score</span>
@@ -247,7 +248,7 @@ ${(analysis.missingSkills || []).join(', ')}
                   <h3 style={{ 
                     fontSize: '1.25rem', 
                     fontWeight: 900, 
-                    color: isSelected ? '#10b981' : isRejected ? '#ef4444' : '#f59e0b',
+                    color: isSelected ? '#10b981' : isRejected ? '#ef4444' : 'var(--primary)',
                     marginTop: '0.5rem',
                     textTransform: 'uppercase',
                     letterSpacing: '0.1em'
@@ -257,7 +258,7 @@ ${(analysis.missingSkills || []).join(', ')}
                 </div>
               </div>
               <div style={{ position: 'absolute', right: -40, bottom: -40, opacity: 0.12, transform: 'rotate(-10deg)', pointerEvents: 'none' }}>
-                {isSelected ? <CheckCircle2 size={220} color="#10b981" /> : isRejected ? <XCircle size={220} color="#ef4444" /> : <AlertTriangle size={220} color="#f59e0b" />}
+                {isSelected ? <CheckCircle2 size={220} color="#10b981" /> : isRejected ? <XCircle size={220} color="#ef4444" /> : <AlertTriangle size={220} color="var(--primary)" />}
               </div>
             </div>
 
@@ -354,14 +355,14 @@ ${(analysis.missingSkills || []).join(', ')}
 
             <div className="glass-card" style={{ padding: '2rem', height: '100%' }}>
                 <h4 style={{ fontSize: '1.1rem', fontWeight: 900, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <BrainCircuit size={22} color="#f59e0b" /> Skill Gap Analysis
+                  <BrainCircuit size={22} color="var(--primary)" /> Skill Gap Analysis
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   {(missingSkills.length > 0 ? missingSkills.slice(0, 10) : ['No critical gaps identified']).map((skill, i) => (
                     <div key={i} style={{ 
                       padding: '1.25rem', borderRadius: '16px', 
-                      background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.1)',
-                      fontSize: '0.9rem', fontWeight: 800, color: '#f59e0b', textAlign: 'left'
+                      background: 'rgba(37, 99, 235, 0.05)', border: '1px solid rgba(37, 99, 235, 0.1)',
+                      fontSize: '0.9rem', fontWeight: 800, color: 'var(--primary)', textAlign: 'left'
                     }}>
                       {typeof skill === 'object' ? skill.name : skill}
                     </div>
@@ -767,7 +768,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
               reasons: result.reasons || [],
               suggestedRoles: result.suggestedRoles || [],
               improvementSkills: result.improvementSkills || [],
-              status: result.verdict || 'Considered',
+              status: 'Applied',
               role: role || 'General',
               extractedText: result.extractedText || '',
               timestamp: new Date().toLocaleString(),

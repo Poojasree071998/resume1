@@ -138,7 +138,7 @@ const GridBackground = () => (
       style={{
         position: 'absolute', top: '-10%', right: '5%',
         width: 800, height: 800,
-        background: 'radial-gradient(circle, rgba(244,196,0,0.08) 0%, transparent 65%)',
+        background: 'radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 65%)',
         borderRadius: '50%', filter: 'blur(80px)'
       }}
     />
@@ -148,7 +148,7 @@ const GridBackground = () => (
       style={{
         position: 'absolute', bottom: '0%', left: '-10%',
         width: 600, height: 600,
-        background: 'radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 65%)',
+        background: 'radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 65%)',
         borderRadius: '50%', filter: 'blur(100px)'
       }}
     />
@@ -200,8 +200,8 @@ const StatChip = ({ icon: Icon, value, label, color, delay, style }) => (
       <Icon size={16} strokeWidth={2.5} />
     </div>
     <div>
-      <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>{value}</div>
-      <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>{label}</div>
+      <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>{value}</div>
+      <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>{label}</div>
     </div>
   </motion.div>
 );
@@ -220,7 +220,7 @@ const RolePill = ({ role, icon: Icon, active, onClick, color }) => (
       display: 'flex', alignItems: 'center', gap: '0.6rem',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      color: active ? '#fff' : 'rgba(255,255,255,0.5)',
+      color: active ? '#fff' : '#64748b',
       fontSize: '0.85rem', fontWeight: 700,
       boxShadow: active ? `0 0 20px ${color}30` : 'none',
       whiteSpace: 'nowrap'
@@ -274,8 +274,8 @@ const FeatureCard = ({ icon: Icon, title, desc, accent, delay }) => (
     }}>
       <Icon size={22} strokeWidth={2} />
     </div>
-    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#fff', marginBottom: '0.75rem', letterSpacing: '-0.01em' }}>{title}</h3>
-    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem', lineHeight: 1.65, fontWeight: 500 }}>{desc}</p>
+    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem', letterSpacing: '-0.01em' }}>{title}</h3>
+    <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.65, fontWeight: 500 }}>{desc}</p>
   </motion.div>
 );
 
@@ -291,10 +291,10 @@ const ProcessStep = ({ num, title, desc, icon: Icon }) => (
     <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{
         width: 48, height: 48, borderRadius: 14,
-        background: 'linear-gradient(135deg, #F4C400, #FFB700)',
+        background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: '#0A1628', fontWeight: 900, fontSize: '1rem',
-        boxShadow: '0 8px 24px rgba(244,196,0,0.35)'
+        color: '#fff', fontWeight: 900, fontSize: '1rem',
+        boxShadow: '0 8px 24px rgba(37,99,235,0.25)'
       }}>{num}</div>
       {num < 4 && (
         <div style={{ width: 1, height: 40, background: 'rgba(244,196,0,0.2)', marginTop: '0.5rem' }} />
@@ -337,15 +337,15 @@ const TestimonialCard = ({ name, role, company, text, rating, delay }) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
       <div style={{
         width: 38, height: 38, borderRadius: '50%',
-        background: 'linear-gradient(135deg, #F4C400, #0ea5e9)',
+        background: 'linear-gradient(135deg, #2563eb, #60a5fa)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: '0.9rem', fontWeight: 800, color: '#0A1628'
+        fontSize: '0.9rem', fontWeight: 800, color: '#fff'
       }}>
         {name[0]}
       </div>
       <div>
-        <div style={{ fontSize: '0.875rem', fontWeight: 800, color: '#fff' }}>{name}</div>
-        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>{role} · {company}</div>
+        <div style={{ fontSize: '0.875rem', fontWeight: 800, color: '#0f172a' }}>{name}</div>
+        <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>{role} · {company}</div>
       </div>
     </div>
   </motion.div>
@@ -387,8 +387,8 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
     <div 
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(160deg, #060d1a 0%, #0a1628 40%, #080f1e 100%)',
-        color: '#fff',
+        background: 'linear-gradient(160deg, #ffffff 0%, #f8fafc 40%, #eff6ff 100%)',
+        color: '#0f172a',
         overflowX: 'hidden',
         position: 'relative'
       }}
@@ -432,8 +432,8 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
               display: 'flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.6rem 1.2rem', borderRadius: 12,
               background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: 'rgba(255,255,255,0.6)',
+              border: '1px solid #e2e8f0',
+              color: '#475569',
               fontSize: '0.85rem', fontWeight: 700,
               cursor: 'pointer', transition: 'all 0.3s ease'
             }}
@@ -449,11 +449,11 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
             }}
             style={{
               padding: '0.65rem 1.6rem', borderRadius: 12,
-              background: 'linear-gradient(135deg, #F4C400, #FFB700)',
-              border: 'none', color: '#0A1628',
+              background: 'linear-gradient(135deg, #2563eb, #1e40af)',
+              border: 'none', color: '#fff',
               fontSize: '0.875rem', fontWeight: 800,
               cursor: 'pointer', letterSpacing: '0.02em',
-              boxShadow: '0 4px 20px rgba(244,196,0,0.35)',
+              boxShadow: '0 4px 20px rgba(37,99,235,0.25)',
               display: 'flex', alignItems: 'center', gap: '0.4rem'
             }}
           >
@@ -484,16 +484,16 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
                 padding: '0.4rem 1rem', borderRadius: 50,
-                background: 'rgba(244,196,0,0.1)',
-                border: '1px solid rgba(244,196,0,0.2)',
+                background: 'rgba(37,99,235,0.1)',
+                border: '1px solid rgba(37,99,235,0.2)',
                 marginBottom: '2rem',
                 fontSize: '0.78rem', fontWeight: 700,
-                color: '#F4C400', letterSpacing: '0.08em', textTransform: 'uppercase'
+                color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase'
               }}
             >
               <span style={{
-                width: 7, height: 7, borderRadius: '50%', background: '#F4C400',
-                boxShadow: '0 0 8px #F4C400', animation: 'pulse 2s infinite'
+                width: 7, height: 7, borderRadius: '50%', background: '#2563eb',
+                boxShadow: '0 0 8px #2563eb', animation: 'pulse 2s infinite'
               }} />
               AI-Powered Resume Intelligence
             </motion.div>
@@ -511,7 +511,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
                 <CharacterReveal text="Rank faster." delay={0.4} />
                 <br />
                 <span style={{
-                  background: 'linear-gradient(135deg, #F4C400 0%, #FFD700 50%, #E8A000 100%)',
+                  background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #1e40af 100%)',
                   WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text', display: 'inline-block'
                 }}>
@@ -525,7 +525,7 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
               style={{
-                fontSize: '1.1rem', color: 'rgba(255,255,255,0.55)',
+                fontSize: '1.1rem', color: '#64748b',
                 lineHeight: 1.7, maxWidth: 480,
                 marginBottom: '2.5rem', fontWeight: 500
               }}
@@ -627,9 +627,9 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
                       transition={{ duration: 2, repeat: analyzing ? Infinity : 0, ease: 'linear' }}
                       style={{
                         width: 56, height: 56, borderRadius: 16, flexShrink: 0,
-                        background: 'linear-gradient(135deg, #F4C400, #FFB700)',
+                        background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: '#0A1628', boxShadow: '0 8px 24px rgba(244,196,0,0.4)'
+                        color: '#fff', boxShadow: '0 8px 24px rgba(37,99,235,0.3)'
                       }}
                     >
                       {analyzing ? <Sparkles size={24} /> : <Upload size={24} />}
@@ -645,9 +645,9 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
                     <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
                       <div style={{
                         padding: '0.5rem 1.1rem', borderRadius: 10,
-                        background: 'rgba(244,196,0,0.12)',
-                        border: '1px solid rgba(244,196,0,0.2)',
-                        fontSize: '0.78rem', fontWeight: 700, color: '#F4C400'
+                        background: 'rgba(37,99,235,0.1)',
+                        border: '1px solid rgba(37,99,235,0.2)',
+                        fontSize: '0.78rem', fontWeight: 700, color: '#2563eb'
                       }}>Browse</div>
                     </div>
                   </div>
@@ -673,8 +673,8 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
                 style={{
                   width: '100%', marginTop: '1rem', padding: '0.9rem',
                   borderRadius: 14, border: '1px solid rgba(255,255,255,0.1)',
-                  background: 'rgba(255,255,255,0.04)',
-                  color: 'rgba(255,255,255,0.7)', fontSize: '0.875rem',
+                  background: '#f8fafc',
+                  color: '#475569', fontSize: '0.875rem',
                   fontWeight: 700, cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
                   transition: 'all 0.2s ease'
@@ -733,8 +733,8 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
                     />
                     <defs>
                       <linearGradient id="scoreGrad" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stopColor="#F4C400"/>
-                        <stop offset="100%" stopColor="#FFD700"/>
+                        <stop offset="0%" stopColor="#2563eb"/>
+                        <stop offset="100%" stopColor="#60a5fa"/>
                       </linearGradient>
                     </defs>
                   </svg>
@@ -813,37 +813,37 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
           viewport={{ once: true }}
           style={{ textAlign: 'center', marginBottom: '4rem' }}
         >
-          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#F4C400', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1rem' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1rem' }}>
             What we offer
           </p>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: 900, letterSpacing: '-0.03em', marginBottom: '1rem' }}>
             Everything you need to land <br />
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>the role you deserve</span>
+            <span style={{ color: '#64748b' }}>the role you deserve</span>
           </h2>
         </motion.div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
-          <FeatureCard icon={BarChart3} title="Deep ATS Scoring" desc="50+ professional metrics evaluated in real time. Know exactly where you stand before applying." accent="#F4C400" delay={0.1} />
+          <FeatureCard icon={BarChart3} title="Deep ATS Scoring" desc="50+ professional metrics evaluated in real time. Know exactly where you stand before applying." accent="#2563eb" delay={0.1} />
           <FeatureCard icon={Target} title="Role-Specific Match" desc="Get precision-tuned feedback for Frontend, Backend, Sales & more with JD-aware AI." accent="#3b82f6" delay={0.2} />
-          <FeatureCard icon={Zap} title="10-Second Analysis" desc="No wait, no sign-up needed. Upload → instant feedback. It's that fast." accent="#ec4899" delay={0.3} />
-          <FeatureCard icon={Lightbulb} title="Gap Remediation" desc="Get clear, actionable suggestions — skills to add, keywords to include, formatting fixes." accent="#10b981" delay={0.4} />
-          <FeatureCard icon={Shield} title="ATS Bypass Engine" desc="Trained on real ATS logic. We tell you what bots reject before they do." accent="#8b5cf6" delay={0.5} />
-          <FeatureCard icon={BrainCircuit} title="AI Resume Rewriter" desc="Let our AI reconstruct your resume with better language, structure, and impact." accent="#f97316" delay={0.6} />
-          <FeatureCard icon={Globe} title="Recruiter Dashboard" desc="For HR teams — bulk upload, rank candidates, schedule interviews, all in one place." accent="#0ea5e9" delay={0.7} />
-          <FeatureCard icon={TrendingUp} title="Career Roadmap" desc="Get a curated, step-by-step growth path based on your current skill level and target role." accent="#F4C400" delay={0.8} />
+          <FeatureCard icon={Zap} title="10-Second Analysis" desc="No wait, no sign-up needed. Upload → instant feedback. It's that fast." accent="#2563eb" delay={0.3} />
+          <FeatureCard icon={Lightbulb} title="Gap Remediation" desc="Get clear, actionable suggestions — skills to add, keywords to include, formatting fixes." accent="#2563eb" delay={0.4} />
+          <FeatureCard icon={Shield} title="ATS Bypass Engine" desc="Trained on real ATS logic. We tell you what bots reject before they do." accent="#1e40af" delay={0.5} />
+          <FeatureCard icon={BrainCircuit} title="AI Resume Rewriter" desc="Let our AI reconstruct your resume with better language, structure, and impact." accent="#2563eb" delay={0.6} />
+          <FeatureCard icon={Globe} title="Recruiter Dashboard" desc="For HR teams — bulk upload, rank candidates, schedule interviews, all in one place." accent="#2563eb" delay={0.7} />
+          <FeatureCard icon={TrendingUp} title="Career Roadmap" desc="Get a curated, step-by-step growth path based on your current skill level and target role." accent="#2563eb" delay={0.8} />
         </div>
       </section>
 
       {/* ── How It Works ──────────────────────────────── */}
       <section style={{
-        background: 'rgba(255,255,255,0.02)',
-        borderTop: '1px solid rgba(255,255,255,0.05)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        background: '#f8fafc',
+        borderTop: '1px solid #e2e8f0',
+        borderBottom: '1px solid #e2e8f0',
       }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '7rem 3rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6rem', alignItems: 'center' }}>
           <div>
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-              <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#F4C400', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1rem' }}>Process</p>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1rem' }}>Process</p>
               <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.5rem)', fontWeight: 900, letterSpacing: '-0.03em', marginBottom: '3rem' }}>
                 From upload to <br />offer in 4 steps
               </h2>
@@ -863,20 +863,19 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
             style={{
               padding: '2.5rem',
               borderRadius: 28,
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(20px)'
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
             }}
           >
-            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>
               Sample Analysis
             </p>
             {[
               { label: 'Experience Relevance', score: 88, color: '#10b981' },
               { label: 'Keyword Density', score: 72, color: '#3b82f6' },
-              { label: 'Impact Statements', score: 65, color: '#F4C400' },
-              { label: 'Formatting Score', score: 95, color: '#ec4899' },
-              { label: 'Education Match', score: 80, color: '#8b5cf6' },
+              { label: 'Impact Statements', score: 65, color: '#2563eb' },
+              { label: 'Formatting Score', score: 95, color: '#6366f1' },
+              { label: 'Education Match', score: 80, color: '#1e40af' },
             ].map(({ label, score, color }, i) => (
               <motion.div
                 key={label}
@@ -887,10 +886,10 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
                 style={{ marginBottom: '1.25rem' }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600 }}>{label}</span>
+                  <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>{label}</span>
                   <span style={{ fontSize: '0.85rem', color, fontWeight: 800 }}>{score}%</span>
                 </div>
-                <div style={{ height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 999, overflow: 'hidden' }}>
+                <div style={{ height: 6, background: '#e2e8f0', borderRadius: 999, overflow: 'hidden' }}>
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${score}%` }}
@@ -926,10 +925,10 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
       {/* ── Testimonials ──────────────────────────────── */}
       <section style={{ maxWidth: 1280, margin: '0 auto', padding: '7rem 3rem' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#F4C400', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1rem' }}>Testimonials</p>
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1rem' }}>Testimonials</p>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 900, letterSpacing: '-0.03em' }}>
             Trusted by candidates <br />
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>and hiring teams alike</span>
+            <span style={{ color: '#64748b' }}>and hiring teams alike</span>
           </h2>
         </motion.div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
@@ -957,12 +956,12 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
             position: 'relative', overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 0%, rgba(244,196,0,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
-          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#F4C400', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1.25rem' }}>Get started free</p>
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 0%, rgba(37,99,235,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1.25rem' }}>Get started free</p>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, letterSpacing: '-0.03em', marginBottom: '1.25rem' }}>
             Your next offer starts <br />with one upload.
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '1.05rem', marginBottom: '2.5rem', fontWeight: 500 }}>
+          <p style={{ color: '#64748b', fontSize: '1.05rem', marginBottom: '2.5rem', fontWeight: 500 }}>
             No account needed. No credit card. Just results.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
@@ -976,11 +975,11 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
               }}
               style={{
                 padding: '1rem 2.5rem', borderRadius: 14,
-                background: 'linear-gradient(135deg, #F4C400, #FFB700)',
-                border: 'none', color: '#0A1628',
+                background: 'linear-gradient(135deg, #2563eb, #1e40af)',
+                border: 'none', color: '#fff',
                 fontSize: '0.95rem', fontWeight: 800, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '0.6rem',
-                boxShadow: '0 8px 28px rgba(244,196,0,0.35)'
+                boxShadow: '0 8px 28px rgba(37,99,235,0.35)'
               }}
             >
               <Upload size={18} /> Analyze My Resume
@@ -991,11 +990,12 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
               onClick={onEnterApp}
               style={{
                 padding: '1rem 2.5rem', borderRadius: 14,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: 'rgba(255,255,255,0.8)',
+                background: '#fff',
+                border: '1px solid #e2e8f0',
+                color: '#1e293b',
                 fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', gap: '0.6rem'
+                display: 'flex', alignItems: 'center', gap: '0.6rem',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
               }}
             >
               <LayoutDashboard size={18} /> Recruiter Dashboard
@@ -1006,24 +1006,24 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
 
       {/* ── Footer ────────────────────────────────────── */}
       <footer style={{
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-        background: 'rgba(0,0,0,0.2)',
+        borderTop: '1px solid #e2e8f0',
+        background: '#f8fafc',
         padding: '4rem 3rem'
       }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: '4rem', marginBottom: '4rem' }}>
           <div>
             <ForgeLogo size={40} variant="sidebar" />
-            <p style={{ marginTop: '1.25rem', color: 'rgba(255,255,255,0.35)', fontSize: '0.875rem', lineHeight: 1.7, maxWidth: 280, fontWeight: 500 }}>
+            <p style={{ marginTop: '1.25rem', color: '#64748b', fontSize: '0.875rem', lineHeight: 1.7, maxWidth: 280, fontWeight: 500 }}>
               Institutional-grade resume intelligence for modern job seekers and hiring teams.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
               {[Linkedin, Twitter, Github].map((Icon, i) => (
                 <motion.div key={i} whileHover={{ y: -3, scale: 1.1 }} style={{
                   width: 36, height: 36, borderRadius: 10,
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: '#fff',
+                  border: '1px solid #e2e8f0',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer', color: 'rgba(255,255,255,0.5)'
+                  cursor: 'pointer', color: '#475569'
                 }}>
                   <Icon size={16} />
                 </motion.div>
@@ -1036,11 +1036,11 @@ function LandingPage({ onUpload, analyzing, onEnterApp, onPrompt, selectedRole, 
             { title: 'Support', links: ['support@forge.ai', '24/7 Global Support', 'Documentation', 'Status'] },
           ].map(({ title, links }) => (
             <div key={title} id={title === 'Support' ? 'footer-support' : undefined}>
-              <h4 style={{ fontSize: '0.8rem', fontWeight: 800, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>{title}</h4>
+              <h4 style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>{title}</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {links.map(link => (
-                  <motion.span key={link} whileHover={{ x: 4, color: '#fff' }}
-                    style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500, cursor: 'pointer', transition: 'color 0.2s' }}>
+                  <motion.span key={link} whileHover={{ x: 4, color: '#2563eb' }}
+                    style={{ fontSize: '0.875rem', color: '#64748b', fontWeight: 500, cursor: 'pointer', transition: 'color 0.2s' }}>
                     {link}
                   </motion.span>
                 ))}

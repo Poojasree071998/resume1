@@ -21,20 +21,21 @@ const NavItem = ({ icon: Icon, label, active, onClick }) => (
     onClick={onClick}
     className={`nav-item ${active ? 'active' : ''}`}
     style={{ 
-      color: active ? '#001f3f' : 'white',
-      background: active ? 'var(--secondary)' : 'transparent'
+      color: active ? 'white' : 'var(--text-muted)',
+      background: active ? 'var(--primary)' : 'transparent',
+      boxShadow: active ? '0 8px 16px var(--primary-glow)' : 'none'
     }}
   >
-    <Icon size={20} color={active ? '#001f3f' : 'white'} />
-    <span style={{ fontWeight: 800 }}>{label}</span>
+    <Icon size={20} color={active ? 'white' : 'var(--text-muted)'} />
+    <span style={{ fontWeight: 700 }}>{label}</span>
   </div>
 );
 
 const Sidebar = ({ activeView, setActiveView, recruiterMode, setRecruiterMode, user, onLogout }) => {
   return (
-    <aside className="sidebar-nav" style={{ width: '280px' }}>
-      <div style={{ paddingBottom: '1.25rem', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-        <ForgeLogo size={34} variant="sidebar" />
+    <aside className="sidebar-nav" style={{ width: 'var(--sidebar-w)', borderRight: '1px solid var(--border)' }}>
+      <div style={{ paddingBottom: '2rem', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+        <ForgeLogo size={36} variant="sidebar" />
       </div>
 
       <div className="sidebar-nav-body">
@@ -97,19 +98,19 @@ const Sidebar = ({ activeView, setActiveView, recruiterMode, setRecruiterMode, u
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            background: recruiterMode ? 'rgba(255,196,0,0.1)' : 'rgba(0,0,0,0.2)',
-            border: `1px solid ${recruiterMode ? 'var(--secondary)' : 'rgba(255,255,255,0.1)'}`,
+            background: recruiterMode ? 'rgba(37, 99, 235, 0.1)' : 'rgba(0,0,0,0.03)',
+            border: `1px solid ${recruiterMode ? 'var(--primary)' : 'var(--border)'}`,
             transition: 'all 0.2s ease'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <ShieldCheck size={18} color={recruiterMode ? 'var(--secondary)' : 'rgba(255,255,255,0.4)'} />
-            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: recruiterMode ? 'var(--secondary)' : 'rgba(255,255,255,0.8)' }}>Recruit Mode</span>
+            <ShieldCheck size={18} color={recruiterMode ? 'var(--primary)' : 'var(--text-muted)'} />
+            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: recruiterMode ? 'var(--primary)' : 'var(--text-muted)' }}>Recruit Mode</span>
           </div>
           <div style={{ 
             width: 32, 
             height: 16, 
-            background: recruiterMode ? 'var(--secondary)' : 'rgba(255,255,255,0.2)', 
+            background: recruiterMode ? 'var(--primary)' : '#cbd5e1', 
             borderRadius: 10, 
             position: 'relative' 
           }}>

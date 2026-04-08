@@ -30,7 +30,7 @@ import {
 const ROADMAP_DATA = [
   {
     title: "Frontend Developer",
-    color: "#F4C400",
+    color: "#2563eb",
     image: "/assets/roadmap/frontend_3d_icon_1774684912545.png",
     steps: [
       { text: "HTML CSS", icon: Monitor },
@@ -388,10 +388,10 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
         gridTemplateColumns: 'repeat(4, 1fr)', 
         gap: '1.5rem' 
       }}>
-        <StatCard icon={FileText} label="Total Resumes" value={stats.total} color="#0066cc" delay={0.1} />
-        <StatCard icon={Target} label="Avg. Score" value={stats.avgScore} color="#F59E0B" delay={0.2} />
+        <StatCard icon={FileText} label="Total Resumes" value={stats.total} color="#2563eb" delay={0.1} />
+        <StatCard icon={Target} label="Avg. Score" value={stats.avgScore} color="#3b82f6" delay={0.2} />
         <StatCard icon={TrendingUp} label="Selected" value={stats.selected} color="#10b981" delay={0.3} />
-        <StatCard icon={AlertCircle} label="Consider" value={stats.consider} color="#3b82f6" delay={0.4} />
+        <StatCard icon={AlertCircle} label="Consider" value={stats.consider} color="#6366f1" delay={0.4} />
       </div>
 
       {/* Career Specialization Roadmap */}
@@ -538,10 +538,10 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
               <div style={{ color: 'var(--secondary)' }}><TrendingUp size={24} /></div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 900 }}>Talent DNA</h3>
             </div>
-            <DnaBar label="Strategic Depth" value={92} color="#0066cc" delay={0.5} />
+            <DnaBar label="Strategic Depth" value={92} color="#2563eb" delay={0.5} />
             <DnaBar label="Technical Skill" value={85} color="#10b981" delay={0.6} />
-            <DnaBar label="Structure & Clarity" value={78} color="#a855f7" delay={0.7} />
-            <DnaBar label="Innovation Quotient" value={65} color="#f59e0b" delay={0.8} />
+            <DnaBar label="Structure & Clarity" value={78} color="#6366f1" delay={0.7} />
+            <DnaBar label="Innovation Quotient" value={65} color="#3b82f6" delay={0.8} />
           </div>
         </div>
       </div>
