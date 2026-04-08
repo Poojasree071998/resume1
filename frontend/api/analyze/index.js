@@ -219,6 +219,7 @@ export default async function handler(req, res) {
     const finalData = { ...results, role, extractedText: text };
 
     // --- AUTO-SAVE TO HR DATABASE (BACKGROUND SYNC) ---
+    let autoSaved = false;
     try {
         await dbConnect();
         const Candidate = (await import('../models/Candidate.js')).default;
@@ -230,19 +231,31 @@ export default async function handler(req, res) {
         const email = emailMatch ? emailMatch[0] : 'candidate@example.com';
 
         await Candidate.create({
-            ...finalData,
             name,
             email,
             fileName: file.originalname,
-            status: 'Applied',
+            role: role || 'General',
+            score: finalData.score || 0,
+            matchPercentage: finalData.matchPercentage || 0,
+            verdict: finalData.verdict || 'Consider',
+            // Use AI verdict as status so HR dashboard displays it correctly
+            status: finalData.verdict || 'Consider',
+            matchedSkills: finalData.matchedSkills || [],
+            skills: finalData.skills || [],
+            missingSkills: finalData.missingSkills || [],
+            strengths: finalData.strengths || [],
+            weaknesses: finalData.weaknesses || [],
+            reasons: finalData.reasons || [],
+            extractedText: text,
             timestamp: new Date()
         });
-        console.log(`[ANALYZE API] Auto-sync success for: ${name}`);
+        autoSaved = true;
+        console.log(`[ANALYZE API] Auto-sync success for: ${name} (status: ${finalData.verdict})`);
     } catch (syncErr) {
         console.error('[ANALYZE API] Auto-sync failed:', syncErr.message);
     }
 
-    return res.status(200).json(finalData);
+    return res.status(200).json({ ...finalData, _autoSaved: autoSaved });
   } catch (error) {
     console.error('[ANALYZE API] Critical Analysis error:', error);
     return res.status(500).json({ 

@@ -313,6 +313,15 @@ function App() {
     if (data.extractedText) setResumeText(data.extractedText);
     if (fileName) setResumeName(fileName);
     
+    // If the /api/analyze endpoint already auto-saved this candidate to DB,
+    // skip the duplicate POST — just refresh the dashboard.
+    if (data._autoSaved) {
+      console.log('[App] Candidate was auto-saved by /api/analyze. Skipping duplicate POST.');
+      await fetchRecentAnalyses();
+      setActiveView('analyzer');
+      return;
+    }
+
     // Persist to backend to trigger notifications & mail
     try {
       let candidateName = data.name;
@@ -363,6 +372,8 @@ function App() {
       await fetchRecentAnalyses();
     } catch (err) {
       console.error('Failed to persist single analysis:', err);
+      // Still refresh to show auto-saved record if any
+      await fetchRecentAnalyses();
     }
 
     setActiveView('analyzer');
@@ -579,13 +590,16 @@ function App() {
         isOpen={showResumeUploadWorkflow} 
         onClose={() => setShowResumeUploadWorkflow(false)}
         onComplete={({ analysisResults, fileName, formData }) => {
+          setShowResumeUploadWorkflow(false);
           if (analysisResults) {
             // Priority: User Edited Fields (personal) > Analysis Results
             const finalData = { ...analysisResults, ...formData?.personal };
+            // handleAnalysisComplete also calls fetchRecentAnalyses internally
             handleAnalysisComplete(finalData, fileName);
           } else {
+            // No analysis results path — still refresh dashboard so auto-saved record appears
             fetchRecentAnalyses();
-            setActiveView('analyzer');
+            setActiveView('dashboard');
           }
         }}
       />

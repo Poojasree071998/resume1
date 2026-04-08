@@ -25,17 +25,29 @@ const HRResumeVault = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('/api/resumes');
+            // Fetch from /api/candidates (correct collection where uploads are stored)
+            const response = await fetch('/api/candidates');
             if (response.ok) {
                 const data = await response.json();
-                setResumes(data);
+                // Map Candidate fields to what the vault expects
+                const mapped = (Array.isArray(data) ? data : []).map(c => ({
+                    _id: c._id || c.id,
+                    employeeName: c.name || 'Unknown',
+                    email: c.email || 'N/A',
+                    fileName: c.fileName || c.name || 'Unnamed File',
+                    uploadDate: c.timestamp || c.createdAt || new Date().toISOString(),
+                    score: c.score || 0,
+                    status: c.status || c.verdict || 'Consider',
+                    role: c.role || 'General',
+                    filePath: c.filePath || null
+                })).sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+                setResumes(mapped);
             } else {
-                throw new Error('Failed to fetch resumes');
+                throw new Error(`Server error: ${response.status}`);
             }
         } catch (err) {
-            console.error('Fetch error:', err);
-            setError('Unable to reach the database. Please ensure the backend is running.');
-            // Fallback for demo if needed
+            console.error('[HR Vault] Fetch error:', err);
+            setError('Unable to reach the database. Please ensure MONGODB_URI is set and the backend is running.');
             setResumes([]);
         } finally {
             setLoading(false);
@@ -49,7 +61,8 @@ const HRResumeVault = () => {
     const filteredResumes = resumes.filter(r => 
         r.employeeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         r.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.fileName?.toLowerCase().includes(searchTerm.toLowerCase())
+        r.fileName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.role?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -121,69 +134,72 @@ const HRResumeVault = () => {
                             <AnimatePresence>
                                 {filteredResumes.length > 0 ? filteredResumes.map((resume, idx) => (
                                     <motion.tr 
-                                        key={resume._id}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: idx * 0.05 }}
-                                        style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }}
-                                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.01)'}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                                    >
-                                        <td style={{ padding: '1.5rem' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                                <div style={{ width: 40, height: 40, borderRadius: '10px', background: 'var(--grad-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0f172a' }}>
-                                                    <User size={20} />
+                                            key={resume._id}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: idx * 0.05 }}
+                                            style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.01)'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                                        >
+                                            <td style={{ padding: '1.5rem' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                                    <div style={{ width: 40, height: 40, borderRadius: '10px', background: 'var(--grad-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0f172a' }}>
+                                                        <User size={20} />
+                                                    </div>
+                                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                        <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)' }}>{resume.employeeName}</span>
+                                                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                                            <Mail size={12} /> {resume.email}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                    <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)' }}>{resume.employeeName}</span>
-                                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                                        <Mail size={12} /> {resume.email}
-                                                    </span>
+                                            </td>
+                                            <td style={{ padding: '1.5rem' }}>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                        <div style={{ padding: '0.5rem', background: 'rgba(0,102,204,0.1)', borderRadius: '8px', color: 'var(--primary)' }}>
+                                                            <FileText size={18} />
+                                                        </div>
+                                                        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)' }}>{resume.fileName}</span>
+                                                    </div>
+                                                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, paddingLeft: '3rem' }}>{resume.role}</span>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td style={{ padding: '1.5rem' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                                <div style={{ padding: '0.5rem', background: 'rgba(0,102,204,0.1)', borderRadius: '8px', color: 'var(--primary)' }}>
-                                                    <FileText size={18} />
+                                            </td>
+                                            <td style={{ padding: '1.5rem' }}>
+                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.25rem' }}>
+                                                    <span style={{ 
+                                                        fontSize: '1.3rem', fontWeight: 900,
+                                                        color: resume.score >= 75 ? '#10b981' : resume.score >= 60 ? 'var(--primary)' : '#ef4444'
+                                                    }}>{resume.score}</span>
+                                                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)' }}>/ 100</span>
                                                 </div>
-                                                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)' }}>{resume.fileName}</span>
-                                            </div>
-                                        </td>
-                                        <td style={{ padding: '1.5rem' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>
-                                                <Calendar size={16} />
-                                                {new Date(resume.uploadDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
-                                            </div>
-                                        </td>
-                                        <td style={{ padding: '1.5rem', textAlign: 'right' }}>
-                                            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
-                                                <a 
-                                                    href={`/${resume.filePath}`} 
-                                                    target="_blank" 
-                                                    rel="noreferrer"
-                                                    style={{ 
-                                                        padding: '0.6rem', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', color: 'var(--text-main)', 
-                                                        transition: 'all 0.2s', border: '1px solid var(--border)' 
-                                                    }}
-                                                    title="View Original"
-                                                >
-                                                    <Eye size={18} />
-                                                </a>
-                                                <a 
-                                                    href={`/${resume.filePath}`} 
-                                                    download 
-                                                    style={{ 
-                                                        padding: '0.6rem', background: 'var(--grad-main)', borderRadius: '10px', color: '#0f172a', 
-                                                        transition: 'all 0.2s', border: 'none' 
-                                                    }}
-                                                    title="Download"
-                                                >
-                                                    <Download size={18} />
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </motion.tr>
+                                            </td>
+                                            <td style={{ padding: '1.5rem' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>
+                                                    <Calendar size={16} />
+                                                    {new Date(resume.uploadDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                </div>
+                                            </td>
+                                            <td style={{ padding: '1.5rem', textAlign: 'right' }}>
+                                                <div style={{
+                                                    display: 'inline-block',
+                                                    padding: '0.5rem 1.25rem',
+                                                    borderRadius: '12px',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: 900,
+                                                    textTransform: 'uppercase',
+                                                    background: resume.status === 'Selected' ? '#10b98115' :
+                                                                resume.status === 'Rejected' ? '#ef444415' :
+                                                                '#3b82f615',
+                                                    color: resume.status === 'Selected' ? '#10b981' :
+                                                           resume.status === 'Rejected' ? '#ef4444' :
+                                                           '#3b82f6'
+                                                }}>
+                                                    {resume.status}
+                                                </div>
+                                            </td>
+                                        </motion.tr>
                                 )) : !loading && (
                                     <tr>
                                         <td colSpan="4" style={{ padding: '5rem', textAlign: 'center' }}>
