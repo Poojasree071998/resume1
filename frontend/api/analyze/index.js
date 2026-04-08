@@ -1,5 +1,6 @@
 import multer from 'multer';
 import mammoth from 'mammoth';
+import dbConnect from '../utils/db.js';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);

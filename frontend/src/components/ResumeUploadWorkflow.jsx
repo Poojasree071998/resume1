@@ -215,29 +215,28 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
               const data = await response.json();
               setAnalysisResults(data);
               console.log('Analysis and Auto-Sync complete');
-            }
-
-            // Auto-populate formData if AI found names/details (Existing logic)
-            if (data.extractedText) {
-               const lines = data.extractedText.split('\n').filter(l => l.trim().length > 0);
-               if (lines.length > 0) {
-                 const nameParts = lines[0].split(' ');
-                 setFormData(prev => ({
+            
+              // Auto-populate formData if AI found names/details (Existing logic)
+              if (data.extractedText) {
+                const lines = data.extractedText.split('\n').filter(l => l.trim().length > 0);
+                if (lines.length > 0) {
+                  const nameParts = lines[0].split(' ');
+                  setFormData(prev => ({
                     ...prev,
                     personal: {
                       ...prev.personal,
                       firstName: nameParts[0] || prev.personal.firstName,
                       lastName: nameParts.slice(1).join(' ') || prev.personal.lastName,
-                      email: extractedEmail || prev.personal.email
+                      email: data.extractedText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)?.[0] || prev.personal.email
                     }
-                 }));
-               }
-            }
+                  }));
+                }
+              }
 
-            setStep(4);
-          } else {
-            throw new Error('Analysis failed');
-          }
+              setStep(4);
+            } else {
+              throw new Error('Analysis failed');
+            }
         } catch (error) {
           console.error('Workflow analysis error:', error);
           // Fallback to success anyway for demo, but log error

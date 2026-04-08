@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const candidateController = require('./controllers/candidateController');
 require('dotenv').config();
 
 // Database Connection
@@ -231,7 +232,6 @@ app.post('/api/interview', (req, res) => {
   ]);
 });
 
-const candidateController = require('./controllers/candidateController');
 
 // Candidate Routes
 app.get('/api/candidates', candidateController.getCandidates);
