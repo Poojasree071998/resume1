@@ -237,14 +237,32 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
             console.log('Syncing to Resume Vault...', { extractedName, extractedEmail });
             
             try {
-              const vaultResponse = await fetch('http://localhost:5000/api/upload-resume', {
+              const vaultResponse = await fetch('/api/upload-resume', {
                 method: 'POST',
                 body: vaultFormData,
               });
               const vaultData = await vaultResponse.json();
               console.log('Vault sync result:', vaultData);
+              
+              // Also sync to the main Candidate Pipeline immediately for HR visibility
+              const pipelineData = {
+                ...data,
+                name: extractedName,
+                email: extractedEmail,
+                fileName: uploadedFile.name,
+                status: 'Applied',
+                timestamp: new Date().toISOString()
+              };
+              
+              await fetch('/api/candidates', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pipelineData)
+              });
+              console.log('Pipeline sync success');
+              
             } catch (err) {
-              console.error('Vault sync failed:', err);
+              console.error('Sync failed:', err);
             }
 
             // Auto-populate formData if AI found names/details (Existing logic)

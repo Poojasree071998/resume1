@@ -398,6 +398,13 @@ function App() {
     setActiveView('dashboard');
   };
 
+  const handleViewChange = (view) => {
+    if (view === 'dashboard' || view === 'vault') {
+      fetchRecentAnalyses();
+    }
+    setActiveView(view);
+  };
+
   return (
     <>
       <AnimatePresence>
@@ -444,7 +451,7 @@ function App() {
           >
             <Sidebar 
               activeView={activeView} 
-              setActiveView={setActiveView} 
+              setActiveView={handleViewChange} 
               recruiterMode={recruiterMode}
               user={user}
               onLogout={handleLogout}

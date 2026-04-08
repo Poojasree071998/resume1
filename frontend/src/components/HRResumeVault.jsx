@@ -25,7 +25,7 @@ const HRResumeVault = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://localhost:5000/api/resumes');
+            const response = await fetch('/api/resumes');
             if (response.ok) {
                 const data = await response.json();
                 setResumes(data);
@@ -159,7 +159,7 @@ const HRResumeVault = () => {
                                         <td style={{ padding: '1.5rem', textAlign: 'right' }}>
                                             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
                                                 <a 
-                                                    href={`http://localhost:5000/${resume.filePath}`} 
+                                                    href={`/${resume.filePath}`} 
                                                     target="_blank" 
                                                     rel="noreferrer"
                                                     style={{ 
@@ -171,7 +171,7 @@ const HRResumeVault = () => {
                                                     <Eye size={18} />
                                                 </a>
                                                 <a 
-                                                    href={`http://localhost:5000/${resume.filePath}`} 
+                                                    href={`/${resume.filePath}`} 
                                                     download 
                                                     style={{ 
                                                         padding: '0.6rem', background: 'var(--grad-main)', borderRadius: '10px', color: '#0f172a', 
