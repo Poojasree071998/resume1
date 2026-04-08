@@ -215,6 +215,38 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
             const data = await response.json();
             setAnalysisResults(data);
             
+            // Extract Name and Email for Direct DB Save (Resume Vault)
+            let extractedName = "CANDIDATE NAME";
+            let extractedEmail = user?.email || "candidate@example.com";
+
+            if (data.extractedText) {
+              const lines = data.extractedText.split('\n').filter(l => l.trim().length > 0);
+              if (lines.length > 0) {
+                extractedName = lines[0].trim().toUpperCase();
+              }
+              const emailMatch = data.extractedText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+              if (emailMatch) extractedEmail = emailMatch[0];
+            }
+
+            // Direct Save to Database for HR Resume Vault
+            const vaultFormData = new FormData();
+            vaultFormData.append('employeeName', extractedName);
+            vaultFormData.append('email', extractedEmail);
+            vaultFormData.append('resume', uploadedFile);
+
+            console.log('Syncing to Resume Vault...', { extractedName, extractedEmail });
+            
+            try {
+              const vaultResponse = await fetch('http://localhost:5000/api/upload-resume', {
+                method: 'POST',
+                body: vaultFormData,
+              });
+              const vaultData = await vaultResponse.json();
+              console.log('Vault sync result:', vaultData);
+            } catch (err) {
+              console.error('Vault sync failed:', err);
+            }
+
             // Auto-populate formData if AI found names/details (Existing logic)
             if (data.extractedText) {
                const lines = data.extractedText.split('\n').filter(l => l.trim().length > 0);
