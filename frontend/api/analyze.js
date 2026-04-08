@@ -23,6 +23,41 @@ const roleKeywords = {
     'General': ['Git', 'Communication', 'Teamwork', 'Agile', 'Leadership', 'Problem Solving']
 };
 
+// --- Robust File Extraction ---
+const extractTextFromPDF = async (buffer) => {
+    try {
+        if (!buffer || buffer.length === 0) return "";
+        console.log(`[ANALYZE API] Attempting PDF extraction (${buffer.length} bytes)...`);
+        
+        const options = {
+            pagerender: (pageData) => {
+                return pageData.getTextContent()
+                    .then(textContent => textContent.items.map(item => item.str).join(' '));
+            }
+        };
+
+        const data = await pdfParse(buffer, options);
+        return data.text || "";
+    } catch (error) {
+        console.error('[ANALYZE API] PDF Extraction Error:', error.message);
+        if (error.message.includes('XRef') || error.message.includes('dictionary')) {
+            throw new Error('This PDF appears to have a corrupted structure (bad XRef table). Try "Saving as PDF" again from your document editor.');
+        }
+        throw error;
+    }
+};
+
+const extractTextFromDOCX = async (buffer) => {
+    try {
+        if (!buffer || buffer.length === 0) return "";
+        const result = await mammoth.extractRawText({ buffer });
+        return result.value || "";
+    } catch (error) {
+        console.error('[ANALYZE API] DOCX Parsing Error:', error.message);
+        throw new Error('Failed to read DOCX file. The document might be corrupted.');
+    }
+};
+
 // --- Analysis Logic ---
 const analyzeResume = (text, targetRole = 'General') => {
     let impactScore = 55;
@@ -121,9 +156,9 @@ export default async function handler(req, res) {
 
     let text = "";
     if (file.mimetype === 'application/pdf') {
-        text = (await pdfParse(file.buffer)).text;
+        text = await extractTextFromPDF(file.buffer);
     } else if (file.mimetype.includes('word') || file.mimetype.includes('officedocument')) {
-        text = (await mammoth.extractRawText({ buffer: file.buffer })).value;
+        text = await extractTextFromDOCX(file.buffer);
     }
 
     const results = analyzeResume(text, role);
