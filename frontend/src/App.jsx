@@ -532,7 +532,6 @@ function App() {
                     {activeView === 'reports' && <ReportsView recentAnalyses={recentAnalyses} />}
                     {activeView === 'mail' && <InboxView setActiveView={setActiveView} />}
                     {activeView === 'interview' && <InterviewPage token={interviewToken} />}
-                    {activeView === 'vault' && <HRResumeVault />}
                   </motion.div>
 
                 </AnimatePresence>
