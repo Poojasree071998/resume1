@@ -128,20 +128,21 @@ const CandidateListView = ({ candidates, onShortlist, onReject, onReset, onUpdat
         
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginRight: '0.5rem' }}>Status:</span>
-          {['All', 'Selected', 'Rejected', 'Consider'].map(filter => (
+          {['All', 'Applied', 'Selected', 'Rejected', 'Consider'].map(filter => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
               style={{
-                padding: '0.4rem 1rem',
+                padding: '0.4rem 1.25rem',
                 borderRadius: '8px',
                 fontSize: '0.75rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 background: activeFilter === filter ? 'var(--grad-main)' : 'rgba(255,255,255,0.05)',
-                color: activeFilter === filter ? 'white' : 'var(--text-muted)',
-                border: '1px solid ' + (activeFilter === filter ? 'transparent' : 'var(--glass-border)')
+                color: activeFilter === filter ? '#0f172a' : 'var(--text-muted)',
+                border: '1px solid ' + (activeFilter === filter ? 'transparent' : 'var(--glass-border)'),
+                boxShadow: activeFilter === filter ? '0 4px 12px var(--primary-glow)' : 'none'
               }}
             >
               {filter}
@@ -426,11 +427,24 @@ Key Skills: ${can.matchedSkills?.map(s => typeof s === 'object' ? s.name : s).jo
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <Search size={48} style={{ opacity: 0.2 }} />
-                  <p style={{ fontWeight: 600 }}>No candidates found matching "{searchTerm}"</p>
-                  <p style={{ fontSize: '0.85rem' }}>Try searching for a different name, role, or clear the search box.</p>
+              <td colSpan="4" style={{ padding: '6rem 4rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+                  <Search size={64} style={{ opacity: 0.1, color: 'var(--primary)' }} />
+                  <div>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                      No candidates found matching "{searchTerm || activeFilter}"
+                    </h3>
+                    <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '2rem' }}>
+                      Try searching for a different name, role, or switch to the <strong>"All"</strong> view.
+                    </p>
+                    <button 
+                      onClick={() => { setActiveFilter('All'); setSearchTerm(''); }}
+                      className="glass-btn btn-primary"
+                      style={{ padding: '0.8rem 2rem', fontWeight: 800 }}
+                    >
+                      Show All Candidates
+                    </button>
+                  </div>
                 </div>
               </td>
             </tr>

@@ -495,8 +495,12 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
                     </div>
                     <div style={{ 
                       padding: '0.6rem 1.25rem', borderRadius: '12px', minWidth: '100px', textAlign: 'center', fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase',
-                      background: item.status === 'Selected' ? '#10b98115' : item.status === 'Rejected' ? '#ef444415' : '#f59e0b15',
-                      color: item.status === 'Selected' ? '#10b981' : item.status === 'Rejected' ? '#ef4444' : '#f59e0b'
+                      background: item.status === 'Selected' ? '#10b98115' : 
+                                  item.status === 'Rejected' ? '#ef444415' : 
+                                  item.status === 'Applied' ? '#3b82f615' : '#f59e0b15',
+                      color: item.status === 'Selected' ? '#10b981' : 
+                             item.status === 'Rejected' ? '#ef4444' : 
+                             item.status === 'Applied' ? '#3b82f6' : '#f59e0b'
                     }}>
                       {item.status}
                     </div>
