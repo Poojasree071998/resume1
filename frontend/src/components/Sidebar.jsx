@@ -57,14 +57,6 @@ const Sidebar = ({ activeView, setActiveView, recruiterMode, setRecruiterMode, u
             active={activeView === 'matcher'} 
             onClick={() => setActiveView('matcher')} 
           />
-          {user?.userRole === 'HR' && (
-            <NavItem 
-              icon={Database} 
-              label="Master DB" 
-              active={activeView === 'resumes'} 
-              onClick={() => setActiveView('resumes')} 
-            />
-          )}
           <NavItem 
             icon={BarChart3} 
             label="Reports" 
