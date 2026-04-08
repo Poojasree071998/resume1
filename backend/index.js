@@ -1,9 +1,8 @@
-
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const candidateController = require('./controllers/candidateController');
-require('dotenv').config();
 
 // Database Connection
 const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
@@ -114,8 +113,15 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
         const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
         const email = emailMatch ? emailMatch[0] : 'candidate@example.com';
 
-        // Use a mock response object to trigger the controller's logic without ending the current request
-        const mockRes = { json: (data) => console.log('Auto-sync success:', data.name), status: () => mockRes };
+        // Use a more resilient mock response object for background auto-sync
+        const mockRes = { 
+          json: (data) => console.log('Auto-sync success:', data.name || 'Candidate'), 
+          status: () => mockRes,
+          send: () => mockRes,
+          setHeader: () => mockRes,
+          header: () => mockRes,
+          end: () => {}
+        };
         const mockReq = { 
             body: { 
                 ...results, 
