@@ -31,16 +31,7 @@ const fs = require('fs');
 const path = require('path');
 const resumeRoute = require('./routes/resumeRoutes');
 
-// Helper to load local data
-const getLocalCandidates = () => {
-  try {
-    const data = fs.readFileSync(path.join(__dirname, 'database.json'), 'utf8');
-    return JSON.parse(data).candidates || [];
-  } catch (err) {
-    console.warn('Local database fallback failed:', err.message);
-    return [];
-  }
-};
+// Helper to load local data (Moved to controllers/candidateController.js)
 
 const app = express();
 const port = 5000;
@@ -143,31 +134,7 @@ app.post('/api/analyze/optimize', async (req, res) => {
   }
 });
 
-// Simplified route for candidates table with local fallback
-app.get('/api/candidates', async (req, res) => {
-  console.log('GET /api/candidates called');
-  try {
-    let candidates = [];
-    
-    // Try MongoDB first if connected
-    if (mongoose.connection.readyState === 1) {
-      const Candidate = require('./models/Candidate');
-      candidates = await Candidate.find().sort({ timestamp: -1 });
-    }
-    
-    // If MongoDB is empty or disconnected, use local fallback
-    if (candidates.length === 0) {
-      console.log('Using local database.json fallback...');
-      candidates = getLocalCandidates();
-    }
-    
-    res.json(candidates);
-  } catch (error) {
-    console.error('Error fetching candidates:', error);
-    // Even on crash, try to return local data for better dev experience
-    res.json(getLocalCandidates());
-  }
-});
+// Simplified route for candidates table removed - using candidateController.getCandidates instead
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running' });

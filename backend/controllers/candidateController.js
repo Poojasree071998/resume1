@@ -8,22 +8,28 @@ const { sendUploadConfirmation, sendInterviewEmail, sendSelectionEmail, sendReje
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, '../data/candidates.json');
+const DB_PATH = path.join(__dirname, '../database.json');
 
-// Ensure data directory exists
-if (!fs.existsSync(path.dirname(DB_PATH))) {
-    fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
-}
+// Ensure data directory exists if it was in a subfolder (but database.json is in root)
+// If you want to keep the data folder, we can move it, but database.json is historically in backend root.
 
 // Helper to read/write local data
 const getLocalData = () => {
     if (!fs.existsSync(DB_PATH)) return [];
-    const data = fs.readFileSync(DB_PATH, 'utf8');
-    return JSON.parse(data || '[]');
+    try {
+        const data = fs.readFileSync(DB_PATH, 'utf8');
+        const parsed = JSON.parse(data || '{}');
+        return Array.isArray(parsed) ? parsed : (parsed.candidates || []);
+    } catch (e) {
+        console.error('Error reading local database:', e.message);
+        return [];
+    }
 };
 
 const saveLocalData = (data) => {
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+    // Keep the object structure for compatibility with index.js's style
+    const payload = { candidates: data };
+    fs.writeFileSync(DB_PATH, JSON.stringify(payload, null, 2));
 };
 
 const isDBConnected = () => mongoose.connection.readyState === 1;
