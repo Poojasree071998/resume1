@@ -126,7 +126,7 @@ const ProfileView = ({ user, onUpdateUser }) => {
                 style={{ 
                   padding: '0.6rem 1.25rem', 
                   fontSize: '0.95rem',
-                  boxShadow: 'var(--shadow-lg)'
+                  boxShadow: 'var(--shadow-premium)'
                 }}
               >
                 <Check size={18} /> Save Changes
@@ -185,7 +185,7 @@ const ProfileView = ({ user, onUpdateUser }) => {
                     padding: '0.25rem 0.5rem',
                     width: '100%',
                     outline: 'none',
-                    background: 'var(--input-bg)'
+                    background: 'var(--bg-sidebar)'
                   }}
                 />
                 <input 
@@ -285,7 +285,7 @@ const DetailItem = ({ icon: Icon, label, value, isMembership, isEditing, onChang
             padding: '0.4rem 0.75rem',
             width: '100%',
             outline: 'none',
-            background: 'var(--bg-hover)'
+            background: 'var(--bg-sidebar)'
           }}
         />
       ) : (

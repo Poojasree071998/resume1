@@ -135,12 +135,12 @@ const ReportsView = ({ recentAnalyses }) => {
       {/* Metrics Row */}
       <div style={{ display: 'flex', gap: '1.5rem' }}>
         <div className="glass-card" style={{ flex: 1, padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ padding: '0.6rem', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>
+          <div style={{ padding: '0.6rem', borderRadius: '10px', background: 'var(--primary-glow)', color: 'var(--primary)' }}>
             <TrendingUp size={20} />
           </div>
           <div>
             <p style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Resumes</p>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 900 }}>{recentAnalyses.length}</h3>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text-main)' }}>{recentAnalyses.length}</h3>
           </div>
         </div>
         <div className="glass-card" style={{ flex: 1, padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -149,7 +149,7 @@ const ReportsView = ({ recentAnalyses }) => {
           </div>
           <div>
             <p style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Selected</p>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 900 }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text-main)' }}>
               {recentAnalyses.filter(a => a.status === 'Selected').length}
             </h3>
           </div>
@@ -160,7 +160,7 @@ const ReportsView = ({ recentAnalyses }) => {
           </div>
           <div>
             <p style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Rejected</p>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 900 }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text-main)' }}>
               {recentAnalyses.filter(a => a.status === 'Rejected').length}
             </h3>
           </div>
@@ -179,7 +179,7 @@ const ReportsView = ({ recentAnalyses }) => {
                   padding: '0.5rem 1.25rem', 
                   borderRadius: '10px', 
                   border: '1px solid var(--border)', 
-                  background: filter === p ? 'var(--grad-main)' : 'rgba(255,255,255,0.05)',
+                  background: filter === p ? 'var(--grad-main)' : 'var(--bg-card)',
                   color: filter === p ? 'white' : 'var(--text-muted)',
                   fontSize: '0.85rem',
                   fontWeight: 800,
@@ -203,9 +203,9 @@ const ReportsView = ({ recentAnalyses }) => {
                 width: '100%', 
                 padding: '0.65rem 1rem 0.65rem 2.6rem', 
                 borderRadius: '12px', 
-                background: 'rgba(255,255,255,0.05)', 
+                background: 'var(--bg-sidebar)', 
                 border: '1px solid var(--border)', 
-                color: 'white',
+                color: 'var(--text-main)',
                 fontSize: '0.85rem'
               }}
             />

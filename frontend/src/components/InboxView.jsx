@@ -64,7 +64,7 @@ const InboxView = ({ setActiveView }) => {
   const getStatusColor = (type) => {
     if (type === 'Selected') return '#10b981';
     if (type === 'Rejected') return '#ef4444';
-    return '#6366f1';
+    return 'var(--primary)';
   };
 
   return (
@@ -101,8 +101,9 @@ const InboxView = ({ setActiveView }) => {
                 width: '100%', 
                 padding: '0.75rem 1rem 0.75rem 2.8rem', 
                 borderRadius: '12px', 
-                background: 'var(--bg-hover)', 
+                background: 'var(--bg-sidebar)', 
                 border: '1px solid var(--border)',
+                color: 'var(--text-main)',
                 fontSize: '0.85rem'
               }}
             />
