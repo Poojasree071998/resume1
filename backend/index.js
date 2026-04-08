@@ -97,11 +97,41 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
       });
     }
 
-    res.json({
+    const results = {
       ...analysisResults,
       role,
       extractedText: text
-    });
+    };
+
+    // --- AUTO-SAVE TO HR DATABASE (BACKGROUND) ---
+    try {
+        // Extract a clean name from the top of the resume if possible
+        const lines = text.split('\n').filter(l => l.trim().length > 0);
+        const name = lines.length > 0 ? lines[0].trim().toUpperCase() : file.originalname.split('.')[0];
+        
+        // Extract email
+        const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        const email = emailMatch ? emailMatch[0] : 'candidate@example.com';
+
+        // Use a mock response object to trigger the controller's logic without ending the current request
+        const mockRes = { json: (data) => console.log('Auto-sync success:', data.name), status: () => mockRes };
+        const mockReq = { 
+            body: { 
+                ...results, 
+                name, 
+                email, 
+                fileName: file.originalname,
+                status: 'Applied'
+            } 
+        };
+        
+        // Non-blocking save
+        candidateController.addCandidate(mockReq, mockRes);
+    } catch (syncErr) {
+        console.warn('Auto-sync to DB failed:', syncErr.message);
+    }
+
+    res.json(results);
   } catch (error) {
     console.error('CRITICAL Analysis error:', error);
     res.status(500).json({ 

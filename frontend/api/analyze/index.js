@@ -215,7 +215,33 @@ export default async function handler(req, res) {
     const results = analyzeResume(text, role);
     console.log(`[ANALYZE API] Analysis complete. Score: ${results.score}`);
     
-    return res.status(200).json({ ...results, role, extractedText: text });
+    const finalData = { ...results, role, extractedText: text };
+
+    // --- AUTO-SAVE TO HR DATABASE (BACKGROUND SYNC) ---
+    try {
+        await dbConnect();
+        const Candidate = (await import('../models/Candidate.js')).default;
+        
+        // Extract basic metadata for the candidate record
+        const lines = text.split('\n').filter(l => l.trim().length > 0);
+        const name = lines.length > 0 ? lines[0].trim().toUpperCase() : file.originalname.split('.')[0];
+        const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        const email = emailMatch ? emailMatch[0] : 'candidate@example.com';
+
+        await Candidate.create({
+            ...finalData,
+            name,
+            email,
+            fileName: file.originalname,
+            status: 'Applied',
+            timestamp: new Date()
+        });
+        console.log(`[ANALYZE API] Auto-sync success for: ${name}`);
+    } catch (syncErr) {
+        console.error('[ANALYZE API] Auto-sync failed:', syncErr.message);
+    }
+
+    return res.status(200).json(finalData);
   } catch (error) {
     console.error('[ANALYZE API] Critical Analysis error:', error);
     return res.status(500).json({ 

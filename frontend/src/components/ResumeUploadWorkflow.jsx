@@ -206,63 +206,15 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
           apiFormData.append('resume', uploadedFile);
           apiFormData.append('role', 'General');
           
-          const response = await fetch('/api/analyze', {
-            method: 'POST',
-            body: apiFormData,
-          });
+            const response = await fetch('/api/analyze', {
+              method: 'POST',
+              body: apiFormData,
+            });
 
-          if (response.ok) {
-            const data = await response.json();
-            setAnalysisResults(data);
-            
-            // Extract Name and Email for Direct DB Save (Resume Vault)
-            let extractedName = "CANDIDATE NAME";
-            let extractedEmail = user?.email || "candidate@example.com";
-
-            if (data.extractedText) {
-              const lines = data.extractedText.split('\n').filter(l => l.trim().length > 0);
-              if (lines.length > 0) {
-                extractedName = lines[0].trim().toUpperCase();
-              }
-              const emailMatch = data.extractedText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-              if (emailMatch) extractedEmail = emailMatch[0];
-            }
-
-            // Direct Save to Database for HR Resume Vault
-            const vaultFormData = new FormData();
-            vaultFormData.append('employeeName', extractedName);
-            vaultFormData.append('email', extractedEmail);
-            vaultFormData.append('resume', uploadedFile);
-
-            console.log('Syncing to Resume Vault...', { extractedName, extractedEmail });
-            
-            try {
-              const vaultResponse = await fetch('/api/upload-resume', {
-                method: 'POST',
-                body: vaultFormData,
-              });
-              const vaultData = await vaultResponse.json();
-              console.log('Vault sync result:', vaultData);
-              
-              // Also sync to the main Candidate Pipeline immediately for HR visibility
-              const pipelineData = {
-                ...data,
-                name: extractedName,
-                email: extractedEmail,
-                fileName: uploadedFile.name,
-                status: 'Applied',
-                timestamp: new Date().toISOString()
-              };
-              
-              await fetch('/api/candidates', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(pipelineData)
-              });
-              console.log('Pipeline sync success');
-              
-            } catch (err) {
-              console.error('Sync failed:', err);
+            if (response.ok) {
+              const data = await response.json();
+              setAnalysisResults(data);
+              console.log('Analysis and Auto-Sync complete');
             }
 
             // Auto-populate formData if AI found names/details (Existing logic)
