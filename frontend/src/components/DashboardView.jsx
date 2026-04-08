@@ -291,7 +291,7 @@ const DnaBar = ({ label, value, color, delay }) => (
   </div>
 );
 
-const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, recruiterMode, onRefresh, onUploadNew, onSelectCandidate }) => {
+const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, recruiterMode, onRefresh, onUploadNew, onSelectCandidate, isLoading, dbError }) => {
   const [analyticsPeriod, setAnalyticsPeriod] = React.useState('Weekly');
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   
@@ -300,6 +300,21 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
     if (onRefresh) await onRefresh();
     setTimeout(() => setIsRefreshing(false), 800);
   };
+
+  if (dbError) {
+    return (
+      <div style={{ padding: '4rem', textAlign: 'center', background: 'rgba(239, 68, 68, 0.05)', borderRadius: '24px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+        <AlertCircle size={64} style={{ color: '#ef4444', marginBottom: '1.5rem' }} />
+        <h2 style={{ fontSize: '2rem', fontWeight: 900, marginBottom: '1rem' }}>Connectivity Error</h2>
+        <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto 2rem' }}>
+          {dbError}
+        </p>
+        <button onClick={handleRefresh} className="glass-btn btn-primary" style={{ padding: '0.8rem 2rem' }}>
+          <RefreshCw size={18} style={{ marginRight: '0.5rem' }} /> Retry Connection
+        </button>
+      </div>
+    );
+  }
 
   const stats = {
     total: recentAnalyses?.length || 0,
@@ -457,7 +472,14 @@ const DashboardView = ({ user, recentAnalyses, setActiveView, setRecruiterMode, 
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {recentAnalyses?.length > 0 ? recentAnalyses.map((item, i) => (
+              {isLoading ? (
+                <div style={{ textAlign: 'center', padding: '4rem' }}>
+                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                    <RefreshCw size={40} style={{ color: 'var(--primary)', opacity: 0.5 }} />
+                  </motion.div>
+                  <p style={{ marginTop: '1rem', fontWeight: 600, color: 'var(--text-muted)' }}>Syncing with Database...</p>
+                </div>
+              ) : recentAnalyses?.length > 0 ? recentAnalyses.map((item, i) => (
                 <motion.div key={i} whileHover={{ x: 5 }} onClick={() => onSelectCandidate(item)} style={{ display: 'flex', alignItems: 'center', padding: '1.5rem', borderRadius: '20px', background: 'rgba(0,0,0,0.01)', border: '1px solid var(--border)', cursor: 'pointer' }}>
                   <div style={{ width: 48, height: 48, borderRadius: '14px', background: 'var(--grad-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0f172a', marginRight: '1.25rem', boxShadow: '0 8px 16px var(--secondary-glow)' }}>
                     <FileText size={22} />

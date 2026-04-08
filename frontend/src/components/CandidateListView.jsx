@@ -85,6 +85,13 @@ const CandidateListView = ({ candidates, onShortlist, onReject, onReset, onUpdat
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2 style={{ fontSize: '1.8rem', fontWeight: 900 }}>Candidate <span className="gradient-text">Matching</span></h2>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="gradient-btn" 
+            style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)', padding: '0.5rem 1rem', fontSize: '0.8rem', color: '#60a5fa' }}
+          >
+            <RefreshCw size={16} /> SYNC PIPELINE
+          </button>
           <button onClick={downloadCSV} className="gradient-btn" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid var(--glass-border)', padding: '0.5rem 1rem', fontSize: '0.8rem' }}>
             <Download size={16} /> DOWNLOAD REPORT
           </button>

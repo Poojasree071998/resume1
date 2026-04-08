@@ -249,11 +249,17 @@ function App() {
     }
   ]);
   
+  const [isDataLoading, setIsDataLoading] = useState(false);
+  const [dbError, setDbError] = useState(null);
+
   const fetchRecentAnalyses = async () => {
+    setIsDataLoading(true);
+    setDbError(null);
     try {
       const response = await fetch('/api/candidates');
       if (response.status === 503) {
         console.error("DATABASE OFFLINE: MONGODB_URI is likely missing from Vercel environment variables.");
+        setDbError("Database Disconnected. Please check Vercel environment variables.");
         return;
       }
       if (response.ok) {
@@ -274,16 +280,18 @@ function App() {
             reasons: cand.reasons || [],
             extractedText: cand.extractedText || '',
             status: cand.status || 'Applied',
+            timestamp: cand.timestamp || cand.updatedAt || new Date().toISOString(),
             date: cand.timestamp ? new Date(cand.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }) : 'Today'
-          })).sort((a, b) => b.id - a.id);
+          })).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
           
           setRecentAnalyses(formatted.slice(0, 15));
-        } else {
-          console.error("API did not return an array:", data);
         }
       }
     } catch (err) {
       console.error('Failed to sync dashboard data:', err);
+      setDbError("Unable to connect to service.");
+    } finally {
+      setIsDataLoading(false);
     }
   };
 
@@ -485,13 +493,14 @@ function App() {
                       <DashboardView 
                         user={user} 
                         recentAnalyses={recentAnalyses}
-                        onBulkClick={() => { setActiveView('analyzer'); setRecruiterMode(true); }}
-                        setActiveView={setActiveView} 
+                        setActiveView={handleViewChange} 
                         setRecruiterMode={setRecruiterMode} 
                         recruiterMode={recruiterMode}
                         onRefresh={fetchRecentAnalyses}
                         onUploadNew={() => setShowResumeUploadWorkflow(true)}
                         onSelectCandidate={handleSelectCandidate}
+                        isLoading={isDataLoading}
+                        dbError={dbError}
                       />
                     )}
                     {activeView === 'analyzer' && (
