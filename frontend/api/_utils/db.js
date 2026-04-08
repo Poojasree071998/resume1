@@ -22,12 +22,11 @@ async function dbConnect() {
     return cached.conn;
   }
 
-  // VALIDATION: Fail early if no URI is provided in production
+  // VALIDATION: Provide clear instructions in logs if URI is missing
   if (!MONGODB_URI) {
-    const errorMsg = 'CRITICAL ERROR: MONGODB_URI is missing in Vercel settings.';
-    console.error(`[DB] ${errorMsg}`);
-    console.info('[DB] Fix: Add MONGODB_URI to Vercel Project Settings > Environment Variables.');
-    return null;
+    console.error('[DB] CRITICAL ERROR: MONGODB_URI is missing in Vercel settings.');
+    console.warn('[DB] ACTION REQUIRED: Add MONGODB_URI to Vercel Project Settings > Environment Variables.');
+    return null; 
   }
 
   if (!cached.promise) {
