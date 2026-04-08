@@ -283,7 +283,7 @@ const analyzeResume = (parsedData = {}, targetRole = 'General', jobDescription =
         score: finalScore,
         matchPercentage: skillMatchScore,
         verdict: status,
-        status: status,
+        status: 'Applied',
         reasons: status === 'Rejected' ? (weaknesses.length > 0 ? weaknesses : ["Low relevance to job role"]) : [],
         weaknesses: weaknesses.length > 0 ? weaknesses : ["Could use more quantifiable metrics"],
         suggestions: suggestions.length > 0 ? suggestions : ["Consider tailoring your summary to specific job descriptions"],

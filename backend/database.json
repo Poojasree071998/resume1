@@ -234,14 +234,30 @@
     },
     {
       "id": "1774607927907",
-      "status": "error",
+      "status": "Interview",
       "timestamp": "2026-03-27T10:38:47.907Z",
       "name": "resume_4",
       "fileName": "resume_4.pdf",
       "score": 0,
       "matchedSkills": [],
       "suggestedRoles": [],
-      "improvementSkills": []
+      "improvementSkills": [],
+      "interview": {
+        "date": "2026-04-09",
+        "time": "17:23",
+        "link": "http://localhost:5173/interview/be0a5d1ccb169da8c49d6a7acc204022",
+        "meetLink": "http://localhost:5173/interview-room/1774607927907",
+        "token": "be0a5d1ccb169da8c49d6a7acc204022"
+      },
+      "notifications": [
+        {
+          "id": "1775649168752",
+          "type": "Interview",
+          "message": "Your interview has been scheduled for 2026-04-09 at 17:23. Please check the meeting link to join.",
+          "link": "http://localhost:5173/interview/be0a5d1ccb169da8c49d6a7acc204022",
+          "date": "8/4/2026, 5:22:48 pm"
+        }
+      ]
     },
     {
       "id": "1774607927915",
@@ -2455,6 +2471,144 @@
           "date": "31/3/2026, 3:34:39 pm"
         }
       ]
+    },
+    {
+      "_id": "1775648782536",
+      "id": "1775648782536",
+      "name": "resume_7",
+      "fileName": "resume_7.pdf",
+      "score": 0,
+      "matchPercentage": 0,
+      "matchedSkills": [],
+      "skills": [],
+      "missingSkills": [
+        "Git",
+        "Communication",
+        "Teamwork",
+        "Agile",
+        "Leadership",
+        "Problem Solving"
+      ],
+      "strengths": [
+        "Strong professional formatting and document structure"
+      ],
+      "weaknesses": [
+        "Keyword gap for UX Developer requirements"
+      ],
+      "reasons": [
+        "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+      ],
+      "status": "Applied",
+      "role": "UX Developer",
+      "email": "pooja@example.com",
+      "extractedText": "",
+      "notifications": [
+        {
+          "id": "1775648782533-1",
+          "type": "Confirmation",
+          "message": "Application received successfully. AI initial screening in progress.",
+          "date": "8/4/2026, 5:16:22 pm"
+        }
+      ],
+      "timestamp": "2026-04-08T11:46:22.536Z",
+      "createdAt": "2026-04-08T11:46:22.536Z"
+    },
+    {
+      "_id": "1775649004950",
+      "id": "1775649004950",
+      "score": 47,
+      "matchPercentage": 0,
+      "verdict": "Rejected",
+      "status": "Applied",
+      "reasons": [
+        "Keyword gap for Frontend Developer requirements"
+      ],
+      "weaknesses": [
+        "Keyword gap for Frontend Developer requirements"
+      ],
+      "suggestions": [
+        "Consider adding skills like: Git, Communication, Teamwork"
+      ],
+      "matchedSkills": [],
+      "missingSkills": [
+        "Git",
+        "Communication",
+        "Teamwork",
+        "Agile",
+        "Leadership",
+        "Problem Solving"
+      ],
+      "skills": [],
+      "strengths": [
+        "Strong professional formatting and document structure"
+      ],
+      "suggestedRoles": [],
+      "improvementSkills": [
+        "Git",
+        "Communication",
+        "Teamwork"
+      ],
+      "communicationScore": 70,
+      "communicationAnalysis": [
+        "Consider expanding on details for better clarity",
+        "Grammar is acceptable"
+      ],
+      "role": "Frontend Developer",
+      "extractedText": "\n\nDivya N\nRole: HR Executive\nSkills:\n- Recruitment\n- Onboarding\nExperience:\n- 2 yrs HR\nEducation:\n- MBA HR",
+      "name": "DIVYA N",
+      "email": "candidate@example.com",
+      "fileName": "resume_7.pdf",
+      "notifications": [
+        {
+          "id": "1775649004946-1",
+          "type": "Confirmation",
+          "message": "Application received successfully. AI initial screening in progress.",
+          "date": "8/4/2026, 5:20:04 pm"
+        }
+      ],
+      "timestamp": "2026-04-08T11:50:04.950Z",
+      "createdAt": "2026-04-08T11:50:04.950Z"
+    },
+    {
+      "_id": "1775649004968",
+      "id": "1775649004968",
+      "name": "Pooja",
+      "fileName": "resume_7.pdf",
+      "score": 47,
+      "matchPercentage": 0,
+      "matchedSkills": [],
+      "skills": [],
+      "missingSkills": [
+        "Git",
+        "Communication",
+        "Teamwork",
+        "Agile",
+        "Leadership",
+        "Problem Solving"
+      ],
+      "strengths": [
+        "Strong professional formatting and document structure"
+      ],
+      "weaknesses": [
+        "Keyword gap for Frontend Developer requirements"
+      ],
+      "reasons": [
+        "Keyword gap for Frontend Developer requirements"
+      ],
+      "status": "Applied",
+      "role": "Frontend Developer",
+      "email": "pooja@example.com",
+      "extractedText": "\n\nDivya N\nRole: HR Executive\nSkills:\n- Recruitment\n- Onboarding\nExperience:\n- 2 yrs HR\nEducation:\n- MBA HR",
+      "notifications": [
+        {
+          "id": "1775649004967-1",
+          "type": "Confirmation",
+          "message": "Application received successfully. AI initial screening in progress.",
+          "date": "8/4/2026, 5:20:04 pm"
+        }
+      ],
+      "timestamp": "2026-04-08T11:50:04.968Z",
+      "createdAt": "2026-04-08T11:50:04.968Z"
     }
   ]
 }
