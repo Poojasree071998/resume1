@@ -251,6 +251,7 @@ function App() {
   
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [dbError, setDbError] = useState(null);
+  const [analyzerRefreshKey, setAnalyzerRefreshKey] = useState(0);
 
   const fetchRecentAnalyses = async () => {
     setIsDataLoading(true);
@@ -285,6 +286,8 @@ function App() {
           })).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
           
           setRecentAnalyses(formatted.slice(0, 15));
+          // Signal AnalyzerView (recruiter mode) to re-fetch its candidates list
+          setAnalyzerRefreshKey(k => k + 1);
         }
       }
     } catch (err) {
@@ -536,6 +539,7 @@ function App() {
                         setUploadedResumes={setUploadedResumes}
                         setShowDuplicateModal={setShowDuplicateModal}
                         user={user}
+                        refreshKey={analyzerRefreshKey}
                       />
                     )}
                     {activeView === 'matcher' && <JobMatcherView resumeText={resumeText} resumeName={resumeName} setActiveView={setActiveView} />}
@@ -543,6 +547,7 @@ function App() {
                     {activeView === 'reports' && <ReportsView recentAnalyses={recentAnalyses} />}
                     {activeView === 'mail' && <InboxView setActiveView={setActiveView} />}
                     {activeView === 'interview' && <InterviewPage token={interviewToken} />}
+                    {activeView === 'vault' && <HRResumeVault />}
                   </motion.div>
 
                 </AnimatePresence>
@@ -588,7 +593,11 @@ function App() {
 
       <ResumeUploadWorkflow 
         isOpen={showResumeUploadWorkflow} 
-        onClose={() => setShowResumeUploadWorkflow(false)}
+        onClose={() => {
+          setShowResumeUploadWorkflow(false);
+          // Refresh dashboard so auto-saved candidates from /api/analyze appear
+          fetchRecentAnalyses();
+        }}
         onComplete={({ analysisResults, fileName, formData }) => {
           setShowResumeUploadWorkflow(false);
           if (analysisResults) {

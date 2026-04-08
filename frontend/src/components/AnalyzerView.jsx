@@ -500,7 +500,7 @@ const subRolesMap = {
   'Sales': ['Business Development', 'Sales Executive', 'Marketing Specialist']
 };
 
-const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, onBatchComplete, onReset, clearResults, recruiterMode, setRecruiterMode, onUpdateUser, initialFile, initialRole, onSetRole, uploadedResumes, setUploadedResumes, setShowDuplicateModal, user, setResults, setResumeText, setResumeName }) => {
+const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, onBatchComplete, onReset, clearResults, recruiterMode, setRecruiterMode, onUpdateUser, initialFile, initialRole, onSetRole, uploadedResumes, setUploadedResumes, setShowDuplicateModal, user, setResults, setResumeText, setResumeName, refreshKey }) => {
   // If user is HR and recruiterMode is active, start at Step 3 (Results/Pipeline)
   const [step, setStep] = useState(results || (recruiterMode && user?.userRole === 'HR') ? 3 : 1);
 
@@ -532,7 +532,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
     }
   }, [step]);
 
-  // Fetch candidates from DB on mount if in recruiter mode
+  // Fetch candidates from DB on mount AND whenever refreshKey changes (new upload happened)
   React.useEffect(() => {
     if (recruiterMode) {
       fetch('/api/candidates')
@@ -546,7 +546,7 @@ const AnalyzerView = ({ results, analyzing, setAnalyzing, onAnalysisComplete, on
         })
         .catch(err => console.error('Error fetching candidates:', err));
     }
-  }, [recruiterMode]);
+  }, [recruiterMode, refreshKey]);
 
   // Process files passed from Landing Page
   React.useEffect(() => {
