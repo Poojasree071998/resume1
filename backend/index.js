@@ -29,7 +29,6 @@ const { extractTextFromPDF, extractTextFromDOCX } = require('./utils/pdfParser')
 const { parseResumeContent, analyzeResume, optimizeResume, generateCareerRoadmap, roleKeywords } = require('./utils/aiPrompt');
 const fs = require('fs');
 const path = require('path');
-const resumeRoute = require('./routes/resumeRoutes');
 
 // Helper to load local data (Moved to controllers/candidateController.js)
 
@@ -224,7 +223,6 @@ app.post('/api/interviews/generate', (req, res) => {
 });
 
 app.get('/api/interviews/validate/:token', candidateController.validateToken);
-app.use('/api', resumeRoute);
 
 
 // Global Error Handler

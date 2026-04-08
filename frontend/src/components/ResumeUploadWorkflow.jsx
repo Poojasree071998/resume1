@@ -215,38 +215,6 @@ const ResumeUploadWorkflow = ({ isOpen, onClose, onComplete }) => {
             const data = await response.json();
             setAnalysisResults(data);
             
-            // Extract Name and Email for Direct DB Save
-            let extractedName = "CANDIDATE NAME";
-            let extractedEmail = "candidate@example.com";
-
-            if (data.extractedText) {
-              const lines = data.extractedText.split('\n').filter(l => l.trim().length > 0);
-              if (lines.length > 0) {
-                extractedName = lines[0].trim().toUpperCase();
-              }
-              const emailMatch = data.extractedText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-              if (emailMatch) extractedEmail = emailMatch[0];
-            }
-
-            // Direct Save to Database for HR Dashboard
-            const directFormData = new FormData();
-            directFormData.append('employeeName', extractedName);
-            directFormData.append('email', extractedEmail);
-            directFormData.append('resume', uploadedFile);
-
-            console.log('Saving to direct database...', { extractedName, extractedEmail });
-            
-            try {
-              const directResponse = await fetch('http://localhost:5000/api/upload-resume', {
-                method: 'POST',
-                body: directFormData,
-              });
-              const directData = await directResponse.json();
-              console.log('Direct save result:', directData);
-            } catch (err) {
-              console.error('Direct save failed:', err);
-            }
-
             // Auto-populate formData if AI found names/details (Existing logic)
             if (data.extractedText) {
                const lines = data.extractedText.split('\n').filter(l => l.trim().length > 0);
