@@ -23,6 +23,7 @@ import ResumeAlreadyExistsModal from './components/ResumeAlreadyExistsModal';
 import ChatWidget from './components/ChatWidget';
 import ResumeBuilderModal from './components/ResumeBuilderModal';
 import ResumeUploadWorkflow from './components/ResumeUploadWorkflow';
+import HRDashboardDirect from './components/HRDashboardDirect';
 
 function App() {
   const [showSplash, setShowSplash] = useState(false);
@@ -515,6 +516,7 @@ function App() {
                     {activeView === 'reports' && <ReportsView recentAnalyses={recentAnalyses} />}
                     {activeView === 'mail' && <InboxView setActiveView={setActiveView} />}
                     {activeView === 'interview' && <InterviewPage token={interviewToken} />}
+                    {activeView === 'resumes' && <HRDashboardDirect />}
                   </motion.div>
 
                 </AnimatePresence>

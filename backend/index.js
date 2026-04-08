@@ -29,6 +29,7 @@ const { extractTextFromPDF, extractTextFromDOCX } = require('./utils/pdfParser')
 const { parseResumeContent, analyzeResume, optimizeResume, generateCareerRoadmap, roleKeywords } = require('./utils/aiPrompt');
 const fs = require('fs');
 const path = require('path');
+const resumeRoute = require('./routes/resumeRoutes');
 
 // Helper to load local data
 const getLocalCandidates = () => {
@@ -47,6 +48,8 @@ const port = 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Set up multer for memory storage
 const storage = multer.memoryStorage();
@@ -254,6 +257,7 @@ app.post('/api/interviews/generate', (req, res) => {
 });
 
 app.get('/api/interviews/validate/:token', candidateController.validateToken);
+app.use('/api', resumeRoute);
 
 
 // Global Error Handler
