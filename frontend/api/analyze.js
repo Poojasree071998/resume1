@@ -27,23 +27,43 @@ const roleKeywords = {
 const extractTextFromPDF = async (buffer) => {
     try {
         if (!buffer || buffer.length === 0) return "";
-        console.log(`[ANALYZE API] Attempting PDF extraction (${buffer.length} bytes)...`);
+        console.log(`[ANALYZE API] Attempting Robust PDF extraction (${buffer.length} bytes)...`);
         
-        const options = {
-            pagerender: (pageData) => {
-                return pageData.getTextContent()
-                    .then(textContent => textContent.items.map(item => item.str).join(' '));
-            }
-        };
+        // Use pdfjs-dist for better resilience against corrupted XRef tables
+        const { getDocument } = await import('pdfjs-dist/legacy/build/pdf.mjs');
+        
+        // Disable worker for simpler serverless execution
+        const loadingTask = getDocument({
+            data: new Uint8Array(buffer),
+            useSystemFonts: true,
+            isEvalSupported: false,
+            disableFontFace: true
+        });
 
-        const data = await pdfParse(buffer, options);
-        return data.text || "";
-    } catch (error) {
-        console.error('[ANALYZE API] PDF Extraction Error:', error.message);
-        if (error.message.includes('XRef') || error.message.includes('dictionary')) {
-            throw new Error('This PDF appears to have a corrupted structure (bad XRef table). Try "Saving as PDF" again from your document editor.');
+        const pdf = await loadingTask.promise;
+        let fullText = "";
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            fullText += pageText + '\n';
         }
-        throw error;
+
+        return fullText || "";
+    } catch (error) {
+        console.warn('[ANALYZE API] PDF Extraction Warning:', error.message);
+        
+        // Fallback to pdf-parse if pdfjs-dist fails, but don't throw hard errors anymore
+        try {
+            const pdfParse = require('pdf-parse/lib/pdf-parse.js');
+            const data = await pdfParse(buffer);
+            return data.text || "";
+        } catch (fallbackError) {
+            console.error('[ANALYZE API] PDF Fallback Failed:', fallbackError.message);
+            // Return whatever we have or empty string instead of crashing
+            return ""; 
+        }
     }
 };
 

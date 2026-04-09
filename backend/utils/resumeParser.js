@@ -7,13 +7,52 @@ const escapeRegExp = (string) => {
 };
 
 const extractTextFromPDF = async (buffer) => {
-  const data = await pdfParse(buffer);
-  return data.text;
+  try {
+    if (!buffer) return "";
+    
+    // Primary: pdfjs-dist
+    try {
+      // pdfjs-dist v5+ is ESM only, use dynamic import
+      const { getDocument } = await import('pdfjs-dist/legacy/build/pdf.mjs');
+      const loadingTask = getDocument({
+        data: new Uint8Array(buffer),
+        useSystemFonts: true,
+        isEvalSupported: false,
+        disableFontFace: true
+      });
+
+      const pdf = await loadingTask.promise;
+      let fullText = "";
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        fullText += textContent.items.map(item => item.str).join(' ') + '\n';
+      }
+      if (fullText.trim().length > 0) return fullText;
+    } catch (e) {
+      console.warn('[Parser] pdfjs failed, falling back...');
+    }
+
+    // Fallback: pdf-parse
+    const parser = typeof pdfParse === 'function' ? pdfParse : pdfParse.default;
+    if (typeof parser === 'function') {
+      const data = await parser(buffer);
+      return data.text || "";
+    }
+    return "";
+  } catch (e) {
+    return "";
+  }
 };
 
 const extractTextFromDOCX = async (buffer) => {
-  const result = await mammoth.extractRawText({ buffer });
-  return result.value;
+  try {
+    const parser = mammoth.extractRawText ? mammoth : mammoth.default;
+    const result = await parser.extractRawText({ buffer });
+    return result.value || "";
+  } catch (e) {
+    return "";
+  }
 };
 
 // ... (after categories)
