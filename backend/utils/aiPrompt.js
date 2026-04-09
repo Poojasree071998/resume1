@@ -178,6 +178,27 @@ const analyzeResume = (parsedData = {}, targetRole = 'General', jobDescription =
     const weaknesses = [];
     const suggestions = [];
 
+    // Ensure we have some text to work with 
+    const cleanText = (text || "").trim();
+    if (cleanText.length < 50) {
+        return {
+            score: 45, // Base score
+            matchPercentage: 30,
+            verdict: 'Consider',
+            status: 'Applied',
+            reasons: ["Resume content is very brief. Consider adding more detail."],
+            strengths: ["Clean layout"],
+            weaknesses: ["Insufficient content for deep analysis"],
+            suggestions: ["Add more quantifiable achievements."],
+            skills: [],
+            matchedSkills: [],
+            missingSkills: (roleKeywords[targetRole] || roleKeywords['General']).slice(0, 5),
+            improvementSkills: [],
+            communicationScore: 50,
+            communicationAnalysis: ["Insufficient text for communication analysis"]
+        };
+    }
+
     // 1. Impact Analysis
     if (/managed|led|directed|developed|implemented/i.test(text)) {
         impactScore += 20;
