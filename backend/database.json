@@ -2609,6 +2609,159 @@
       ],
       "timestamp": "2026-04-08T11:50:04.968Z",
       "createdAt": "2026-04-08T11:50:04.968Z"
+    },
+    {
+      "_id": "1775709178166",
+      "id": "1775709178166",
+      "name": "resume_8",
+      "fileName": "resume_8.pdf",
+      "score": 0,
+      "matchPercentage": 0,
+      "matchedSkills": [],
+      "skills": [],
+      "missingSkills": [
+        "React",
+        "JavaScript",
+        "TypeScript",
+        "Tailwind",
+        "Next.js",
+        "Redux",
+        "Architecture",
+        "TTI",
+        "Core Web Vitals",
+        "Performant",
+        "Accessible"
+      ],
+      "strengths": [
+        "Strong professional formatting and document structure"
+      ],
+      "weaknesses": [
+        "Keyword gap for Frontend requirements"
+      ],
+      "reasons": [
+        "Unreadable PDF: The file seems to be an image or has no text. Please upload a machine-readable PDF."
+      ],
+      "status": "Applied",
+      "role": "Frontend",
+      "email": "pooja@example.com",
+      "extractedText": "",
+      "notifications": [
+        {
+          "id": "1775709178165-1",
+          "type": "Confirmation",
+          "message": "Application received successfully. AI initial screening in progress.",
+          "date": "9/4/2026, 10:02:58 am"
+        }
+      ],
+      "timestamp": "2026-04-09T04:32:58.166Z",
+      "createdAt": "2026-04-09T04:32:58.167Z"
+    },
+    {
+      "_id": "1775709239123",
+      "id": "1775709239123",
+      "score": 47,
+      "matchPercentage": 0,
+      "verdict": "Rejected",
+      "status": "Applied",
+      "reasons": [
+        "Keyword gap for Frontend requirements"
+      ],
+      "weaknesses": [
+        "Keyword gap for Frontend requirements"
+      ],
+      "suggestions": [
+        "Consider adding skills like: React, JavaScript, TypeScript"
+      ],
+      "matchedSkills": [],
+      "missingSkills": [
+        "React",
+        "JavaScript",
+        "TypeScript",
+        "Tailwind",
+        "Next.js",
+        "Redux",
+        "Architecture",
+        "TTI",
+        "Core Web Vitals",
+        "Performant",
+        "Accessible"
+      ],
+      "skills": [],
+      "strengths": [
+        "Strong professional formatting and document structure"
+      ],
+      "suggestedRoles": [],
+      "improvementSkills": [
+        "React",
+        "JavaScript",
+        "TypeScript"
+      ],
+      "communicationScore": 70,
+      "communicationAnalysis": [
+        "Consider expanding on details for better clarity",
+        "Grammar is acceptable"
+      ],
+      "role": "Frontend",
+      "extractedText": "\n\nVikram L\nRole: Mobile Developer\nSkills:\n- Flutter\n- Dart\nExperience:\n- 3 yrs mobile apps\nEducation:\n- BCA",
+      "name": "VIKRAM L",
+      "email": "candidate@example.com",
+      "fileName": "resume_8.pdf",
+      "notifications": [
+        {
+          "id": "1775709239121-1",
+          "type": "Confirmation",
+          "message": "Application received successfully. AI initial screening in progress.",
+          "date": "9/4/2026, 10:03:59 am"
+        }
+      ],
+      "timestamp": "2026-04-09T04:33:59.123Z",
+      "createdAt": "2026-04-09T04:33:59.123Z"
+    },
+    {
+      "_id": "1775709239135",
+      "id": "1775709239135",
+      "name": "Pooja",
+      "fileName": "resume_8.pdf",
+      "score": 47,
+      "matchPercentage": 0,
+      "matchedSkills": [],
+      "skills": [],
+      "missingSkills": [
+        "React",
+        "JavaScript",
+        "TypeScript",
+        "Tailwind",
+        "Next.js",
+        "Redux",
+        "Architecture",
+        "TTI",
+        "Core Web Vitals",
+        "Performant",
+        "Accessible"
+      ],
+      "strengths": [
+        "Strong professional formatting and document structure"
+      ],
+      "weaknesses": [
+        "Keyword gap for Frontend requirements"
+      ],
+      "reasons": [
+        "Keyword gap for Frontend requirements"
+      ],
+      "status": "Applied",
+      "role": "Frontend",
+      "email": "pooja@example.com",
+      "extractedText": "\n\nVikram L\nRole: Mobile Developer\nSkills:\n- Flutter\n- Dart\nExperience:\n- 3 yrs mobile apps\nEducation:\n- BCA",
+      "notifications": [
+        {
+          "id": "1775709239133-1",
+          "type": "Confirmation",
+          "message": "Application received successfully. AI initial screening in progress.",
+          "date": "9/4/2026, 10:03:59 am"
+        }
+      ],
+      "timestamp": "2026-04-09T04:33:59.135Z",
+      "createdAt": "2026-04-09T04:33:59.135Z"
     }
   ]
 }
